@@ -52,7 +52,7 @@ def create_lab_report(filename="lab_report.pdf", logo_path="logo.png"):
     box_left = 40
     box_right = width - 40
     box_top = height - 3.1 * inch
-    box_bottom = height - 8 * inch
+    box_bottom = height - 7.3 * inch
 
     c.setFont("Helvetica", 10)
     c.drawString(box_left, height - 2.8 * inch, "Name:")
@@ -71,15 +71,17 @@ def create_lab_report(filename="lab_report.pdf", logo_path="logo.png"):
         ("TRIGLYCERIDES", "mmol/l", "0.68-1.92 mmol/l"),
         ("HDL", "mmol/l", "0.90-2.10 mmol/l"),
         ("LDL", "mmol/l", "0.00-3.37 mmol/l"),
-        ("CREATININE", "umol/l", "43-133 umol/l  70-106 umol/l"),
-        ("URIC ACID", "umol/l", "214-488 umol/l  137-363 umol/l"),
+        ("CREATININE", "umol/l", "70-106 umol/l"),
+        ("", "umol/l", "70-106 umol/l"),
+        ("URIC ACID", "umol/l", "214-488 umol/l"),
+        ("", "umol/l", "137-363 umol/l"),
         ("BUN", "mmol/L", "1.7-8.3 mmol/l"),
         ("SGPT", "u/l", ">40 u/l"),
         ("SGOT", "u/l", ">40 u/l"),
     ]
 
-    y_start = height - 3.3 * inch
-    line_height = 0.5 * inch
+    y_start = height - 3.5 * inch
+    line_height = 0.3 * inch
 
     for test in tests:
         c.drawString(box_left + 10, y_start, test[0])
@@ -108,7 +110,7 @@ def create_lab_report(filename="lab_report.pdf", logo_path="logo.png"):
         text_role_width = c.stringWidth(text_role, "Helvetica", 10)
         c.drawString((width - text_role_width) / 2, y_position - 50, text_role)
 
-    y_sig = height - 8.5 * inch
+    y_sig = height - 8.4 * inch
     draw_centered_signature_line(
         c, y_sig, "MARY JEAN L. BERNAS, MD", "Lic no. 113340", "Pathologist"
     )
