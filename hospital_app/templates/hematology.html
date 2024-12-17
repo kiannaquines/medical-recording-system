@@ -1,0 +1,56 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'hematology_add' %}" class="btn btn-primary mb-3">Add Hematology Result</a>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title">{{ detail_header }}</h5>
+                </div>
+                <div class="card-body">
+                    <table id="datatable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Hemoglobin</th>
+                                <th>Hematocrit</th>
+                                <th>Erythrocty</th>
+                                <th>Platelet</th>
+                                <th>Blood Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.patient }}</td>
+                                <td>{{ result.hemoglobin_mass_concentration }}</td>
+                                <td>{{ result.hematocrit }}</td>
+                                <td>{{ result.erythrocty_no_concentration }}</td>
+                                <td>{{ result.platelet }}</td>
+                                <td>{{ result.blood_type }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-start gap-2">
+                                        <a href="{% url 'hematology_update' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'hematology_delete' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-trash text-danger"></i>
+                                        </a>
+                                        <a href="">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

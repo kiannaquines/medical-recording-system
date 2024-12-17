@@ -1,0 +1,28 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post">
+                {% csrf_token %}
+                <div class="callout callout-danger">
+                    Are you sure you want to remove the data? All associated information to  <a href="#" class="callout-link">
+                        {{ object }}
+                    </a> will be deleted.
+                </div>
+                {{ object. }}
+                <div class="form-group mt-2">
+                    <input type="submit" value="Submit" class="btn btn-primary">
+                    <input
+                        type="button"
+                        onclick="Back()"
+                        value="Back"
+                        class="btn btn-success"
+                    >
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

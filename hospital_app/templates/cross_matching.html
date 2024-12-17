@@ -1,0 +1,66 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'cross_matching_add' %}" class="btn btn-primary mb-3">Add Cross Matching Result</a>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title">{{ detail_header }}</h5>
+                </div>
+                <div class="card-body">
+                    <table id="datatable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Result</th>
+                                <th>Pathologist</th>
+                                <th>Medical Technologist</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.patient }}</td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        <a class="text-white" href="{% url 'cross_matching_result_update' pk=result.result.id %}">
+                                            {{ result.result }}
+                                        </a>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a class="text-" href="{% url 'employee_update' pk=result.pathologist.id %}">
+                                        {{ result.pathologist.get_full_name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="text-" href="{% url 'employee_update' pk=result.medical_technologist.id %}">
+                                        {{ result.medical_technologist.get_full_name }}
+                                    </a>
+                                    </td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-start gap-2">
+                                        <a href="{% url 'cross_matching_update' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'cross_matching_delete' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-trash text-danger"></i>
+                                        </a>
+                                        <a href="">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

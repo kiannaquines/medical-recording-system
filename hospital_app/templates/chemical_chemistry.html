@@ -1,0 +1,60 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'clinical_chemistry_add' %}" class="btn btn-primary mb-3">Add Clinical Chemistry</a>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title">{{ detail_header }}</h5>
+                </div>
+                <div class="card-body">
+                    <table id="datatable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Glucose</th>
+                                <th>Cholesterol</th>
+                                <th>Triglycerides</th>
+                                <th>HDL</th>
+                                <th>LDL</th>
+                                <th>Creatinine</th>
+                                <th>Uric Acid</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.patient }}</td>
+                                <td>{{ result.glucose }}</td>
+                                <td>{{ result.cholesterol }}</td>
+                                <td>{{ result.triglycerides }}</td>
+                                <td>{{ result.hdl }}</td>
+                                <td>{{ result.ldl }}</td>
+                                <td>{{ result.creatinine }}</td>
+                                <td>{{ result.uric_acid }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-start gap-2">
+                                        <a href="{% url 'clinical_chemistry_update' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'clinical_chemistry_delete' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-trash text-danger"></i>
+                                        </a>
+                                        <a href="">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

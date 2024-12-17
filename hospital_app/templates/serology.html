@@ -1,0 +1,54 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'serology_add' %}" class="btn btn-primary mb-3">Add Serology Result</a>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title">{{ detail_header }}</h5>
+                </div>
+                <div class="card-body">
+                    <table id="datatable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>HB Determination</th>
+                                <th>Typhidot Rapid Test</th>
+                                <th>Dengue Rapid Test</th>
+                                <th>Date Recorded</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.patient }}</td>
+                                <td>{{ result.hb_determination }}</td>
+                                <td>{{ result.typhidot_rapid_test }}</td>
+                                <td>{{ result.dengue_rapid_test }}</td>
+                                <td>{{ result.date }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-start gap-2">
+                                        <a href="{% url 'serology_update' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'serology_delete' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-trash text-danger"></i>
+                                        </a>
+                                        <a href="">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

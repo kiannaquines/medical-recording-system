@@ -1,0 +1,55 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'employee_add' %}" class="btn btn-primary mb-3">Add Employee</a>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title">{{ detail_header }}</h5>
+                </div>
+                <div class="card-body">
+                    <table id="datatable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Email Address</th>
+                                <th>Position</th>
+                                <th>Date Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in employees %}
+                            <tr>
+                                <td>{{ result.get_full_name }}</td>
+                                <td>{{ result.email }}</td>
+                                <td>
+                                    {% for group in result.groups.all %}
+                                        <span class="badge bg-primary">{{ group }}</span>{% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                        <span class="badge bg-warning">No position assigned</span>
+                                    {% endfor %}
+                                </td>
+                                <td>{{ result.date_joined }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-start gap-2">
+                                        <a href="{% url 'employee_update' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'employee_delete' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-trash text-danger"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

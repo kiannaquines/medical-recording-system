@@ -1,0 +1,55 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'patient_add' %}" class="btn btn-primary mb-3">Add Patient</a>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title">{{ detail_header }}</h5>
+                </div>
+                <div class="card-body">
+                    <table id="datatable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Physician</th>
+                                <th>Room #</th>
+                                <th>SARS Result</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in patients %}
+                            <tr>
+                                <td>{{ result.get_full_name }}</td>
+                                <td>{{ result.age }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ result.sex }}</span>
+                                </td>
+                                <td>{{ result.physician.get_full_name }}</td>
+                                <td>{{ result.room_number }}</td>
+                                <td>{{ result.sars_result }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-start gap-2">
+                                        <a href="{% url 'patient_update' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'patient_delete' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-trash text-danger"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

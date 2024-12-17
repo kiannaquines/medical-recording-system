@@ -1,0 +1,95 @@
+{% load static %}
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <div class="sidebar-brand">
+        <a href="./index.html" class="brand-link">
+            <img src="{% static 'assets/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
+            <span class="brand-text fw-light">Record Management</span>
+        </a>
+    </div>
+    <div class="sidebar-wrapper d-flex flex-column">
+        <nav class="mt-2 flex-grow-1">
+            <ul
+                class="nav sidebar-menu flex-column"
+                data-lte-toggle="treeview"
+                role="menu"
+                data-accordion="false"
+            >
+                <li class="nav-item menu-open active">
+                    <a href="{% url 'dashboard' %}" class="nav-link">
+                        <i class="nav-icon bi bi-speedometer"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'patient_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-people"></i>
+                        <p>
+                            Patient Information
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'employee_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-person-add"></i>
+                        <p>
+                            Employee Information
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-file-earmark-medical"></i>
+                        <p>
+                            Laboratory Result
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'chemical_chemistry_list' %}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Chemical Chemistry</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'serology_list' %}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Serology</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'hematology_list' %}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Hematology</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'cross_matching_result_list' %}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Cross Matching Result</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'cross_matching_list' %}" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Cross Matching</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item mr-auto">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-box-arrow-right"></i>
+                        <p>
+                            Sign Out
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
