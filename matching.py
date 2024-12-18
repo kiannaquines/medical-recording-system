@@ -3,21 +3,21 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.units import inch
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
 from PIL import Image
 
-
-def create_lab_report(filename="lab_report.pdf", logo_path="logo.png"):
+def create_lab_report(filename="cross-matching.pdf", logo_path=""):
     c = canvas.Canvas(filename, pagesize=letter)
     width, height = letter
 
+    # Logo
     try:
         img = Image.open(logo_path)
         img_width, img_height = img.size
         aspect = img_height / float(img_width)
-
         desired_width = 1.3 * inch
         desired_height = desired_width * aspect
-
         c.drawImage(
             logo_path,
             45,
@@ -29,9 +29,7 @@ def create_lab_report(filename="lab_report.pdf", logo_path="logo.png"):
     except Exception as e:
         print(f"Could not load logo: {e}")
 
-    def center_text(
-        text, y_position, font_name="Helvetica", font_size=12, is_bold=False
-    ):
+    def center_text(text, y_position, font_name="Helvetica", font_size=12, is_bold=False):
         if is_bold:
             font_name += "-Bold"
         c.setFont(font_name, font_size)
@@ -39,6 +37,7 @@ def create_lab_report(filename="lab_report.pdf", logo_path="logo.png"):
         x_position = (width - text_width) / 2
         c.drawString(x_position, y_position, text)
 
+    # Headers
     center_text(
         "PRESIDENT ROXAS PROVINCIAL COMMUNITY HOSPITAL",
         height - 1 * inch,
@@ -46,51 +45,45 @@ def create_lab_report(filename="lab_report.pdf", logo_path="logo.png"):
         is_bold=True,
     )
     center_text("New Cebu . Pres. Roxas . Cotabato.", height - 1.3 * inch, font_size=12)
-    center_text("LABORATORY DEPARTMENT", height - 1.6 * inch, font_size=12)
-    center_text("CLINICAL CHEMISTRY", height - 2.2 * inch, font_size=14, is_bold=True)
+    center_text("LABORATORY DEPARTMENT", height - 1.6 * inch, font_size=12, is_bold=True)
+    center_text("CROSS MATCHING RESULT", height - 2.2 * inch, font_size=14, is_bold=True)
 
-    box_left = 40
-    box_right = width - 40
-    box_top = height - 3.1 * inch
-    box_bottom = height - 7.3 * inch
-
+    # Name and Date fields
     c.setFont("Helvetica", 10)
-    c.drawString(box_left, height - 2.8 * inch, "Name:")
-    c.drawString(box_left + 300, height - 2.8 * inch, "Date:")
-    c.drawString(box_right - 80, height - 2.8 * inch, "Room:")
+    c.drawString(40, height - 2.8 * inch, "Name:")
+    c.drawString(340, height - 2.8 * inch, "Date:")
 
-    c.line(box_left + 50, height - 2.85 * inch, box_left + 280, height - 2.85 * inch)
-    c.line(box_left + 335, height - 2.85 * inch, box_left + 400, height - 2.85 * inch)
-    c.line(box_right - 45, height - 2.85 * inch, box_right, height - 2.85 * inch)
+    c.line(90, height - 2.85 * inch, 320, height - 2.85 * inch)  # Name line
+    c.line(375, height - 2.85 * inch, 440, height - 2.85 * inch)  # Date line
 
-    c.rect(box_left, box_bottom, box_right - box_left, box_top - box_bottom)
-
-    tests = [
-        ("GLUCOSE", "mmol/l", "3.9-6.4 mmol/l"),
-        ("CHOLESTEROL", "mmol/l", "4.12-5.36 mmol/l"),
-        ("TRIGLYCERIDES", "mmol/l", "0.68-1.92 mmol/l"),
-        ("HDL", "mmol/l", "0.90-2.10 mmol/l"),
-        ("LDL", "mmol/l", "0.00-3.37 mmol/l"),
-        ("CREATININE", "umol/l", "70-106 umol/l"),
-        ("", "umol/l", "70-106 umol/l"),
-        ("URIC ACID", "umol/l", "214-488 umol/l"),
-        ("", "umol/l", "137-363 umol/l"),
-        ("BUN", "mmol/L", "1.7-8.3 mmol/l"),
-        ("SGPT", "u/l", ">40 u/l"),
-        ("SGOT", "u/l", ">40 u/l"),
+    # Create table
+    data = [
+        ["Serial No.", "Blood Type", "Amt. In cc.", "Blood Bank", "Date of Collection", "Expiration Date", "Result"],
     ]
+    # Add empty rows
+    for _ in range(6):
+        data.append(["", "", "", "", "", "", ""])
 
-    y_start = height - 3.5 * inch
-    line_height = 0.3 * inch
+    table_style = TableStyle([
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING', (0, 0), (-1, -1), 5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+    ])
 
-    for test in tests:
-        c.drawString(box_left + 10, y_start, test[0])
-        c.line(box_left + 160, y_start, box_left + 260, y_start)
-        c.drawString(box_left + 270, y_start, test[1])
-        c.drawString(box_left + 360, y_start, test[2])
-        y_start -= line_height
+    # Calculate column widths (adjusted to match the image proportions)
+    col_widths = [60, 70, 70, 80, 90, 90, 70]  # Adjusted widths
+    table = Table(data, colWidths=col_widths, rowHeights=[30] * len(data))
+    table.setStyle(table_style)
 
-    y_sig = height - 8.5 * inch
+    # Position the table
+    table_x = 40
+    table_y = height - 6.0 * inch
+    table.wrapOn(c, width, height)
+    table.drawOn(c, table_x, table_y)
 
     def draw_centered_signature_line(c, y_position, text_name, text_license, text_role):
         line_width = 200
@@ -110,6 +103,7 @@ def create_lab_report(filename="lab_report.pdf", logo_path="logo.png"):
         text_role_width = c.stringWidth(text_role, "Helvetica", 10)
         c.drawString((width - text_role_width) / 2, y_position - 50, text_role)
 
+    # Draw signatures
     y_sig = height - 8.4 * inch
     draw_centered_signature_line(
         c, y_sig, "MARY JEAN L. BERNAS, MD", "Lic no. 113340", "Pathologist"
@@ -119,13 +113,12 @@ def create_lab_report(filename="lab_report.pdf", logo_path="logo.png"):
     draw_centered_signature_line(
         c,
         y_sig_bottom,
-        "FLORA JEANNE A. IRLANDEZ, RMT",
+        "CRIS L. JUNTARCIEGO, RMT",  # Updated name as per image
         "Lic no. 85982",
-        "Medical Technologist",
+        "Medical Technologist"
     )
 
     c.save()
-
 
 if __name__ == "__main__":
     create_lab_report(
