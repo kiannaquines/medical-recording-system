@@ -1,18 +1,23 @@
 from django.shortcuts import render
-from django.views.generic import View, FormView, UpdateView, DeleteView, CreateView, ListView
+from django.views.generic import View, ListView
 from hospital_app.models import *
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
-class LoginView(FormView):
-    pass
+class LoginView(View):
+    def get(self, request):
+        context = {}
+        return render(request, 'login.html', context)
+    
+    def post(self, request):
+        pass
 
 class DashboardView(View):
 
     def get(self, request):
         context = {}
-        context['detail_header'] = 'Dashboard'
-        context['humberger_header'] = 'Dashboard'
+        context['detail_header'] = 'Record Management Dashboard'
+        context['humberger_header'] = 'Record Management Dashboard'
         return render(request, 'dashboard.html', context)
 
 class EmployeeListView(ListView):
