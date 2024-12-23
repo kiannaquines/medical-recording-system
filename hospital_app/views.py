@@ -16,8 +16,8 @@ class DashboardView(View):
 
     def get(self, request):
         context = {}
-        context['detail_header'] = 'Record Management Dashboard'
-        context['humberger_header'] = 'Record Management Dashboard'
+        context['detail_header'] = 'Management Dashboard'
+        context['humberger_header'] = 'Management Dashboard'
         return render(request, 'dashboard.html', context)
 
 class EmployeeListView(ListView):

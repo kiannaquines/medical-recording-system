@@ -13019,13 +13019,13 @@ textarea.form-control-lg {
 .sidebar-brand .brand-link .brand-image {
   float: left;
   width: auto;
-  max-height: 33px;
+  max-height: 45px;
   line-height: 0.8;
 }
 .sidebar-brand .brand-link .brand-image-xs {
   float: left;
   width: auto;
-  max-height: 33px;
+  max-height: 50px;
   margin-top: -0.1rem;
   line-height: 0.8;
 }
