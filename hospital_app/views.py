@@ -3,14 +3,32 @@ from django.views.generic import View, ListView
 from hospital_app.models import *
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from hospital_app.forms import LoginForm
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 
 class LoginView(View):
     def get(self, request):
         context = {}
+        context['login_form'] = LoginForm()
         return render(request, 'login.html', context)
     
     def post(self, request):
-        pass
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+
+            if user:
+                login(request, user)
+                return HttpResponseRedirect(reverse_lazy('dashboard'))
+            
+            messages.error(request, 'There was an error while authenticating your account please check your username or password, please try again.')
+
+        return HttpResponseRedirect(reverse_lazy('login'))
+    
 
 class DashboardView(View):
 

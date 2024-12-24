@@ -6,7 +6,7 @@ from hospital_app.update_view import *
 
 urlpatterns = [
     path('', LoginView.as_view(), name="login"),
-
+    path('logout/', logout_user, name="logout_user"),
     # View
     path('dashboard/', DashboardView.as_view(), name="dashboard"),
     path('patient/', PatientListView.as_view(), name="patient_list"),

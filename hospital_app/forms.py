@@ -8,26 +8,44 @@ hospital_models = [
     Hematology,
     Serology,
     CrossMatchingResult,
-    CrossMatching
+    CrossMatching,
 ]
 
 custom_fields = {
-    'date_of_collection': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-    'expiration_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-    'time_of_collection': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
+    "date_of_collection": forms.DateInput(
+        attrs={"type": "date", "class": "form-control"}
+    ),
+    "expiration_date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+    "time_of_collection": forms.TimeInput(
+        attrs={"type": "time", "class": "form-control"}
+    ),
 }
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control","placeholder":"Username"}
+        )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control","placeholder":"Password"}
+        )
+    )
+
 
 class EmployeeCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         fields_required = {
-            'groups',
-            'first_name',
-            'last_name',
-            'email',
-            'password1',
-            'password2'
+            "groups",
+            "first_name",
+            "last_name",
+            "email",
+            "password1",
+            "password2",
         }
 
         for field_name in fields_required:
@@ -36,23 +54,24 @@ class EmployeeCreationForm(UserCreationForm):
         for field_name, field in self.fields.items():
 
             if isinstance(field.widget, forms.CheckboxInput):
-                field.widget.attrs.update({'class': 'form-check-input'})
+                field.widget.attrs.update({"class": "form-check-input"})
             else:
-                field.widget.attrs.update({'class': 'form-control'})
+                field.widget.attrs.update({"class": "form-control"})
 
     class Meta:
         model = User
         fields = [
             "username",
             "first_name",
-            "last_name", 
-            "email", 
-            "groups", 
-            "user_permissions", 
-            "is_active", 
-            "is_staff", 
-            "is_superuser"
+            "last_name",
+            "email",
+            "groups",
+            "user_permissions",
+            "is_active",
+            "is_staff",
+            "is_superuser",
         ]
+
 
 class EmployeeUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -61,23 +80,24 @@ class EmployeeUpdateForm(forms.ModelForm):
         for field_name, field in self.fields.items():
 
             if isinstance(field.widget, forms.CheckboxInput):
-                field.widget.attrs.update({'class': 'form-check-input'})
+                field.widget.attrs.update({"class": "form-check-input"})
             else:
-                field.widget.attrs.update({'class': 'form-control'})
+                field.widget.attrs.update({"class": "form-control"})
 
     class Meta:
         model = User
         fields = [
             "username",
             "first_name",
-            "last_name",  
-            "email", 
-            "groups", 
-            "user_permissions", 
-            "is_active", 
-            "is_staff", 
-            "is_superuser"
+            "last_name",
+            "email",
+            "groups",
+            "user_permissions",
+            "is_active",
+            "is_staff",
+            "is_superuser",
         ]
+
 
 class BaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -86,7 +106,7 @@ class BaseForm(forms.ModelForm):
 
     def add_custom_widgets(self):
         for field_name, field in self.fields.items():
-            field.widget.attrs.update({'required': True})
+            field.widget.attrs.update({"required": True})
             field.widget.attrs.update({"class": "form-control"})
 
             if field_name in custom_fields:
@@ -98,6 +118,7 @@ class BaseForm(forms.ModelForm):
                     field.widget.attrs.update({"class": "form-check-input"})
                 elif isinstance(field, forms.TimeField):
                     field.widget.attrs.update({"type": "time"})
+
 
 for model in hospital_models:
     form_class = type(
