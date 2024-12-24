@@ -19,8 +19,20 @@ custom_fields = {
 
 class EmployeeCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
-
         super().__init__(*args, **kwargs)
+
+        fields_required = {
+            'groups',
+            'first_name',
+            'last_name',
+            'email',
+            'password1',
+            'password2'
+        }
+
+        for field_name in fields_required:
+            self.fields[field_name].required = True
+
         for field_name, field in self.fields.items():
 
             if isinstance(field.widget, forms.CheckboxInput):
