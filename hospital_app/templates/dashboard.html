@@ -7,7 +7,7 @@
         <div class="col-lg-3 col-6">
             <div class="small-box text-bg-primary">
                 <div class="inner">
-                    <h3>150</h3>
+                    <h3>{{ chemical_chemistry_count }}</h3>
                     <p>Chemical Chemistry</p>
                 </div>
                 <svg
@@ -19,7 +19,7 @@
                 >
                     <path fill-rule="evenodd" d="M10 1.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5zm-5 0A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5v1A1.5 1.5 0 0 1 9.5 4h-3A1.5 1.5 0 0 1 5 2.5zm-2 0h1v1A2.5 2.5 0 0 0 6.5 5h3A2.5 2.5 0 0 0 12 2.5v-1h1a2 2 0 0 1 2 2V14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3.5a2 2 0 0 1 2-2"/>
                 </svg>
-                <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                <a href="{% url 'chemical_chemistry_list' %}" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
                     More info
                     <i class="bi bi-link-45deg"></i>
                 </a>
@@ -29,8 +29,7 @@
             <div class="small-box text-bg-success">
                 <div class="inner">
                     <h3>
-                        53
-                        <sup class="fs-5">%</sup>
+                        {{ serology_count }}
                     </h3>
                     <p>Serology</p>
                 </div>
@@ -44,7 +43,7 @@
                     <path fill-rule="evenodd" d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
                     <path fill-rule="evenodd" d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5zm4 5.982c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018"/>
                 </svg>
-                <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                <a href="{% url 'serology_list' %}" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
                     More info
                     <i class="bi bi-link-45deg"></i>
                 </a>
@@ -53,7 +52,7 @@
         <div class="col-lg-3 col-6">
             <div class="small-box text-bg-warning">
                 <div class="inner">
-                    <h3>44</h3>
+                    <h3>{{ hematology_count }}</h3>
                     <p>Hematology</p>
                 </div>
                 <svg
@@ -66,7 +65,7 @@
                     <path fill-rule="evenodd" d="M7.21.8C7.69.295 8 0 8 0q.164.544.371 1.038c.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8m.413 1.021A31 31 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10c0 0 2.5 1.5 5 .5s5-.5 5-.5c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/>
                     <path fill-rule="evenodd" d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87z"/>
                 </svg>
-                <a href="#" class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover">
+                <a href="{% url 'hematology_list' %}" class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover">
                     More info
                     <i class="bi bi-link-45deg"></i>
                 </a>
@@ -75,7 +74,7 @@
         <div class="col-lg-3 col-6">
             <div class="small-box text-bg-danger">
                 <div class="inner">
-                    <h3>65</h3>
+                    <h3>{{ cross_matching_count }}</h3>
                     <p>Cross Matching</p>
                 </div>
                 <svg
@@ -88,7 +87,7 @@
                     <path d="M8 5a.5.5 0 0 1 .5.5V7H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V8H6a.5.5 0 0 1 0-1h1.5V5.5A.5.5 0 0 1 8 5m-2.5 6.5A.5.5 0 0 1 6 11h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5"/>
                     <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
                 </svg>
-                <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                <a href="{% url 'cross_matching_result_list' %}" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
                     More info
                     <i class="bi bi-link-45deg"></i>
                 </a>
@@ -104,8 +103,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Overall Employee</span>
                     <span class="info-box-number">
-                        10
-                        <small>%</small>
+                        {{ overall_employee }}
                     </span>
                 </div>
             </div>
@@ -117,7 +115,7 @@
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">Inactive Employee</span>
-                    <span class="info-box-number">41,410</span>
+                    <span class="info-box-number">{{ inactive_employee }}</span>
                 </div>
             </div>
         </div>
@@ -128,7 +126,7 @@
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">Active Employee</span>
-                    <span class="info-box-number">760</span>
+                    <span class="info-box-number">{{ active_employee }}</span>
                 </div>
             </div>
         </div>
@@ -139,7 +137,7 @@
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">Employee Groups</span>
-                    <span class="info-box-number">2,000</span>
+                    <span class="info-box-number">{{ employee_group_count }}</span>
                 </div>
             </div>
         </div>

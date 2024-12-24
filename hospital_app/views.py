@@ -18,6 +18,17 @@ class DashboardView(View):
         context = {}
         context['detail_header'] = 'Management Dashboard'
         context['humberger_header'] = 'Management Dashboard'
+
+        context['chemical_chemistry_count'] = ClinicalChemistry.objects.all().count()
+        context['serology_count'] = Serology.objects.all().count()
+        context['hematology_count'] = Hematology.objects.all().count()
+        context['cross_matching_count'] = CrossMatching.objects.all().count()
+
+
+        context['overall_employee'] = User.objects.all().count()
+        context['inactive_employee'] = User.objects.filter(is_active=False).count()
+        context['active_employee'] = User.objects.filter(is_active=True).count()
+        context['employee_group_count'] = Group.objects.all().count()
         return render(request, 'dashboard.html', context)
 
 class EmployeeListView(ListView):
