@@ -13,11 +13,11 @@
                     <table id="datatable" class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>Patient</th>
-                                <th>Result</th>
-                                <th>Pathologist</th>
-                                <th>Medical Technologist</th>
-                                <th>Actions</th>
+                                <th class="text-muted">Patient</th>
+                                <th class="text-muted">Result</th>
+                                <th class="text-muted">Pathologist</th>
+                                <th class="text-muted">Medical Technologist</th>
+                                <th class="text-muted">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -26,18 +26,18 @@
                                 <td>{{ result.patient }}</td>
                                 <td>
                                     <span class="badge bg-primary">
-                                        <a class="text-white" href="{% url 'cross_matching_result_update' pk=result.result.id %}">
+                                        <a class="text-white" style="text-decoration: none;" target="_blank" href="{% url 'cross_matching_result_update' pk=result.result.id %}">
                                             {{ result.result }}
                                         </a>
                                     </span>
                                 </td>
                                 <td>
-                                    <a class="text-" href="{% url 'employee_update' pk=result.pathologist.id %}">
+                                    <a style="text-decoration: none;" target="_blank" href="{% url 'employee_update' pk=result.pathologist.id %}">
                                         {{ result.pathologist.get_full_name }}
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="text-" href="{% url 'employee_update' pk=result.medical_technologist.id %}">
+                                    <a style="text-decoration: none;" target="_blank" href="{% url 'employee_update' pk=result.medical_technologist.id %}">
                                         {{ result.medical_technologist.get_full_name }}
                                     </a>
                                     </td>
