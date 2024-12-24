@@ -130,4 +130,5 @@ class CrossMatchingResultView(ListView):
 def logout_user(request):
     from django.contrib.auth import logout
     logout(request)
+    messages.success(request, 'You have been successfully logged out.')
     return HttpResponseRedirect(reverse_lazy('login'))
