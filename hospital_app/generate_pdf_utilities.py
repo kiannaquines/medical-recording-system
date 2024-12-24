@@ -1,12 +1,10 @@
 from reportlab.platypus import Table, TableStyle
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
+from core.settings import LOGO_PATH
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from PIL import Image
-import os
-
-LOGO_PATH = os.path.join(os.path.dirname(__file__), "static/assets/img/logo.jpg")
 
 
 def chemical_chemistry(filename="chemical_chemistry.pdf"):

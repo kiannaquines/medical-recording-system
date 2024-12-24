@@ -88,3 +88,5 @@ STATICFILES_DIRS = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGO_PATH = os.path.join(os.path.dirname(__file__), "static/assets/img/logo.jpg")
+
