@@ -9,7 +9,8 @@ class EmployeeInfo(models.Model):
     license_number = models.CharField(max_length=255, unique=True, db_index=True)
 
     def __str__(self):
-        return f'{self.user.get_full_name()}{self.license_number}'
+        return f"{self.user.get_full_name()}{self.license_number}"
+
 
 class Patient(models.Model):
     firstname = models.CharField(max_length=255)
@@ -36,10 +37,8 @@ class Patient(models.Model):
     def get_full_name(self):
         return f"{self.firstname} {self.middlename} {self.lastname}"
 
-
     def __str__(self) -> str:
         return self.get_full_name()
-
 
 class ClinicalChemistry(models.Model):
     patient = models.ForeignKey(
@@ -68,7 +67,6 @@ class ClinicalChemistry(models.Model):
         verbose_name = "Clinical Chemistry"
         verbose_name_plural = "Clinical Chemistry"
         db_table = "clinical_chemistry"
-
 
 class Hematology(models.Model):
 
@@ -114,12 +112,11 @@ class Hematology(models.Model):
 
     def get_date(self):
         return self.date.strftime("%m/%d/%Y")
-    
+
     class Meta:
         verbose_name = "Hematology"
         verbose_name_plural = "Hematology"
         db_table = "hematology"
-
 
 class Serology(models.Model):
     patient = models.ForeignKey(
@@ -133,7 +130,6 @@ class Serology(models.Model):
 
     def __str__(self) -> str:
         return f"Serology Result of {self.patient} {self.date}"
-
 
 class CrossMatchingResult(models.Model):
     amt_in_cc = models.FloatField()
@@ -150,30 +146,32 @@ class CrossMatchingResult(models.Model):
         verbose_name_plural = "Cross Matching Result"
         db_table = "cross_matching_result"
 
-
 class CrossMatching(models.Model):
     result = models.ForeignKey(
         CrossMatchingResult,
         on_delete=models.CASCADE,
         related_name="cross_matching_result",
-        help_text="Result of cross matching"
+        help_text="Result of cross matching",
     )
     patient = models.ForeignKey(
         "Patient",
         related_name="patient_cross_matching_result",
         on_delete=models.CASCADE,
-        help_text="Patient name"
+        help_text="Patient name",
     )
     pathologist = models.ForeignKey(
-        User, related_name="pathologist",
-        limit_choices_to={'groups__name':'Pathologist'},
+        User,
+        related_name="pathologist",
+        limit_choices_to={"groups__name": "Pathologist"},
         on_delete=models.CASCADE,
-        help_text="Pathologist name"
+        help_text="Pathologist name",
     )
     medical_technologist = models.ForeignKey(
-        User, related_name="medical_technologist", 
-        limit_choices_to={'groups__name':'Medical Technologist'},on_delete=models.CASCADE,
-        help_text="Medical Technologist name"
+        User,
+        related_name="medical_technologist",
+        limit_choices_to={"groups__name": "Medical Technologist"},
+        on_delete=models.CASCADE,
+        help_text="Medical Technologist name",
     )
 
     def __str__(self) -> str:

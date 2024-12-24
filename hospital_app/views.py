@@ -1,4 +1,3 @@
-from PyPDF2 import PdfReader, PdfWriter
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View, ListView
 from hospital_app.models import *
@@ -6,7 +5,6 @@ from django.http import (
     FileResponse,
     HttpResponse,
     HttpResponseRedirect,
-    HttpResponseServerError,
 )
 from django.urls import reverse_lazy
 from hospital_app.forms import LoginForm
@@ -16,7 +14,6 @@ from core.settings import BASE_DIR
 import io
 import os
 from fillpdf import fillpdfs
-import tempfile
 
 
 class LoginView(View):
@@ -44,7 +41,6 @@ class LoginView(View):
 
         return HttpResponseRedirect(reverse_lazy("login"))
 
-
 class DashboardView(View):
 
     def get(self, request):
@@ -63,7 +59,6 @@ class DashboardView(View):
         context["employee_group_count"] = Group.objects.all().count()
         return render(request, "dashboard.html", context)
 
-
 class EmployeeListView(ListView):
     template_name = "employee.html"
     queryset = User.objects.all()
@@ -74,7 +69,6 @@ class EmployeeListView(ListView):
         context["detail_header"] = "Employee Details List"
         context["humberger_header"] = "Employee Details"
         return context
-
 
 class PatientListView(ListView):
     template_name = "patient.html"
@@ -87,7 +81,6 @@ class PatientListView(ListView):
         context["humberger_header"] = "Patient Details"
         return context
 
-
 class ClinicalChemistryView(ListView):
     template_name = "chemical_chemistry.html"
     queryset = ClinicalChemistry.objects.all()
@@ -98,7 +91,6 @@ class ClinicalChemistryView(ListView):
         context["detail_header"] = "Chemical Chemistry Details List"
         context["humberger_header"] = "Chemical Chemistry Details"
         return context
-
 
 class HematologyView(ListView):
     template_name = "hematology.html"
@@ -111,7 +103,6 @@ class HematologyView(ListView):
         context["humberger_header"] = "Hematology Details"
         return context
 
-
 class SerologyView(ListView):
     template_name = "serology.html"
     queryset = Serology.objects.all()
@@ -122,7 +113,6 @@ class SerologyView(ListView):
         context["detail_header"] = "Serology Details List"
         context["humberger_header"] = "Serology Details"
         return context
-
 
 class CrossMatchingView(ListView):
     template_name = "cross_matching.html"
@@ -135,7 +125,6 @@ class CrossMatchingView(ListView):
         context["humberger_header"] = "Cross Matching Details"
         return context
 
-
 class CrossMatchingResultView(ListView):
     template_name = "cross_matching_result.html"
     queryset = CrossMatchingResult.objects.all()
@@ -147,14 +136,12 @@ class CrossMatchingResultView(ListView):
         context["humberger_header"] = "Cross Matching Result Details"
         return context
 
-
 def logout_user(request):
     from django.contrib.auth import logout
 
     logout(request)
     messages.success(request, "You have been successfully logged out.")
     return HttpResponseRedirect(reverse_lazy("login"))
-
 
 def generate_hematology_result(request, pk):
     try:
