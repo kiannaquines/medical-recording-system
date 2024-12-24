@@ -45,4 +45,6 @@ urlpatterns = [
     path('employee/delete/<int:pk>', EmployeeDeleteView.as_view(), name="employee_delete"),
 
     # Export
+    path('generate-chemistry-result/<int:pk>', generate_chemistry_result, name="generate_chemistry_result"),
+    path('generate-hematology-result/<int:pk>', generate_hematology_result, name="generate_hematology_result"),
 ]

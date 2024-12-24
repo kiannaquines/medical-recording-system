@@ -8,6 +8,7 @@ hospital_models = [
     Serology,
     CrossMatchingResult,
     CrossMatching,
+    EmployeeInfo,
 ]
 
 for model in hospital_models:

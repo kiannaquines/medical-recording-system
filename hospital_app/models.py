@@ -4,6 +4,12 @@ from django.contrib.auth.models import Group
 
 User = get_user_model()
 
+class EmployeeInfo(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    license_number = models.CharField(max_length=255, unique=True, db_index=True)
+
+    def __str__(self):
+        return f'{self.user.get_full_name()}{self.license_number}'
 
 class Patient(models.Model):
     firstname = models.CharField(max_length=255)
@@ -30,6 +36,7 @@ class Patient(models.Model):
     def get_full_name(self):
         return f"{self.firstname} {self.middlename} {self.lastname}"
 
+
     def __str__(self) -> str:
         return self.get_full_name()
 
@@ -54,6 +61,9 @@ class ClinicalChemistry(models.Model):
     def __str__(self) -> str:
         return f"Clinical Chemistry Result of {self.patient} {self.date}"
 
+    def get_date(self):
+        return self.date.strftime("%Y/%m/%d")
+
     class Meta:
         verbose_name = "Clinical Chemistry"
         verbose_name_plural = "Clinical Chemistry"
@@ -74,8 +84,8 @@ class Hematology(models.Model):
     )
 
     RH_TYPE_CHOICES = (
-        ("+", "Positive"),
-        ("-", "Negative"),
+        ("+ (Positive)", "Positive"),
+        ("- (Negative)", "Negative"),
     )
 
     patient = models.ForeignKey(
@@ -85,7 +95,7 @@ class Hematology(models.Model):
     hemoglobin_mass_concentration = models.CharField(max_length=255)
     hematocrit = models.CharField(max_length=255)
     erythrocty_no_concentration = models.CharField(max_length=255)
-    platelet = models.FloatField()
+    platelet = models.IntegerField()
 
     blood_type = models.CharField(max_length=255, choices=BLOOD_TYPE_CHOICES)
     rh_type = models.CharField(max_length=255, choices=RH_TYPE_CHOICES)
@@ -102,6 +112,9 @@ class Hematology(models.Model):
     def __str__(self) -> str:
         return f"Hematology Result of {self.patient} {self.date}"
 
+    def get_date(self):
+        return self.date.strftime("%m/%d/%Y")
+    
     class Meta:
         verbose_name = "Hematology"
         verbose_name_plural = "Hematology"
