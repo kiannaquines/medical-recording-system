@@ -1,7 +1,26 @@
-from hospital_app.forms import EmployeeCreationForm, HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm
+from django.shortcuts import get_object_or_404, redirect, render
+from hospital_app.forms import EmployeeCreationForm, HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm, EmployeeInfoCreationForm
 from hospital_app.models import *
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
+
+
+def employee_info_add_view(request, pk):
+    employee = get_object_or_404(User, pk=pk)
+
+    if request.method == 'POST':
+        form = EmployeeInfoCreationForm(request.POST, instance=EmployeeInfo.objects.filter(user=employee).first())
+        if form.is_valid():
+            form.save()
+            return redirect('employee_list')
+
+    employee_info = EmployeeInfo.objects.filter(user=employee).first()
+    context = {
+        'detail_header': 'Edit Employee Detail' if employee_info else 'Add Employee Detail',
+        'humberger_header': 'Edit Employee Detail' if employee_info else 'Add Employee Detail',
+        'form': EmployeeInfoCreationForm(instance=employee_info) if employee_info else EmployeeInfoCreationForm(initial={'user': employee}),
+    }
+    return render(request, 'forms.html', context)
 
 class HematologyCreateView(CreateView):
     template_name = 'forms.html'

@@ -37,7 +37,7 @@
                                         <a href="{% url 'serology_delete' pk=result.id %}" class="text-sm">
                                             <i class="bi bi-trash text-danger"></i>
                                         </a>
-                                        <a href="">
+                                        <a href="{% url 'generate_serology_result' pk=result.id %}">
                                             <i class="bi bi-printer"></i>
                                         </a>
                                     </div>

@@ -35,6 +35,17 @@ class LoginForm(forms.Form):
     )
 
 
+class EmployeeInfoCreationForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items(): 
+            field.widget.attrs.update({"class": "form-control"})
+
+    class Meta:
+        model = EmployeeInfo
+        fields = ("user","license_number",)
+
 class EmployeeCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

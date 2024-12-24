@@ -6,7 +6,7 @@ User = get_user_model()
 
 class EmployeeInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    license_number = models.CharField(max_length=255, unique=True, db_index=True)
+    license_number = models.CharField(max_length=10, unique=True, db_index=True)
 
     def __str__(self):
         return f"{self.user.get_full_name()}{self.license_number}"
@@ -57,6 +57,10 @@ class ClinicalChemistry(models.Model):
     sgot = models.FloatField()
     date = models.DateField(auto_now_add=True)
 
+
+    assigned_pathologist = models.ForeignKey(User, related_name="chemical_chemist_pathologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Pathologist'})
+    assigned_technologist = models.ForeignKey(User, related_name="chemical_chemist_technologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Medical Technologist'})
+
     def __str__(self) -> str:
         return f"Clinical Chemistry Result of {self.patient} {self.date}"
 
@@ -104,8 +108,10 @@ class Hematology(models.Model):
     monocytes = models.FloatField()
     eosinophils = models.FloatField()
     basophils = models.FloatField()
-    others = models.CharField(max_length=100, null=True, blank=True)
     date = models.DateField(auto_now_add=True)
+
+    assigned_pathologist = models.ForeignKey(User, related_name="assigned_pathologist", on_delete=models.CASCADE, null=False, blank=False, limit_choices_to={'groups__name':'Pathologist'})
+    assigned_technologist = models.ForeignKey(User, related_name="assigned_technologist", on_delete=models.CASCADE, null=False, blank=False, limit_choices_to={'groups__name':'Medical Technologist'})
 
     def __str__(self) -> str:
         return f"Hematology Result of {self.patient} {self.date}"
@@ -126,10 +132,18 @@ class Serology(models.Model):
     hb_determination = models.CharField(max_length=255)
     typhidot_rapid_test = models.CharField(max_length=255)
     dengue_rapid_test = models.CharField(max_length=255)
+
+    assigned_pathologist = models.ForeignKey(User, related_name="serology_pathologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Pathologist'})
+    assigned_technologist = models.ForeignKey(User, related_name="serology_technologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Medical Technologist'})
+
     date = models.DateField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"Serology Result of {self.patient} {self.date}"
+    
+
+    def get_date(self):
+        return self.date.strftime("%m/%d/%Y")
 
 class CrossMatchingResult(models.Model):
     amt_in_cc = models.FloatField()

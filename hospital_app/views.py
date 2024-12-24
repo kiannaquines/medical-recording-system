@@ -41,6 +41,7 @@ class LoginView(View):
 
         return HttpResponseRedirect(reverse_lazy("login"))
 
+
 class DashboardView(View):
 
     def get(self, request):
@@ -59,6 +60,7 @@ class DashboardView(View):
         context["employee_group_count"] = Group.objects.all().count()
         return render(request, "dashboard.html", context)
 
+
 class EmployeeListView(ListView):
     template_name = "employee.html"
     queryset = User.objects.all()
@@ -69,6 +71,7 @@ class EmployeeListView(ListView):
         context["detail_header"] = "Employee Details List"
         context["humberger_header"] = "Employee Details"
         return context
+
 
 class PatientListView(ListView):
     template_name = "patient.html"
@@ -81,6 +84,7 @@ class PatientListView(ListView):
         context["humberger_header"] = "Patient Details"
         return context
 
+
 class ClinicalChemistryView(ListView):
     template_name = "chemical_chemistry.html"
     queryset = ClinicalChemistry.objects.all()
@@ -91,6 +95,7 @@ class ClinicalChemistryView(ListView):
         context["detail_header"] = "Chemical Chemistry Details List"
         context["humberger_header"] = "Chemical Chemistry Details"
         return context
+
 
 class HematologyView(ListView):
     template_name = "hematology.html"
@@ -103,6 +108,7 @@ class HematologyView(ListView):
         context["humberger_header"] = "Hematology Details"
         return context
 
+
 class SerologyView(ListView):
     template_name = "serology.html"
     queryset = Serology.objects.all()
@@ -113,6 +119,7 @@ class SerologyView(ListView):
         context["detail_header"] = "Serology Details List"
         context["humberger_header"] = "Serology Details"
         return context
+
 
 class CrossMatchingView(ListView):
     template_name = "cross_matching.html"
@@ -125,6 +132,7 @@ class CrossMatchingView(ListView):
         context["humberger_header"] = "Cross Matching Details"
         return context
 
+
 class CrossMatchingResultView(ListView):
     template_name = "cross_matching_result.html"
     queryset = CrossMatchingResult.objects.all()
@@ -136,6 +144,7 @@ class CrossMatchingResultView(ListView):
         context["humberger_header"] = "Cross Matching Result Details"
         return context
 
+
 def logout_user(request):
     from django.contrib.auth import logout
 
@@ -143,56 +152,173 @@ def logout_user(request):
     messages.success(request, "You have been successfully logged out.")
     return HttpResponseRedirect(reverse_lazy("login"))
 
+
 def generate_hematology_result(request, pk):
-    try:
-        hematology_result = get_object_or_404(Hematology, pk=pk)
+    if request.method == "GET":
+        try:
+            hematology_result = get_object_or_404(Hematology, pk=pk)
+            assigned_technologist_details = get_object_or_404(
+                EmployeeInfo, user=hematology_result.assigned_technologist
+            )
+            assigned_pathologistlogist_details = get_object_or_404(
+                EmployeeInfo, user=hematology_result.assigned_technologist
+            )
 
-        data_to_fill = {
-            "name": str(hematology_result.patient),
-            "date": hematology_result.get_date(),
-            "room": hematology_result.patient.room_number,
-            "hemoglobin": str(hematology_result.hemoglobin_mass_concentration or ""),
-            "leucocyte": str(hematology_result.leucocyte_no_concentration or ""),
-            "hematocrit": str(hematology_result.hematocrit or ""),
-            "segmenters": str(hematology_result.segmenters or ""),
-            "erythrocyte": str(hematology_result.erythrocty_no_concentration or ""),
-            "lymphocytes": str(hematology_result.lymphocytes or ""),
-            "platelet": str(hematology_result.platelet or ""),
-            "monocytes": str(hematology_result.monocytes or ""),
-            "eosinophils": str(hematology_result.eosinophils or ""),
-            "bloodtype": str(hematology_result.blood_type or ""),
-            "basophils": str(hematology_result.basophils or ""),
-            "rhytype": str(hematology_result.rh_type or ""),
-        }
+            data_to_fill = {
+                "name": str(hematology_result.patient),
+                "date": hematology_result.get_date(),
+                "room": hematology_result.patient.room_number,
+                "hemoglobin": f"{str(hematology_result.hemoglobin_mass_concentration)} gm/L",
+                "leucocyte": f"{str(hematology_result.leucocyte_no_concentration)} L",
+                "hematocrit": str(hematology_result.hematocrit),
+                "segmenters": str(hematology_result.segmenters),
+                "erythrocyte": f"{str(hematology_result.erythrocty_no_concentration)} L",
+                "lymphocytes": str(hematology_result.lymphocytes),
+                "platelet": str(hematology_result.platelet),
+                "monocytes": str(hematology_result.monocytes),
+                "eosinophils": str(hematology_result.eosinophils),
+                "bloodtype": str(hematology_result.blood_type),
+                "basophils": str(hematology_result.basophils),
+                "rhytype": str(hematology_result.rh_type),
+                "pathologist_name": str(
+                    hematology_result.assigned_pathologist.get_full_name()
+                ),
+                "medical_technologist_name": str(
+                    hematology_result.assigned_technologist.get_full_name()
+                ),
+                "lic_no_pathologist": str(
+                    assigned_pathologistlogist_details.license_number
+                ),
+                "lic_no_medical_technologist": str(
+                    assigned_technologist_details.license_number
+                ),
+            }
 
-        input_pdf_path = os.path.join(
-            BASE_DIR,
-            "hospital_app",
-            "templates",
-            "pdf_fillables",
-            "hematology_form_fillable.pdf",
-        )
+            input_pdf_path = os.path.join(
+                BASE_DIR,
+                "hospital_app",
+                "templates",
+                "pdf_fillables",
+                "hematology_form_fillable.pdf",
+            )
 
-        filled_pdf_buffer = io.BytesIO()
-        fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
-        filled_pdf_buffer.seek(0)
+            filled_pdf_buffer = io.BytesIO()
+            fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
+            filled_pdf_buffer.seek(0)
 
-        response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
-        response["Content-Disposition"] = (
-            f'attachment; filename="hematology_result_{pk}.pdf"'
-        )
-        return response
+            response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
+            response["Content-Disposition"] = (
+                f'attachment; filename="hematology_result_{pk}.pdf"'
+            )
+            return response
 
-    except Exception as e:
-        return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
+        except Exception as e:
+            return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
 
 
 def generate_chemistry_result(request, pk):
-    pass
+    if request.method == "GET":
+        try:
+            chemical_chemistry_result = get_object_or_404(ClinicalChemistry, pk=pk)
+            assigned_technologist_details = get_object_or_404(
+                EmployeeInfo, user=chemical_chemistry_result.assigned_technologist
+            )
+            assigned_pathologistlogist_details = get_object_or_404(
+                EmployeeInfo, user=chemical_chemistry_result.assigned_technologist
+            )
+
+            data_to_fill = {
+                "name": str(chemical_chemistry_result.patient),
+                "date": chemical_chemistry_result.get_date(),
+                "room": chemical_chemistry_result.patient.room_number,
+                "glucose": f"{str(chemical_chemistry_result.glucose)} gm/L",
+                "chol": f"{str(chemical_chemistry_result.cholesterol)} L",
+                "tri": str(chemical_chemistry_result.triglycerides),
+                "hdl": str(chemical_chemistry_result.hdl),
+                "ldl": f"{str(chemical_chemistry_result.ldl)} L",
+                "cre": str(chemical_chemistry_result.creatinine),
+                "uric": str(chemical_chemistry_result.uric_acid),
+                "bun": str(chemical_chemistry_result.bun),
+                "sgpt": str(chemical_chemistry_result.sgpt),
+                "sgot": str(chemical_chemistry_result.sgot),
+                "name_path": str(
+                    chemical_chemistry_result.assigned_pathologist.get_full_name()
+                ),
+                "namemedtich": str(
+                    chemical_chemistry_result.assigned_technologist.get_full_name()
+                ),
+                "pat_lic": str(assigned_pathologistlogist_details.license_number),
+                "med_tech_lic": str(assigned_technologist_details.license_number),
+            }
+
+            input_pdf_path = os.path.join(
+                BASE_DIR,
+                "hospital_app",
+                "templates",
+                "pdf_fillables",
+                "chemical_chemistry.pdf",
+            )
+
+            filled_pdf_buffer = io.BytesIO()
+            fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
+            filled_pdf_buffer.seek(0)
+
+            response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
+            response["Content-Disposition"] = (
+                f'attachment; filename="chemical_chemistry_result_{pk}.pdf"'
+            )
+            return response
+
+        except Exception as e:
+            return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
 
 
-def generate_serology_result(request, id):
-    pass
+def generate_serology_result(request, pk):
+    if request.method == "GET":
+        try:
+            serology_result = get_object_or_404(Serology, pk=pk)
+            assigned_technologist_details = get_object_or_404(
+                EmployeeInfo, user=serology_result.assigned_technologist
+            )
+            assigned_pathologistlogist_details = get_object_or_404(
+                EmployeeInfo, user=serology_result.assigned_technologist
+            )
+
+            data_to_fill = {
+                "text_1rlg": str(serology_result.patient),
+                "text_2pxsy": serology_result.get_date(),
+                "text_3aszy": serology_result.patient.room_number,
+                "textarea_4zrvv": f"{str(serology_result.hb_determination)}",
+                "textarea_5ugpz": f"{str(serology_result.typhidot_rapid_test)}",
+                "textarea_6tjgp": str(serology_result.dengue_rapid_test),
+                "text_7cce": str(
+                    assigned_pathologistlogist_details.user.get_full_name()
+                ),
+                "text_8hhqi": f"{str(assigned_technologist_details.user.get_full_name())} L",
+                "text_9qfvv": str(assigned_pathologistlogist_details.license_number),
+                "text_10wele": str(assigned_technologist_details.license_number),
+            }
+
+            input_pdf_path = os.path.join(
+                BASE_DIR,
+                "hospital_app",
+                "templates",
+                "pdf_fillables",
+                "serology.pdf",
+            )
+
+            filled_pdf_buffer = io.BytesIO()
+            fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
+            filled_pdf_buffer.seek(0)
+
+            response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
+            response["Content-Disposition"] = (
+                f'attachment; filename="serology_result_{pk}.pdf"'
+            )
+            return response
+
+        except Exception as e:
+            return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
 
 
 def generate_cross_matching_result(request, id):
