@@ -34,6 +34,9 @@ class Patient(models.Model):
     sars_result = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=True)
 
+    assigned_pathologist = models.ForeignKey(User, related_name="patient_pathologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Pathologist'})
+    assigned_technologist = models.ForeignKey(User, related_name="patient_technologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Medical Technologist'})
+
     def get_full_name(self):
         return f"{self.firstname} {self.middlename} {self.lastname}"
 

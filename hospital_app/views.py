@@ -320,6 +320,53 @@ def generate_serology_result(request, pk):
         except Exception as e:
             return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
 
+def generate_panbio(request, pk):
+    if request.method == "GET":
+        try:
+            patient_info = get_object_or_404(Patient, pk=pk)
+            assigned_technologist_details = get_object_or_404(
+                EmployeeInfo, user=patient_info.assigned_technologist
+            )
+            assigned_pathologistlogist_details = get_object_or_404(
+                EmployeeInfo, user=patient_info.assigned_technologist
+            )
+
+            data_to_fill = {
+                "text_1rlg": str(patient_info.patient),
+                "text_2pxsy": patient_info.get_date(),
+                "text_3aszy": patient_info.patient.room_number,
+                "textarea_4zrvv": f"{str(patient_info.hb_determination)}",
+                "textarea_5ugpz": f"{str(patient_info.typhidot_rapid_test)}",
+                "textarea_6tjgp": str(patient_info.dengue_rapid_test),
+                "text_7cce": str(
+                    assigned_pathologistlogist_details.user.get_full_name()
+                ),
+                "text_8hhqi": f"{str(assigned_technologist_details.user.get_full_name())} L",
+                "text_9qfvv": str(assigned_pathologistlogist_details.license_number),
+                "text_10wele": str(assigned_technologist_details.license_number),
+            }
+
+            input_pdf_path = os.path.join(
+                BASE_DIR,
+                "hospital_app",
+                "templates",
+                "pdf_fillables",
+                "serology.pdf",
+            )
+
+            filled_pdf_buffer = io.BytesIO()
+            fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
+            filled_pdf_buffer.seek(0)
+
+            response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
+            response["Content-Disposition"] = (
+                f'attachment; filename="serology_result_{pk}.pdf"'
+            )
+            return response
+
+        except Exception as e:
+            return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
+
 
 def generate_cross_matching_result(request, id):
     pass
