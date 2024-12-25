@@ -40,6 +40,12 @@ class Patient(models.Model):
     def get_full_name(self):
         return f"{self.firstname} {self.middlename} {self.lastname}"
 
+    def get_date(self):
+        return self.date.strftime("%Y/%m/%d")
+    
+    def get_time_of_collection(self):
+        return self.time_of_collection.strftime("%H:%M %p")
+    
     def __str__(self) -> str:
         return self.get_full_name()
 

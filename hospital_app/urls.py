@@ -50,6 +50,6 @@ urlpatterns = [
     path('generate-chemistry-result/<int:pk>', generate_chemistry_result, name="generate_chemistry_result"),
     path('generate-hematology-result/<int:pk>', generate_hematology_result, name="generate_hematology_result"),
     path('generate-serology-result/<int:pk>', generate_serology_result, name="generate_serology_result"),
-
+    path('generate-panbio-result/<int:pk>', generate_panbio, name="generate_panbio"),
 
 ]

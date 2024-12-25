@@ -320,6 +320,7 @@ def generate_serology_result(request, pk):
         except Exception as e:
             return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
 
+
 def generate_panbio(request, pk):
     if request.method == "GET":
         try:
@@ -332,18 +333,22 @@ def generate_panbio(request, pk):
             )
 
             data_to_fill = {
-                "text_1rlg": str(patient_info.patient),
-                "text_2pxsy": patient_info.get_date(),
-                "text_3aszy": patient_info.patient.room_number,
-                "textarea_4zrvv": f"{str(patient_info.hb_determination)}",
-                "textarea_5ugpz": f"{str(patient_info.typhidot_rapid_test)}",
-                "textarea_6tjgp": str(patient_info.dengue_rapid_test),
-                "text_7cce": str(
-                    assigned_pathologistlogist_details.user.get_full_name()
-                ),
-                "text_8hhqi": f"{str(assigned_technologist_details.user.get_full_name())} L",
-                "text_9qfvv": str(assigned_pathologistlogist_details.license_number),
-                "text_10wele": str(assigned_technologist_details.license_number),
+                "date": str(patient_info.get_date()),
+                "lastname": patient_info.lastname,
+                "firstname": patient_info.firstname,
+                "middlename": f"{str(patient_info.middlename)}",
+                "age": f"{str(patient_info.age)}",
+                "sex": str(patient_info.sex),
+                "physician": str(patient_info.physician.get_full_name()),
+                "room": str(patient_info.room_number),
+                "sample": str(patient_info.sample_type),
+                "time": str(patient_info.get_time_of_collection()),
+                "date_collection": str(patient_info.date_of_collection),
+                "result": str(patient_info.sars_result),
+                "name1": str(assigned_pathologistlogist_details.user.get_full_name()),
+                "name2": str(assigned_technologist_details.user.get_full_name()),
+                "lic1": str(assigned_pathologistlogist_details.license_number),
+                "lic2": str(assigned_technologist_details.license_number),
             }
 
             input_pdf_path = os.path.join(
@@ -351,7 +356,7 @@ def generate_panbio(request, pk):
                 "hospital_app",
                 "templates",
                 "pdf_fillables",
-                "serology.pdf",
+                "panbio_template.pdf",
             )
 
             filled_pdf_buffer = io.BytesIO()
@@ -359,9 +364,7 @@ def generate_panbio(request, pk):
             filled_pdf_buffer.seek(0)
 
             response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
-            response["Content-Disposition"] = (
-                f'attachment; filename="serology_result_{pk}.pdf"'
-            )
+            response["Content-Disposition"] = f'attachment; filename="panbio_{pk}.pdf"'
             return response
 
         except Exception as e:
