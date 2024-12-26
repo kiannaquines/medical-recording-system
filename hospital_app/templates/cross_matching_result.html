@@ -13,6 +13,7 @@
                     <table id="datatable" class="table table-bordered table-hover">
                         <thead>
                             <tr>
+                                <th class="text-muted">Serial Number</th>
                                 <th class="text-muted">Amount in CC</th>
                                 <th class="text-muted">Blood Bank</th>
                                 <th class="text-muted">Collection Date</th>
@@ -24,6 +25,7 @@
                         <tbody>
                             {% for result in results %}
                             <tr>
+                                <td>{{ result.serial_no }}</td>
                                 <td>{{ result.amt_in_cc }}</td>
                                 <td>{{ result.blood_bank }}</td>
                                 <td>{{ result.date_of_collection }}</td>
@@ -36,9 +38,6 @@
                                         </a>
                                         <a href="{% url 'cross_matching_result_delete' pk=result.id %}" class="text-sm">
                                             <i class="bi bi-trash text-danger"></i>
-                                        </a>
-                                        <a href="">
-                                            <i class="bi bi-printer"></i>
                                         </a>
                                     </div>
                                 </td>

@@ -392,6 +392,61 @@ def generate_panbio(request, pk):
         except Exception as e:
             return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
 
+def generate_urinalysis_result(request, pk):
+    if request.method == "GET":
+        try:
+            urinalysis_detail = get_object_or_404(Urinalysis, pk=pk)
+            assigned_technologist_details = get_object_or_404(
+                EmployeeInfo, user=urinalysis_detail.assigned_technologist
+            )
+            assigned_pathologistlogist_details = get_object_or_404(
+                EmployeeInfo, user=urinalysis_detail.assigned_technologist
+            )
+
+            data_to_fill = {
+                "name": str(urinalysis_detail.patient),
+                "date": urinalysis_detail.get_date(),
+                "room": urinalysis_detail.patient.room_number,
+                "color": urinalysis_detail.color,
+                "appearance": urinalysis_detail.appearance,
+                "reaction": urinalysis_detail.pH,
+                "gravity": urinalysis_detail.specific_gravity,
+                "sugar": urinalysis_detail.sugar,
+                "albumin": urinalysis_detail.albumin,
+                "cells": urinalysis_detail.epithelia,
+                "pus": urinalysis_detail.pus_cells,
+                "rbs": urinalysis_detail.rbc,
+                "mucous": urinalysis_detail.mucous_thread,
+                "cast": urinalysis_detail.cast,
+                "crystals": urinalysis_detail.crystals,
+                "urates": urinalysis_detail.urates,
+                "bacteria": urinalysis_detail.bacteria,
+                "others": urinalysis_detail.others,
+                "pregnancy_test": urinalysis_detail.pregnancy_test,
+                "name1": assigned_pathologistlogist_details.user.get_full_name(),
+                "name2": assigned_technologist_details.user.get_full_name(),
+                "lic1": assigned_pathologistlogist_details.license_number,
+                "lic2": assigned_technologist_details.license_number,
+            }
+
+            input_pdf_path = os.path.join(
+                BASE_DIR,
+                "hospital_app",
+                "templates",
+                "pdf_fillables",
+                "urinalysis_template.pdf",
+            )
+
+            filled_pdf_buffer = io.BytesIO()
+            fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
+            filled_pdf_buffer.seek(0)
+
+            response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
+            response["Content-Disposition"] = f'attachment; filename="urinalysis_{pk}.pdf"'
+            return response
+
+        except Exception as e:
+            return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
 
 def generate_cross_matching_result(request, id):
     pass

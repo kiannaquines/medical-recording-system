@@ -33,11 +33,14 @@
                                 <td>{{ result.albumin }}</td>
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
-                                        <a href="{% url 'rbs_update' pk=result.id %}" class="text-sm">
+                                        <a href="{% url 'urinalysis_update' pk=result.id %}" class="text-sm">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="{% url 'rbs_delete' pk=result.id %}" class="text-sm">
+                                        <a href="{% url 'urinalysis_delete' pk=result.id %}" class="text-sm">
                                             <i class="bi bi-trash text-danger"></i>
+                                        </a>
+                                        <a href="{% url 'generate_urinalysis_result' pk=result.id %}">
+                                            <i class="bi bi-printer"></i>
                                         </a>
                                     </div>
                                 </td>

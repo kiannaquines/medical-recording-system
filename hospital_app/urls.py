@@ -40,6 +40,7 @@ urlpatterns = [
     path('patient/update/<int:pk>', PatientUpdateView.as_view(), name="patient_update"),
     path('employee/update/<int:pk>', EmployeeUpdateView.as_view(), name="employee_update"),
     path('laboratory/rbs/update/<int:pk>', RBSUpdateView.as_view(), name="rbs_update"),
+    path('laboratory/urinalysis/update/<int:pk>', UrinalysisUpdateView.as_view(), name="urinalysis_update"),
 
     # Delete
     path('laboratory/hematology/delete/<int:pk>', HematologyDeleteView.as_view(), name="hematology_delete"),
@@ -50,11 +51,13 @@ urlpatterns = [
     path('patient/delete/<int:pk>', PatientDeleteView.as_view(), name="patient_delete"),
     path('employee/delete/<int:pk>', EmployeeDeleteView.as_view(), name="employee_delete"),
     path('laboratory/rbs/delete/<int:pk>', RBSDeleteView.as_view(), name="rbs_delete"),
+    path('laboratory/urinalysis/delete/<int:pk>', UrinalysisDeleteView.as_view(), name="urinalysis_delete"),
 
     # Export
     path('generate-chemistry-result/<int:pk>', generate_chemistry_result, name="generate_chemistry_result"),
     path('generate-hematology-result/<int:pk>', generate_hematology_result, name="generate_hematology_result"),
     path('generate-serology-result/<int:pk>', generate_serology_result, name="generate_serology_result"),
     path('generate-panbio-result/<int:pk>', generate_panbio, name="generate_panbio"),
+    path('generate-urinalysis-result/<int:pk>', generate_urinalysis_result, name="generate_urinalysis_result"),
 
 ]
