@@ -223,57 +223,69 @@ class Serology(models.Model):
 
 
 class CrossMatchingResult(models.Model):
-    serial_no = models.CharField(max_length=255)
-    amt_in_cc = models.FloatField()
-    blood_bank = models.CharField(max_length=255)
-    date_of_collection = models.DateField()
-    expiration_date = models.DateField()
-    result = models.TextField(max_length=255)
+    serial_no = models.CharField(
+        max_length=255,
+        unique=True,
+        help_text="Unique serial number of the cross-matching result.",
+    )
+    amt_in_cc = models.FloatField(help_text="Amount in cc.")
+    blood_bank = models.CharField(max_length=255, help_text="Name of the blood bank.")
+    date_of_collection = models.DateField(help_text="Date the blood was collected.")
+    expiration_date = models.DateField(help_text="Expiration date of the blood.")
+    result = models.TextField(max_length=255, help_text="Result of the cross-matching.")
 
     def __str__(self) -> str:
-        return f"Cross Matching Result {self.date_of_collection}"
+        return f"Result {self.serial_no} from {self.blood_bank}"
 
     class Meta:
         verbose_name = "Cross Matching Result"
-        verbose_name_plural = "Cross Matching Result"
+        verbose_name_plural = "Cross Matching Results"
         db_table = "cross_matching_result"
+        ordering = ["-date_of_collection"]
 
 
 class CrossMatching(models.Model):
-    result = models.ForeignKey(
+    results = models.ManyToManyField(
         CrossMatchingResult,
-        on_delete=models.CASCADE,
-        related_name="cross_matching_result",
-        help_text="Result of cross matching",
+        related_name="cross_matchings",
+        help_text="Related cross-matching results.",
     )
     patient = models.ForeignKey(
         "Patient",
-        related_name="patient_cross_matching_result",
+        related_name="cross_matchings",
         on_delete=models.CASCADE,
-        help_text="Patient name",
+        help_text="Patient associated with this cross-matching.",
     )
     pathologist = models.ForeignKey(
         User,
-        related_name="pathologist",
+        related_name="pathologist_cross_matchings",
         limit_choices_to={"groups__name": "Pathologist"},
         on_delete=models.CASCADE,
-        help_text="Pathologist name",
+        help_text="Pathologist overseeing the cross-matching.",
     )
     medical_technologist = models.ForeignKey(
         User,
-        related_name="medical_technologist",
+        related_name="technologist_cross_matchings",
         limit_choices_to={"groups__name": "Medical Technologist"},
         on_delete=models.CASCADE,
-        help_text="Medical Technologist name",
+        help_text="Medical technologist handling the cross-matching.",
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True, help_text="Timestamp of record creation."
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True, help_text="Timestamp of last update."
     )
 
     def __str__(self) -> str:
-        return f"Cross Matching Result of {self.patient}"
+        return f"Cross Matching for {self.patient} (Created: {self.created_at.date()})"
 
     class Meta:
         verbose_name = "Cross Matching"
-        verbose_name_plural = "Cross Matching"
+        verbose_name_plural = "Cross Matchings"
         db_table = "cross_matching"
+        ordering = ["-created_at"]
 
 
 class RBS(models.Model):
