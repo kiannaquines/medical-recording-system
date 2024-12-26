@@ -9,6 +9,7 @@ hospital_models = [
     Serology,
     CrossMatchingResult,
     CrossMatching,
+    RBS,
 ]
 
 custom_fields = {
@@ -17,6 +18,12 @@ custom_fields = {
     ),
     "expiration_date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
     "time_of_collection": forms.TimeInput(
+        attrs={"type": "time", "class": "form-control"}
+    ),
+    "date": forms.DateInput(
+        attrs={"type": "date", "class": "form-control"}
+    ),
+    "time": forms.TimeInput(
         attrs={"type": "time", "class": "form-control"}
     ),
 }

@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 
 User = get_user_model()
 
+
 class EmployeeInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     license_number = models.CharField(max_length=10, unique=True, db_index=True)
@@ -34,20 +35,44 @@ class Patient(models.Model):
     sars_result = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=True)
 
-    assigned_pathologist = models.ForeignKey(User, related_name="patient_pathologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Pathologist'})
-    assigned_technologist = models.ForeignKey(User, related_name="patient_technologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Medical Technologist'})
+    assigned_pathologist = models.ForeignKey(
+        User,
+        related_name="patient_pathologist",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        limit_choices_to={"groups__name": "Pathologist"},
+    )
+    assigned_technologist = models.ForeignKey(
+        User,
+        related_name="patient_technologist",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        limit_choices_to={"groups__name": "Medical Technologist"},
+    )
+
+    patient_type = models.CharField(
+        max_length=100,
+        default="In Patient",
+        choices=(
+            ("In Patient", "In Patient"),
+            ("Out Patient", "Out Patient"),
+        ),
+    )
 
     def get_full_name(self):
         return f"{self.firstname} {self.middlename} {self.lastname}"
 
     def get_date(self):
         return self.date.strftime("%Y/%m/%d")
-    
+
     def get_time_of_collection(self):
         return self.time_of_collection.strftime("%H:%M %p")
-    
+
     def __str__(self) -> str:
         return self.get_full_name()
+
 
 class ClinicalChemistry(models.Model):
     patient = models.ForeignKey(
@@ -66,9 +91,22 @@ class ClinicalChemistry(models.Model):
     sgot = models.FloatField()
     date = models.DateField(auto_now_add=True)
 
-
-    assigned_pathologist = models.ForeignKey(User, related_name="chemical_chemist_pathologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Pathologist'})
-    assigned_technologist = models.ForeignKey(User, related_name="chemical_chemist_technologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Medical Technologist'})
+    assigned_pathologist = models.ForeignKey(
+        User,
+        related_name="chemical_chemist_pathologist",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        limit_choices_to={"groups__name": "Pathologist"},
+    )
+    assigned_technologist = models.ForeignKey(
+        User,
+        related_name="chemical_chemist_technologist",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        limit_choices_to={"groups__name": "Medical Technologist"},
+    )
 
     def __str__(self) -> str:
         return f"Clinical Chemistry Result of {self.patient} {self.date}"
@@ -80,6 +118,7 @@ class ClinicalChemistry(models.Model):
         verbose_name = "Clinical Chemistry"
         verbose_name_plural = "Clinical Chemistry"
         db_table = "clinical_chemistry"
+
 
 class Hematology(models.Model):
 
@@ -119,8 +158,22 @@ class Hematology(models.Model):
     basophils = models.FloatField()
     date = models.DateField(auto_now_add=True)
 
-    assigned_pathologist = models.ForeignKey(User, related_name="assigned_pathologist", on_delete=models.CASCADE, null=False, blank=False, limit_choices_to={'groups__name':'Pathologist'})
-    assigned_technologist = models.ForeignKey(User, related_name="assigned_technologist", on_delete=models.CASCADE, null=False, blank=False, limit_choices_to={'groups__name':'Medical Technologist'})
+    assigned_pathologist = models.ForeignKey(
+        User,
+        related_name="assigned_pathologist",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        limit_choices_to={"groups__name": "Pathologist"},
+    )
+    assigned_technologist = models.ForeignKey(
+        User,
+        related_name="assigned_technologist",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        limit_choices_to={"groups__name": "Medical Technologist"},
+    )
 
     def __str__(self) -> str:
         return f"Hematology Result of {self.patient} {self.date}"
@@ -133,6 +186,7 @@ class Hematology(models.Model):
         verbose_name_plural = "Hematology"
         db_table = "hematology"
 
+
 class Serology(models.Model):
     patient = models.ForeignKey(
         Patient, on_delete=models.CASCADE, related_name="patient_serology"
@@ -142,17 +196,31 @@ class Serology(models.Model):
     typhidot_rapid_test = models.CharField(max_length=255)
     dengue_rapid_test = models.CharField(max_length=255)
 
-    assigned_pathologist = models.ForeignKey(User, related_name="serology_pathologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Pathologist'})
-    assigned_technologist = models.ForeignKey(User, related_name="serology_technologist", on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'groups__name':'Medical Technologist'})
+    assigned_pathologist = models.ForeignKey(
+        User,
+        related_name="serology_pathologist",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        limit_choices_to={"groups__name": "Pathologist"},
+    )
+    assigned_technologist = models.ForeignKey(
+        User,
+        related_name="serology_technologist",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        limit_choices_to={"groups__name": "Medical Technologist"},
+    )
 
     date = models.DateField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"Serology Result of {self.patient} {self.date}"
-    
 
     def get_date(self):
         return self.date.strftime("%m/%d/%Y")
+
 
 class CrossMatchingResult(models.Model):
     amt_in_cc = models.FloatField()
@@ -168,6 +236,7 @@ class CrossMatchingResult(models.Model):
         verbose_name = "Cross Matching Result"
         verbose_name_plural = "Cross Matching Result"
         db_table = "cross_matching_result"
+
 
 class CrossMatching(models.Model):
     result = models.ForeignKey(
@@ -204,3 +273,37 @@ class CrossMatching(models.Model):
         verbose_name = "Cross Matching"
         verbose_name_plural = "Cross Matching"
         db_table = "cross_matching"
+
+
+class RBS(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="patient_rbs")
+    result = models.CharField(max_length=255)
+    date = models.DateField(auto_now_add=False)
+    time = models.TimeField(auto_now_add=False)
+
+    assigned_pathologist = models.ForeignKey(
+        User,
+        related_name="rbs_assigned_pathologist",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        limit_choices_to={"groups__name": "Pathologist"},
+    )
+    assigned_technologist = models.ForeignKey(
+        User,
+        related_name="rbs_assigned_technologist",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        limit_choices_to={"groups__name": "Medical Technologist"},
+    )
+
+    def __str__(self) -> str:
+        return f"RBS Result of {self.date} {self.time}"
+
+
+
+
+
+
+

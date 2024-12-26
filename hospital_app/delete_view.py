@@ -2,6 +2,25 @@ from hospital_app.models import *
 from django.views.generic import DeleteView
 from django.urls import reverse_lazy
 
+class RBSDeleteView(DeleteView):
+    pk_url_kwarg = 'pk'
+    template_name = 'delete_forms.html'
+    model = RBS
+    success_url = reverse_lazy('rbs_result_list')
+
+    def form_valid(self, form):
+        form = super().form_valid(form)
+        return form
+    
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['detail_header'] = 'Delete RBS Details'
+        context['humberger_header'] = 'RBS Details'
+        return context
+
 class HematologyDeleteView(DeleteView):
     pk_url_kwarg = 'pk'
     template_name = 'delete_forms.html'
