@@ -1,0 +1,53 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Manage Urinalysis Results</h5>
+                <a href="{% url 'urinalysis_add' %}" class="btn btn-primary mb-3">Add Urinalysis Result</a>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <table id="datatable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-muted">Patient</th>
+                                <th class="text-muted">Appearance</th>
+                                <th class="text-muted">Specific Gravity</th>
+                                <th class="text-muted">Reaction PH</th>
+                                <th class="text-muted">Sugar</th>
+                                <th class="text-muted">Albumin</th>
+                                <th class="text-muted">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.patient }}</td>
+                                <td>{{ result.appearance }}</td>
+                                <td>{{ result.specific_gravity }}</td>
+                                <td>{{ result.pH }}</td>
+                                <td>{{ result.sugar }}</td>
+                                <td>{{ result.albumin }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-start gap-2">
+                                        <a href="{% url 'rbs_update' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'rbs_delete' pk=result.id %}" class="text-sm">
+                                            <i class="bi bi-trash text-danger"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

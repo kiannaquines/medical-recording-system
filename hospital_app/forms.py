@@ -10,6 +10,7 @@ hospital_models = [
     CrossMatchingResult,
     CrossMatching,
     RBS,
+    Urinalysis,
 ]
 
 custom_fields = {

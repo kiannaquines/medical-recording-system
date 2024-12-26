@@ -10,6 +10,7 @@ hospital_models = [
     CrossMatching,
     EmployeeInfo,
     RBS,
+    Urinalysis,
 ]
 
 for model in hospital_models:

@@ -276,7 +276,9 @@ class CrossMatching(models.Model):
 
 
 class RBS(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="patient_rbs")
+    patient = models.ForeignKey(
+        Patient, on_delete=models.CASCADE, related_name="patient_rbs"
+    )
     result = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=False)
     time = models.TimeField(auto_now_add=False)
@@ -302,8 +304,46 @@ class RBS(models.Model):
         return f"RBS Result of {self.date} {self.time}"
 
 
+class Urinalysis(models.Model):
+    patient = models.ForeignKey(
+        Patient, on_delete=models.CASCADE, related_name="patient_urinalysis"
+    )
+    color = models.CharField(max_length=255, help_text="Color")
+    appearance = models.CharField(max_length=255, help_text="Appearance")
+    specific_gravity = models.CharField(max_length=255, help_text="Specific Gravity")
+    pH = models.CharField(max_length=255, help_text="pH")
+    sugar = models.CharField(max_length=255, help_text="Sugar")
+    albumin = models.CharField(max_length=255, help_text="Albumin")
+    epithelia = models.CharField(max_length=255, help_text="Epithelia")
+    bacteria = models.CharField(max_length=255, help_text="Bacteria")
+    pus_cells = models.CharField(max_length=255, help_text="Pus Cells")
+    rbc = models.CharField(max_length=255, help_text="RBC")
+    cast = models.CharField(max_length=255, help_text="Cast")
+    crystals = models.CharField(max_length=255, help_text="Crystals")
+    others = models.CharField(max_length=255, help_text="Others")
+    amorphous = models.CharField(max_length=255, help_text="Amorphous")
+    mucous_thread = models.CharField(max_length=255, help_text="Mucous Thread")
 
+    assigned_pathologist = models.ForeignKey(
+        User,
+        related_name="urinalysis_assigned_pathologist",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        limit_choices_to={"groups__name": "Pathologist"},
+        help_text="Pathologist name",
+    )
+    assigned_technologist = models.ForeignKey(
+        User,
+        related_name="urinalysis_assigned_technologist",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        limit_choices_to={"groups__name": "Medical Technologist"},
+        help_text="Medical Technologist name",
+    )
 
+    date = models.DateField(auto_now_add=True)
 
-
-
+    def __str__(self) -> str:
+        return f"Urinalysis Result of {self.patient} {self.date}"

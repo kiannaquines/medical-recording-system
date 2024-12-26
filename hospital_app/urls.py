@@ -17,6 +17,7 @@ urlpatterns = [
     path('laboratory/cross-matching/result', CrossMatchingView.as_view(), name="cross_matching_list"),
     path('laboratory/cross-matching-result/result', CrossMatchingResultView.as_view(), name="cross_matching_result_list"),
     path('laboratory/rbs/result', RBSView.as_view(), name="rbs_result_list"),
+    path('laboratory/urinalysis/result', UrinalysisView.as_view(), name="urinalysis_result_list"),
 
     # Create
     path('laboratory/hematology/add', HematologyCreateView.as_view(), name="hematology_add"),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('employee/add', EmployeeCreateView.as_view(), name="employee_add"),
     path('employee/info/add/<int:pk>', employee_info_add_view, name="employee_info_add"),
     path('laboratory/rbs/add', RBSCreateView.as_view(), name="rbs_add"),
+    path('laboratory/urinalysis/add', UrinalysisCreateView.as_view(), name="urinalysis_add"),
 
     # Update
     path('laboratory/hematology/update/<int:pk>', HematologyUpdateView.as_view(), name="hematology_update"),

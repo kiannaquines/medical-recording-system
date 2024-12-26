@@ -108,6 +108,17 @@ class RBSView(ListView):
         context["humberger_header"] = "RBS Details"
         return context
 
+class UrinalysisView(ListView):
+    template_name = "urinalysis.html"
+    queryset = Urinalysis.objects.all()
+    context_object_name = "results"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["detail_header"] = "Urinalysis Details List"
+        context["humberger_header"] = "Urinalysis Details"
+        return context
+
 class HematologyView(ListView):
     template_name = "hematology.html"
     queryset = Hematology.objects.all()
