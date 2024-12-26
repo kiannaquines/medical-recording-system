@@ -14,6 +14,7 @@ from core.settings import BASE_DIR
 import io
 import os
 from fillpdf import fillpdfs
+from django.contrib.admin.models import LogEntry
 
 
 class LoginView(View):
@@ -58,6 +59,7 @@ class DashboardView(View):
         context["inactive_employee"] = User.objects.filter(is_active=False).count()
         context["active_employee"] = User.objects.filter(is_active=True).count()
         context["employee_group_count"] = Group.objects.all().count()
+        context["logs"] = LogEntry.objects.select_related('user', 'content_type').order_by('-action_time')
         return render(request, "dashboard.html", context)
 
 

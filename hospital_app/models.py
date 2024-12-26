@@ -324,7 +324,9 @@ class Urinalysis(models.Model):
     others = models.CharField(max_length=255, help_text="Others")
     amorphous = models.CharField(max_length=255, help_text="Amorphous")
     mucous_thread = models.CharField(max_length=255, help_text="Mucous Thread")
-    pregnancy_test = models.CharField(max_length=255, help_text="Pregnancy Test", null=True, blank=True)
+    pregnancy_test = models.CharField(
+        max_length=255, help_text="Pregnancy Test", null=True, blank=True
+    )
     urates = models.CharField(max_length=255, help_text="Urates", null=True, blank=True)
 
     assigned_pathologist = models.ForeignKey(
@@ -348,9 +350,8 @@ class Urinalysis(models.Model):
 
     date = models.DateField(auto_now_add=True)
 
-
     def get_date(self):
         return self.date.strftime("%m/%d/%Y")
-    
+
     def __str__(self) -> str:
         return f"Urinalysis Result of {self.patient} {self.date}"
