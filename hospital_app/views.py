@@ -665,12 +665,10 @@ def generate_cross_matching_result(request, pk):
             )
         )
 
-        elements.append(signatory_table)
-
-        doc.build(elements, onFirstPage=add_logo)
-
-        buffer.seek(0)
         filename = f"cross_matching_result_{slugify(cross_matching_data.patient)}_{datetime.now().strftime('%Y%m%d')}.pdf"
-
+        elements.append(signatory_table)
+        doc.title = "Cross Matching Result"
+        doc.build(elements, onFirstPage=add_logo)
+        buffer.seek(0)
         response = FileResponse(buffer, as_attachment=True, filename=filename)
         return response
