@@ -59,5 +59,5 @@ urlpatterns = [
     path('generate-serology-result/<int:pk>', generate_serology_result, name="generate_serology_result"),
     path('generate-panbio-result/<int:pk>', generate_panbio, name="generate_panbio"),
     path('generate-urinalysis-result/<int:pk>', generate_urinalysis_result, name="generate_urinalysis_result"),
-
+    path('generate-cross-matching-result/<int:pk>', generate_cross_matching_result, name="generate_cross_matching_result"),
 ]

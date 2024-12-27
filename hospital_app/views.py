@@ -15,6 +15,21 @@ import io
 import os
 from fillpdf import fillpdfs
 from django.contrib.admin.models import LogEntry
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Table,
+    TableStyle,
+    Paragraph,
+    Spacer,
+)
+from reportlab.lib.units import inch
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from core.settings import LOGO_PATH
+from reportlab.lib.pagesizes import letter
+from django.utils.text import slugify
+from datetime import datetime
 
 
 class LoginView(View):
@@ -59,7 +74,9 @@ class DashboardView(View):
         context["inactive_employee"] = User.objects.filter(is_active=False).count()
         context["active_employee"] = User.objects.filter(is_active=True).count()
         context["employee_group_count"] = Group.objects.all().count()
-        context["logs"] = LogEntry.objects.select_related('user', 'content_type').order_by('-action_time')
+        context["logs"] = LogEntry.objects.select_related(
+            "user", "content_type"
+        ).order_by("-action_time")
         return render(request, "dashboard.html", context)
 
 
@@ -110,6 +127,7 @@ class RBSView(ListView):
         context["humberger_header"] = "RBS Details"
         return context
 
+
 class UrinalysisView(ListView):
     template_name = "urinalysis.html"
     queryset = Urinalysis.objects.all()
@@ -120,6 +138,7 @@ class UrinalysisView(ListView):
         context["detail_header"] = "Urinalysis Details List"
         context["humberger_header"] = "Urinalysis Details"
         return context
+
 
 class HematologyView(ListView):
     template_name = "hematology.html"
@@ -394,6 +413,7 @@ def generate_panbio(request, pk):
         except Exception as e:
             return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
 
+
 def generate_urinalysis_result(request, pk):
     if request.method == "GET":
         try:
@@ -444,11 +464,213 @@ def generate_urinalysis_result(request, pk):
             filled_pdf_buffer.seek(0)
 
             response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
-            response["Content-Disposition"] = f'attachment; filename="urinalysis_{pk}.pdf"'
+            response["Content-Disposition"] = (
+                f'attachment; filename="urinalysis_{pk}.pdf"'
+            )
             return response
 
         except Exception as e:
             return HttpResponse(f"Error generating PDF: {str(e)}", status=500)
 
-def generate_cross_matching_result(request, id):
-    pass
+
+def add_logo(canvas, doc):
+    canvas.drawImage(
+        LOGO_PATH,
+        x=doc.leftMargin - 0.7 * inch,
+        y=doc.pagesize[1] - 1.5 * inch,
+        width=1.2 * inch,
+        height=1.2 * inch,
+        preserveAspectRatio=True,
+        mask="auto",
+    )
+
+
+def generate_cross_matching_result(request, pk):
+    if request.method == "GET":
+        buffer = io.BytesIO()
+
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=letter,
+            topMargin=0.5 * inch,
+            leftMargin=1 * inch,
+            rightMargin=1 * inch,
+            bottomMargin=1 * inch,
+        )
+
+        elements = []
+        styles = getSampleStyleSheet()
+        styles["Normal"].fontSize = 11
+
+        header_style = ParagraphStyle(
+            "CustomHeader",
+            parent=styles["Normal"],
+            fontSize=12,
+            alignment=1,
+            spaceAfter=0,
+            spaceBefore=0,
+            leading=15,
+            textColor=colors.black,
+        )
+
+        header_content = [
+            [
+                Paragraph(
+                    "<b>PRESIDENT ROXAS PROVINCIAL COMMUNITY HOSPITAL</b><br/>"
+                    "New Cebu, Pres. Roxas, Cotabato.<br/>"
+                    "<b>LABORATORY DEPARTMENT</b><br/>"
+                    "<b>CROSS MATCHING RESULT</b>",
+                    header_style,
+                ),
+            ]
+        ]
+
+        header_table = Table(header_content, colWidths=[7.3 * inch])
+        header_table.setStyle(
+            TableStyle(
+                [
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ]
+            )
+        )
+
+        elements.append(header_table)
+        elements.append(Spacer(1, 20))
+
+        cross_matching_data = CrossMatching.objects.get(pk=pk)
+        technologist = get_object_or_404(
+            EmployeeInfo, user=cross_matching_data.medical_technologist
+        )
+        pathologist = get_object_or_404(
+            EmployeeInfo, user=cross_matching_data.pathologist
+        )
+        patient_info = [
+            [
+                Paragraph("<b>Name:</b>", styles["Normal"]),
+                Paragraph(str(cross_matching_data.patient), styles["Normal"]),
+                Paragraph("<b>Date:</b>", styles["Normal"]),
+                Paragraph(datetime.now().strftime("%Y/%m/%d"), styles["Normal"]),
+            ]
+        ]
+
+        patient_table = Table(
+            patient_info, colWidths=[0.8 * inch, 4 * inch, 0.8 * inch, 2 * inch]
+        )
+        patient_table.setStyle(
+            TableStyle(
+                [
+                    ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+                    ("LINEBELOW", (1, 0), (1, 0), 0.5, colors.black),
+                    ("LINEBELOW", (3, 0), (3, 0), 0.5, colors.black),
+                ]
+            )
+        )
+
+        elements.append(patient_table)
+        elements.append(Spacer(1, 20))
+
+        data = [
+            [
+                "Serial No.",
+                "Blood Type",
+                "Amt. In cc.",
+                "Blood Bank",
+                "Date of Collection",
+                "Expiration Date",
+                "Result",
+            ],
+        ]
+
+        for result in cross_matching_data.results.all():
+            data.append(
+                [
+                    result.serial_no,
+                    result.blood_bank,
+                    result.amt_in_cc,
+                    result.blood_bank,
+                    result.date_of_collection.strftime("%Y/%m/%d"),
+                    result.expiration_date.strftime("%Y/%m/%d"),
+                    result.result,
+                ]
+            )
+
+        main_table = Table(
+            data,
+            colWidths=[
+                1 * inch,
+                1 * inch,
+                1 * inch,
+                1.25 * inch,
+                1.2 * inch,
+                1.2 * inch,
+                1 * inch,
+            ],
+        )
+        main_table.setStyle(
+            TableStyle(
+                [
+                    ("BOX", (0, 0), (-1, -1), 1, colors.black),
+                    ("GRID", (0, 0), (-1, -1), 1, colors.black),
+                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                    ("FONTSIZE", (0, 0), (-1, 0), 9),
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                    ("TOPPADDING", (0, 0), (-1, -1), 8),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                ]
+            )
+        )
+
+        elements.append(main_table)
+        elements.append(Spacer(1, 30))
+
+        signatory_style = ParagraphStyle(
+            "Signatory",
+            parent=styles["Normal"],
+            fontSize=12,
+            alignment=1,
+            spaceBefore=0,
+            spaceAfter=0,
+        )
+
+        signatory_data = [
+            [
+                Paragraph(
+                    f"<b>{cross_matching_data.medical_technologist.get_full_name()}</b>",
+                    signatory_style,
+                ),
+                Paragraph(
+                    f"<b>{cross_matching_data.pathologist.get_full_name()}</b>",
+                    signatory_style,
+                ),
+            ],
+            [
+                Paragraph(f"Lic no. {technologist.license_number}", signatory_style),
+                Paragraph(f"Lic no. {pathologist.license_number}", signatory_style),
+            ],
+            [
+                Paragraph("<b>Pathologist</b>", signatory_style),
+                Paragraph("<b>Medical Technologist</b>", signatory_style),
+            ],
+        ]
+
+        signatory_table = Table(signatory_data, colWidths=[4 * inch, 4 * inch])
+        signatory_table.setStyle(
+            TableStyle(
+                [
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ]
+            )
+        )
+
+        elements.append(signatory_table)
+
+        doc.build(elements, onFirstPage=add_logo)
+
+        buffer.seek(0)
+        filename = f"cross_matching_result_{slugify(cross_matching_data.patient)}_{datetime.now().strftime('%Y%m%d')}.pdf"
+
+        response = FileResponse(buffer, as_attachment=True, filename=filename)
+        return response

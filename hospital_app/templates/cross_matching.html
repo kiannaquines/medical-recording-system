@@ -51,7 +51,7 @@
                                         <a href="{% url 'cross_matching_delete' pk=result.id %}" class="text-sm">
                                             <i class="bi bi-trash text-danger"></i>
                                         </a>
-                                        <a href="">
+                                        <a href="{% url 'generate_cross_matching_result' pk=result.id %}">
                                             <i class="bi bi-printer"></i>
                                         </a>
                                     </div>
