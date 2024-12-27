@@ -280,10 +280,7 @@ class CrossMatching(models.Model):
         db_table = "cross_matching"
         ordering = ["-created_at"]
 
-class RBS(models.Model):
-    patient = models.ForeignKey(
-        Patient, on_delete=models.CASCADE, related_name="patient_rbs"
-    )
+class RBSResult(models.Model):
     result = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=False)
     time = models.TimeField(auto_now_add=False)
@@ -305,8 +302,19 @@ class RBS(models.Model):
         limit_choices_to={"groups__name": "Medical Technologist"},
     )
 
+class RBS(models.Model):
+    patient = models.ForeignKey(
+        Patient, on_delete=models.CASCADE, related_name="patient_rbs"
+    )
+    rbs_result = models.ManyToManyField(
+        RBSResult,
+        related_name="rbs_results",
+        help_text="Related RBS results.",
+    )
+    
+
     def __str__(self) -> str:
-        return f"RBS Result of {self.date} {self.time}"
+        return f"RBS Result of {self.patient} {self.rbs_result}"
 
 class Urinalysis(models.Model):
     patient = models.ForeignKey(

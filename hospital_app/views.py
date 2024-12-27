@@ -672,3 +672,175 @@ def generate_cross_matching_result(request, pk):
         buffer.seek(0)
         response = FileResponse(buffer, as_attachment=True, filename=filename)
         return response
+
+def generate_rbs_result(request, pk):
+    if request.method == "GET":
+        buffer = io.BytesIO()
+
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=letter,
+            topMargin=0.5 * inch,
+            leftMargin=1.1 * inch,
+            rightMargin=1.1 * inch,
+            bottomMargin=1 * inch,
+        )
+
+        elements = []
+        styles = getSampleStyleSheet()
+        styles["Normal"].fontSize = 12
+
+        header_style = ParagraphStyle(
+            "CustomHeader",
+            parent=styles["Normal"],
+            fontSize=12,
+            alignment=1,
+            spaceAfter=0,
+            spaceBefore=0,
+            leading=15,
+            textColor=colors.black,
+        )
+
+        header_content = [
+            [
+                Paragraph(
+                    "<b>PRESIDENT ROXAS PROVINCIAL COMMUNITY HOSPITAL</b><br/>"
+                    "New Cebu, Pres. Roxas, Cotabato.<br/>"
+                    "<b>LABORATORY DEPARTMENT</b><br/>"
+                    "<b>RBS</b>",
+                    header_style,
+                ),
+            ]
+        ]
+
+        header_table = Table(header_content, colWidths=[7.2 * inch])
+        header_table.setStyle(
+            TableStyle(
+                [
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                    ("FONTSIZE", (0, 0), (-1, 0), 11),
+                ]
+            )
+        )
+
+        elements.append(header_table)
+        elements.append(Spacer(1, 20))
+
+        get_patient = Patient.objects.get(pk=pk)
+
+        rbs_data = RBS.objects.filter(patient=get_patient.pk)
+
+        patient_info = [
+            [
+                Paragraph("<b>Name:</b>", styles["Normal"]),
+                Paragraph(str(get_patient), styles["Normal"]),
+                Paragraph("<b>Date:</b>", styles["Normal"]),
+                Paragraph(datetime.now().strftime("%Y/%m/%d"), styles["Normal"]),
+            ]
+        ]
+
+        patient_table = Table(
+            patient_info, colWidths=[0.8 * inch, 4 * inch, 0.8 * inch, 2 * inch]
+        )
+        patient_table.setStyle(
+            TableStyle(
+                [
+                    ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+                ]
+            )
+        )
+
+        elements.append(patient_table)
+        elements.append(Spacer(1, 20))
+
+        data = [
+            [
+                "Results (mmol/dl)",
+                "Date",
+                "Time",
+            ],
+        ]
+
+        for result in rbs_data:
+            data.append(
+                [
+                    result.result,
+                    result.date,
+                    result.time,
+                ]
+            )
+
+        main_table = Table(
+            data,
+            colWidths=[
+                2.4 * inch,
+                2.4 * inch,
+                2.4 * inch,
+            ],
+        )
+        main_table.setStyle(
+            TableStyle(
+                [
+                    ("BOX", (0, 0), (-1, -1), 1, colors.black),
+                    ("GRID", (0, 0), (-1, -1), 1, colors.black),
+                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                    ("FONTSIZE", (0, 0), (-1, 0), 11),
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                    ("TOPPADDING", (0, 0), (-1, -1), 8),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                ]
+            )
+        )
+
+        elements.append(main_table)
+        elements.append(Spacer(1, 30))
+
+        signatory_style = ParagraphStyle(
+            "Signatory",
+            parent=styles["Normal"],
+            fontSize=12,
+            alignment=1,
+            spaceBefore=0,
+            spaceAfter=0,
+        )
+
+        # signatory_data = [
+        #     [
+        #         Paragraph(
+        #             f"<b>{technologist.user.get_full_name()}</b>",
+        #             signatory_style,
+        #         ),
+        #         Paragraph(
+        #             f"<b>{pathologist.user.get_full_name()}</b>",
+        #             signatory_style,
+        #         ),
+        #     ],
+        #     [
+        #         Paragraph(f"Lic no. {technologist.license_number}", signatory_style),
+        #         Paragraph(f"Lic no. {pathologist.license_number}", signatory_style),
+        #     ],
+        #     [
+        #         Paragraph("<b>Pathologist</b>", signatory_style),
+        #         Paragraph("<b>Medical Technologist</b>", signatory_style),
+        #     ],
+        # ]
+
+        # signatory_table = Table(signatory_data, colWidths=[4 * inch, 4 * inch])
+        # signatory_table.setStyle(
+        #     TableStyle(
+        #         [
+        #             ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        #             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        #         ]
+        #     )
+        # )
+
+        # filename = f"rbs_result_{slugify(cross_matching_data.patient)}_{datetime.now().strftime('%Y%m%d')}.pdf"
+        # elements.append(signatory_table)
+        doc.title = "RBS Result"
+        doc.build(elements, onFirstPage=add_logo)
+        buffer.seek(0)
+        response = FileResponse(buffer, as_attachment=True, filename="filename.pdf")
+        return response
