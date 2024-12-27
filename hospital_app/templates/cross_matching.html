@@ -25,11 +25,13 @@
                             <tr>
                                 <td>{{ result.patient }}</td>
                                 <td>
+                                    {% for item in result.results.all %}
                                     <span class="badge bg-primary">
-                                        <a class="text-white" style="text-decoration: none;" target="_blank" href="{% url 'cross_matching_result_update' pk=result.result.id %}">
-                                            {{ result.result }}
+                                        <a class="text-white" style="text-decoration: none;" target="_blank" href="{% url 'cross_matching_result_update' pk=item.id %}">
+                                            {{ item }}
                                         </a>
                                     </span>
+                                    {% endfor %}
                                 </td>
                                 <td>
                                     <a style="text-decoration: none;" target="_blank" href="{% url 'employee_update' pk=result.pathologist.id %}">
