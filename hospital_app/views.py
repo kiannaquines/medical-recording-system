@@ -127,6 +127,16 @@ class RBSView(ListView):
         context["humberger_header"] = "RBS Details"
         return context
 
+class PatientRBSView(ListView):
+    template_name = "rbs_results.html"
+    queryset = RBSResult.objects.all()
+    context_object_name = "results"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["detail_header"] = "RBS Result Details List"
+        context["humberger_header"] = "RBS Result Details"
+        return context
 
 class UrinalysisView(ListView):
     template_name = "urinalysis.html"
@@ -672,6 +682,7 @@ def generate_cross_matching_result(request, pk):
         buffer.seek(0)
         response = FileResponse(buffer, as_attachment=True, filename=filename)
         return response
+
 
 def generate_rbs_result(request, pk):
     if request.method == "GET":

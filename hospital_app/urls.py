@@ -18,7 +18,7 @@ urlpatterns = [
     path('laboratory/cross-matching-result/result', CrossMatchingResultView.as_view(), name="cross_matching_result_list"),
     path('laboratory/rbs/result', RBSView.as_view(), name="rbs_result_list"),
     path('laboratory/urinalysis/result', UrinalysisView.as_view(), name="urinalysis_result_list"),
-
+    path('laboratory/rbs-result/result', PatientRBSView.as_view(), name="rbs__result_list"),
     # Create
     path('laboratory/hematology/add', HematologyCreateView.as_view(), name="hematology_add"),
     path('laboratory/serology/add', SerologyCreateView.as_view(), name="serology_add"),
@@ -30,7 +30,7 @@ urlpatterns = [
     path('employee/info/add/<int:pk>', employee_info_add_view, name="employee_info_add"),
     path('laboratory/rbs/add', RBSCreateView.as_view(), name="rbs_add"),
     path('laboratory/urinalysis/add', UrinalysisCreateView.as_view(), name="urinalysis_add"),
-
+    path('laboratory/rbs-result/add', RBSResultCreateView.as_view(), name="rbs_result_add"),
     # Update
     path('laboratory/hematology/update/<int:pk>', HematologyUpdateView.as_view(), name="hematology_update"),
     path('laboratory/serology/update/<int:pk>', SerologyUpdateView.as_view(), name="serology_update"),
@@ -41,7 +41,7 @@ urlpatterns = [
     path('employee/update/<int:pk>', EmployeeUpdateView.as_view(), name="employee_update"),
     path('laboratory/rbs/update/<int:pk>', RBSUpdateView.as_view(), name="rbs_update"),
     path('laboratory/urinalysis/update/<int:pk>', UrinalysisUpdateView.as_view(), name="urinalysis_update"),
-
+    path('laboratory/rbs-result/update/<int:pk>', RBSResultUpdateView.as_view(), name="rbs_result_update"),
     # Delete
     path('laboratory/hematology/delete/<int:pk>', HematologyDeleteView.as_view(), name="hematology_delete"),
     path('laboratory/serology/delete/<int:pk>', SerologyDeleteView.as_view(), name="serology_delete"),
@@ -52,7 +52,7 @@ urlpatterns = [
     path('employee/delete/<int:pk>', EmployeeDeleteView.as_view(), name="employee_delete"),
     path('laboratory/rbs/delete/<int:pk>', RBSDeleteView.as_view(), name="rbs_delete"),
     path('laboratory/urinalysis/delete/<int:pk>', UrinalysisDeleteView.as_view(), name="urinalysis_delete"),
-
+    path('laboratory/rbs-result/delete/<int:pk>', RBSResultDeleteView.as_view(), name="rbs_result_delete"),
     # Export
     path('generate-chemistry-result/<int:pk>', generate_chemistry_result, name="generate_chemistry_result"),
     path('generate-hematology-result/<int:pk>', generate_hematology_result, name="generate_hematology_result"),

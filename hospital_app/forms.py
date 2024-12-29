@@ -11,6 +11,7 @@ hospital_models = [
     CrossMatching,
     RBS,
     Urinalysis,
+    RBSResult,
 ]
 
 custom_fields = {

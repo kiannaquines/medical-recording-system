@@ -1,4 +1,4 @@
-from hospital_app.forms import HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm, EmployeeUpdateForm, RBSForm, UrinalysisForm
+from hospital_app.forms import HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm, EmployeeUpdateForm, RBSForm, UrinalysisForm, RBSResultForm
 from hospital_app.models import *
 from django.views.generic import UpdateView
 from django.urls import reverse_lazy
@@ -62,7 +62,26 @@ class CrossMatchingResultUpdateView(UpdateView):
         context['detail_header'] = 'Update Cross Matching Details'
         context['humberger_header'] = 'Cross Matching Details'
         return context
+
+class RBSResultUpdateView(UpdateView):
+    template_name = 'forms.html'
+    form_class = RBSResultForm
+    model = RBSResult
+    success_url = reverse_lazy('rbs__result_list')
+
+    def form_valid(self, form):
+        form = super().form_valid(form)
+        return form
     
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['detail_header'] = 'RBS Result Update'
+        context['humberger_header'] = 'RBS Result Update'
+        return context    
+
 class CrossMatchingUpdateView(UpdateView):
     pk_url_kwarg = 'pk'
     template_name = 'forms.html'

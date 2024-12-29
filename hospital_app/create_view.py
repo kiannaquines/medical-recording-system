@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from hospital_app.forms import EmployeeCreationForm, HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm, RBSForm, EmployeeInfoCreationForm, UrinalysisForm
+from hospital_app.forms import EmployeeCreationForm, HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm, RBSForm, EmployeeInfoCreationForm, UrinalysisForm, RBSResultForm
 from hospital_app.models import *
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
@@ -41,6 +41,25 @@ class RBSCreateView(CreateView):
         context['humberger_header'] = 'RBS Details'
         return context
 
+class RBSResultCreateView(CreateView):
+    template_name = 'forms.html'
+    form_class = RBSResultForm
+    model = RBSResult
+    success_url = reverse_lazy('rbs__result_list')
+
+    def form_valid(self, form):
+        form = super().form_valid(form)
+        return form
+    
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['detail_header'] = 'RBS Result Details'
+        context['humberger_header'] = 'RBS Result Details'
+        return context
+
 class UrinalysisCreateView(CreateView):
     template_name = 'forms.html'
     form_class = UrinalysisForm
@@ -56,8 +75,8 @@ class UrinalysisCreateView(CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['detail_header'] = 'RBS Details'
-        context['humberger_header'] = 'RBS Details'
+        context['detail_header'] = 'Urinalysis Details'
+        context['humberger_header'] = 'Urinalysis Details'
         return context
 
 class HematologyCreateView(CreateView):

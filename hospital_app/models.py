@@ -302,6 +302,9 @@ class RBSResult(models.Model):
         limit_choices_to={"groups__name": "Medical Technologist"},
     )
 
+    def __str__(self) -> str:
+        return self.result
+
 class RBS(models.Model):
     patient = models.ForeignKey(
         Patient, on_delete=models.CASCADE, related_name="patient_rbs"

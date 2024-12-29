@@ -21,6 +21,24 @@ class UrinalysisDeleteView(DeleteView):
         context['humberger_header'] = 'Urinalysis Details'
         return context
 
+class RBSResultDeleteView(DeleteView):
+    template_name = 'delete_forms.html'
+    model = RBSResult
+    success_url = reverse_lazy('rbs__result_list')
+
+    def form_valid(self, form):
+        form = super().form_valid(form)
+        return form
+    
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['detail_header'] = 'Delete RBS Result Details'
+        context['humberger_header'] = 'Delete RBS Result Details'
+        return context 
+
 class RBSDeleteView(DeleteView):
     pk_url_kwarg = 'pk'
     template_name = 'delete_forms.html'
