@@ -127,6 +127,7 @@ class RBSView(ListView):
         context["humberger_header"] = "RBS Details"
         return context
 
+
 class PatientRBSView(ListView):
     template_name = "rbs_results.html"
     queryset = RBSResult.objects.all()
@@ -137,6 +138,7 @@ class PatientRBSView(ListView):
         context["detail_header"] = "RBS Result Details List"
         context["humberger_header"] = "RBS Result Details"
         return context
+
 
 class UrinalysisView(ListView):
     template_name = "urinalysis.html"
@@ -773,7 +775,7 @@ def generate_rbs_result(request, pk):
             ],
         ]
 
-        for result in rbs_data:
+        for result in rbs_data.rbs_result.all():
             data.append(
                 [
                     result.result,

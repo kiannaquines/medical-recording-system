@@ -22,24 +22,20 @@ custom_fields = {
     "time_of_collection": forms.TimeInput(
         attrs={"type": "time", "class": "form-control"}
     ),
-    "date": forms.DateInput(
-        attrs={"type": "date", "class": "form-control"}
-    ),
-    "time": forms.TimeInput(
-        attrs={"type": "time", "class": "form-control"}
-    ),
+    "date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+    "time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),
 }
 
 
 class LoginForm(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(
-            attrs={"class": "form-control","placeholder":"Username"}
+            attrs={"class": "form-control", "placeholder": "Username"}
         )
     )
     password = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={"class": "form-control","placeholder":"Password"}
+            attrs={"class": "form-control", "placeholder": "Password"}
         )
     )
 
@@ -48,12 +44,16 @@ class EmployeeInfoCreationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items(): 
+        for field_name, field in self.fields.items():
             field.widget.attrs.update({"class": "form-control"})
 
     class Meta:
         model = EmployeeInfo
-        fields = ("user","license_number",)
+        fields = (
+            "user",
+            "license_number",
+        )
+
 
 class EmployeeCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):

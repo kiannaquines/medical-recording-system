@@ -4,12 +4,14 @@ from django.contrib.auth.models import Group
 
 User = get_user_model()
 
+
 class EmployeeInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     license_number = models.CharField(max_length=10, unique=True, db_index=True)
 
     def __str__(self):
         return f"{self.user.get_full_name()}{self.license_number}"
+
 
 class Patient(models.Model):
     firstname = models.CharField(max_length=255)
@@ -71,6 +73,7 @@ class Patient(models.Model):
     def __str__(self) -> str:
         return self.get_full_name()
 
+
 class ClinicalChemistry(models.Model):
     patient = models.ForeignKey(
         Patient, on_delete=models.CASCADE, related_name="patient_clinical_chemistry"
@@ -115,6 +118,7 @@ class ClinicalChemistry(models.Model):
         verbose_name = "Clinical Chemistry"
         verbose_name_plural = "Clinical Chemistry"
         db_table = "clinical_chemistry"
+
 
 class Hematology(models.Model):
 
@@ -182,6 +186,7 @@ class Hematology(models.Model):
         verbose_name_plural = "Hematology"
         db_table = "hematology"
 
+
 class Serology(models.Model):
     patient = models.ForeignKey(
         Patient, on_delete=models.CASCADE, related_name="patient_serology"
@@ -216,6 +221,7 @@ class Serology(models.Model):
     def get_date(self):
         return self.date.strftime("%m/%d/%Y")
 
+
 class CrossMatchingResult(models.Model):
     serial_no = models.CharField(
         max_length=255,
@@ -236,6 +242,7 @@ class CrossMatchingResult(models.Model):
         verbose_name_plural = "Cross Matching Results"
         db_table = "cross_matching_result"
         ordering = ["-date_of_collection"]
+
 
 class CrossMatching(models.Model):
     results = models.ManyToManyField(
@@ -280,30 +287,15 @@ class CrossMatching(models.Model):
         db_table = "cross_matching"
         ordering = ["-created_at"]
 
+
 class RBSResult(models.Model):
     result = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=False)
     time = models.TimeField(auto_now_add=False)
 
-    assigned_pathologist = models.ForeignKey(
-        User,
-        related_name="rbs_assigned_pathologist",
-        on_delete=models.CASCADE,
-        null=False,
-        blank=False,
-        limit_choices_to={"groups__name": "Pathologist"},
-    )
-    assigned_technologist = models.ForeignKey(
-        User,
-        related_name="rbs_assigned_technologist",
-        on_delete=models.CASCADE,
-        null=False,
-        blank=False,
-        limit_choices_to={"groups__name": "Medical Technologist"},
-    )
-
     def __str__(self) -> str:
         return self.result
+
 
 class RBS(models.Model):
     patient = models.ForeignKey(
@@ -314,10 +306,27 @@ class RBS(models.Model):
         related_name="rbs_results",
         help_text="Related RBS results.",
     )
-    
+
+    assigned_pathologist = models.ForeignKey(
+        User,
+        related_name="rbs_assigned_pathologist",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        limit_choices_to={"groups__name": "Pathologist"},
+    )
+    assigned_technologist = models.ForeignKey(
+        User,
+        related_name="rbs_assigned_technologist",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        limit_choices_to={"groups__name": "Medical Technologist"},
+    )
 
     def __str__(self) -> str:
         return f"RBS Result of {self.patient} {self.rbs_result}"
+
 
 class Urinalysis(models.Model):
     patient = models.ForeignKey(
