@@ -10,7 +10,7 @@ urlpatterns = [
     # View
     path('dashboard/', DashboardView.as_view(), name="dashboard"),
     path('patient/', PatientListView.as_view(), name="patient_list"),
-    path('patient/bio', PatientListView.as_view(), name="patient_bio_list"),
+    path('patient/bio', PatientPanBioListView.as_view(), name="patient_bio_list"),
     path('employee/', EmployeeListView.as_view(), name="employee_list"),
     path('laboratory/chemical-chemistry/result', ClinicalChemistryView.as_view(), name="chemical_chemistry_list"),
     path('laboratory/serology/result', SerologyView.as_view(), name="serology_list"),

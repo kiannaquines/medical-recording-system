@@ -104,7 +104,7 @@ class PatientListView(ListView):
         return context
 
 
-class PatientListView(ListView):
+class PatientPanBioListView(ListView):
     template_name = "patient_bio.html"
     queryset = Patient.objects.all()
     context_object_name = "patients"

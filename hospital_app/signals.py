@@ -6,7 +6,7 @@ from django.utils.timezone import now
 
 from .models import (
     EmployeeInfo, Patient, ClinicalChemistry, Hematology,
-    Serology, CrossMatching, RBS, Urinalysis
+    Serology, CrossMatching, RBS, Urinalysis, User
 )
 
 MODELS_TO_LOG = [
