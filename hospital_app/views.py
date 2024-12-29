@@ -82,7 +82,7 @@ class DashboardView(View):
 
 class EmployeeListView(ListView):
     template_name = "employee.html"
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('-date_joined')
     context_object_name = "employees"
 
     def get_context_data(self, **kwargs):
@@ -93,14 +93,14 @@ class EmployeeListView(ListView):
     
 class LaboratoryRequestView(ListView):
     template_name = "lab_request.html"
-    queryset = LabRequest.objects.all()
+    queryset = LabRequest.objects.all().order_by('-date_request')
     context_object_name = "results"
 
     def get_queryset(self):
         current_user = self.request.user
         if current_user.groups.filter(Q(name="Administrator") or Q(name="Medical Technologist")).exists():
-            return LabRequest.objects.all()
-        return LabRequest.objects.filter(requested_by=current_user)
+            return LabRequest.objects.all().order_by('-date_request')
+        return LabRequest.objects.filter(requested_by=current_user).order_by('-date_request')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -111,7 +111,7 @@ class LaboratoryRequestView(ListView):
 
 class PatientListView(ListView):
     template_name = "patient.html"
-    queryset = Patient.objects.all()
+    queryset = Patient.objects.all().order_by('-date')
     context_object_name = "patients"
 
     def get_context_data(self, **kwargs):
@@ -123,7 +123,7 @@ class PatientListView(ListView):
 
 class PatientPanBioListView(ListView):
     template_name = "patient_bio.html"
-    queryset = Patient.objects.all()
+    queryset = Patient.objects.all().order_by('-date')
     context_object_name = "patients"
 
     def get_context_data(self, **kwargs):
@@ -135,7 +135,7 @@ class PatientPanBioListView(ListView):
 
 class ClinicalChemistryView(ListView):
     template_name = "chemical_chemistry.html"
-    queryset = ClinicalChemistry.objects.all()
+    queryset = ClinicalChemistry.objects.all().order_by('-date')
     context_object_name = "results"
 
     def get_context_data(self, **kwargs):

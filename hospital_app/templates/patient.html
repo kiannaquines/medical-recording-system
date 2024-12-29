@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Manage Patient Informations</h5>
-                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
+                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" or request.user|has_group:"Nurse" or request.user|has_group:"Doctor" %}
                 <a href="{% url 'patient_add' %}" class="btn btn-primary mb-3">Add Patient</a>
                 {% endif %}
             </div>

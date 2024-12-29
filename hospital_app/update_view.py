@@ -1,5 +1,6 @@
 from hospital_app.forms import (
     HematologyForm,
+    LaboratoryRequestFormNurseAndDoctor,
     SerologyForm,
     ClinicalChemistryForm,
     CrossMatchingForm,
@@ -82,13 +83,15 @@ class CrossMatchingResultUpdateView(UpdateView):
 class LabRequestResultUpdateView(UpdateView):
     pk_url_kwarg = "pk"
     template_name = "forms.html"
-    form_class = LabRequestForm
+    form_class = LaboratoryRequestFormNurseAndDoctor
     model = LabRequest
     success_url = reverse_lazy("laboratory__result_list")
 
     def form_valid(self, form):
-        form = super().form_valid(form)
-        return form
+        lab_request = form.save(commit=False)
+        lab_request.requested_by = lab_request.requested_by
+        lab_request.save()
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         return super().form_invalid(form)

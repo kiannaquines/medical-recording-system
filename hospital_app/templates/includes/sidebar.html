@@ -73,6 +73,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{% url 'laboratory__result_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            Lab Request
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{% url 'chemical_chemistry_list' %}" class="nav-link">
                         <i class="nav-icon bi bi-file-medical"></i>
                         <p>
@@ -145,6 +153,21 @@
                     </a>
                 </li>
                 {% elif request.user|has_group:"Doctor" or request.user|has_group:"Nurse" %}
+                <li>
+                    <a href="#" class="nav-link">
+                        <small class="text-uppercase text-muted">
+                            Patient Module
+                        </small>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="{% url 'patient_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-people"></i>
+                        <p>
+                            Patient Information
+                        </p>
+                    </a>
+                </li>
                 <li>
                     <a href="#" class="nav-link">
                         <small class="text-uppercase text-muted">
@@ -240,21 +263,6 @@
                     </a>
                 </li>
                 {% endif %}
-                <li>
-                    <a href="#" class="nav-link">
-                        <small class="text-uppercase text-muted">
-                            Account
-                        </small>
-                    </a>
-                </li>
-                <li class="nav-item mr-auto">
-                    <a href="{% url 'logout_user' %}" class="nav-link">
-                        <i class="nav-icon bi bi-box-arrow-right"></i>
-                        <p>
-                            Sign Out
-                        </p>
-                    </a>
-                </li>
             </ul>
         </nav>
     </div>

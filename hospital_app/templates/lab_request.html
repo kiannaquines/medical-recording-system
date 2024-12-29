@@ -7,7 +7,16 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Manage Patient Informations</h5>
+
+                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
+
+                <a href="{% url 'laboratory_request_super_add' %}" class="btn btn-primary mb-3">Add Request</a>
+
+                {% else %}
+
                 <a href="{% url 'laboratory_request_add' %}" class="btn btn-primary mb-3">Add Request</a>
+
+                {% endif %}
             </div>
             <div class="card mb-4">
                 <div class="card-body">
@@ -17,6 +26,7 @@
                                 <th class="text-muted">Patient</th>
                                 <th class="text-muted">Description</th>
                                 <th class="text-muted">Request Type</th>
+                                <th class="text-muted">Requested</th>
                                 <th class="text-muted">Date Request</th>            
                                 <th class="text-muted">Actions</th>
                             </tr>
@@ -30,6 +40,9 @@
                                 </td>
                                 <td>
                                     <span class="badge bg-primary">{{ result.lab_request_type }}</span>
+                                </td>
+                                <td>
+                                    {{ result.requested_by.get_full_name }}
                                 </td>
                                 <td>
                                     {{ result.date_request }}

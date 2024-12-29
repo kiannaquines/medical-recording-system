@@ -11,7 +11,7 @@ class EmployeeInfo(models.Model):
     license_number = models.CharField(max_length=10, unique=True, db_index=True)
 
     def __str__(self):
-        return f"{self.user.get_full_name()}{self.license_number}"
+        return f"{self.user.get_full_name()} {self.license_number}"
 
 
 class Patient(models.Model):
@@ -73,6 +73,10 @@ class Patient(models.Model):
 
     def __str__(self) -> str:
         return self.get_full_name()
+    
+
+    class Meta:
+        ordering = ('time_of_collection',)
 
 
 class ClinicalChemistry(models.Model):
@@ -119,6 +123,7 @@ class ClinicalChemistry(models.Model):
         verbose_name = "Clinical Chemistry"
         verbose_name_plural = "Clinical Chemistry"
         db_table = "clinical_chemistry"
+        ordering = ('date',)
 
 
 class Hematology(models.Model):
@@ -186,6 +191,7 @@ class Hematology(models.Model):
         verbose_name = "Hematology"
         verbose_name_plural = "Hematology"
         db_table = "hematology"
+        ordering = ('date',)
 
 
 class Serology(models.Model):
@@ -302,6 +308,10 @@ class RBSResult(models.Model):
 
     def get_date(self):
         return self.date.strftime("%m/%d/%Y")
+    
+
+    class Meta:
+        ordering = ('date',)
 
 
 class RBS(models.Model):
@@ -385,6 +395,10 @@ class Urinalysis(models.Model):
 
     def __str__(self) -> str:
         return f"Urinalysis Result of {self.patient} {self.date}"
+    
+
+    class Meta:
+        ordering = ('date',)
 
 
 class LabRequest(models.Model):

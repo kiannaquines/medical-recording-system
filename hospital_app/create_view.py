@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from hospital_app.forms import EmployeeCreationForm, HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm, RBSForm, EmployeeInfoCreationForm, UrinalysisForm, RBSResultForm, LabRequestForm
+from hospital_app.forms import EmployeeCreationForm, HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm, RBSForm, EmployeeInfoCreationForm, UrinalysisForm, RBSResultForm, LabRequestForm, LaboratoryRequestFormNurseAndDoctor
 from hospital_app.models import *
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
@@ -43,13 +43,15 @@ class RBSCreateView(CreateView):
 
 class LabRequestCreateView(CreateView):
     template_name = 'forms.html'
-    form_class = LabRequestForm
+    form_class = LaboratoryRequestFormNurseAndDoctor
     model = LabRequest
     success_url = reverse_lazy('laboratory__result_list')
 
     def form_valid(self, form):
-        form = super().form_valid(form)
-        return form
+        lab_request = form.save(commit=False)
+        lab_request.requested_by = self.request.user
+        lab_request.save()
+        return super().form_valid(form)
     
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -59,6 +61,26 @@ class LabRequestCreateView(CreateView):
         context['detail_header'] = 'Laboratory Request Details'
         context['humberger_header'] = 'Laboratory Request Details'
         return context
+
+
+class ForAdminLabRequestCreateView(CreateView):
+    template_name = 'forms.html'
+    form_class = LabRequestForm
+    model = LabRequest
+    success_url = reverse_lazy('laboratory__result_list')
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['detail_header'] = 'Laboratory Request Details'
+        context['humberger_header'] = 'Laboratory Request Details'
+        return context
+
 
 class RBSResultCreateView(CreateView):
     template_name = 'forms.html'

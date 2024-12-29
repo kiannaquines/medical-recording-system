@@ -34,6 +34,8 @@ urlpatterns = [
     path('laboratory/urinalysis/add', UrinalysisCreateView.as_view(), name="urinalysis_add"),
     path('laboratory/rbs-result/add', RBSResultCreateView.as_view(), name="rbs_result_add"),
     path('laboratory/request/add', LabRequestCreateView.as_view(), name="laboratory_request_add"),
+    path('laboratory/request/super/add', ForAdminLabRequestCreateView.as_view(), name="laboratory_request_super_add"),
+
     # Update
     path('laboratory/hematology/update/<int:pk>', HematologyUpdateView.as_view(), name="hematology_update"),
     path('laboratory/serology/update/<int:pk>', SerologyUpdateView.as_view(), name="serology_update"),
