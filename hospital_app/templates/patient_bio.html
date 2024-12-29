@@ -1,0 +1,55 @@
+{% extends './includes/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Manage Patient Bio</h5>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <table id="datatable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-muted">Patient</th>
+                                <th class="text-muted">Type</th>
+                                <th class="text-muted">Age</th>
+                                <th class="text-muted">Gender</th>
+                                <th class="text-muted">Physician</th>
+                                <th class="text-muted">Room #</th>
+                                <th class="text-muted">SARS Result</th>
+                                <th class="text-muted">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in patients %}
+                            <tr>
+                                <td>{{ result.get_full_name }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ result.patient_type }}</span>
+                                </td>
+                                <td>{{ result.age }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ result.sex }}</span>
+                                </td>
+                                <td>{{ result.physician.get_full_name }}</td>
+                                <td>{{ result.room_number }}</td>
+                                <td>{{ result.sars_result }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-start gap-2">
+                                        <a href="{% url 'generate_panbio' pk=result.id %}">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

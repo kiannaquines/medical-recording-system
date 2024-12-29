@@ -103,6 +103,16 @@ class PatientListView(ListView):
         context["humberger_header"] = "Patient Details"
         return context
 
+class PatientListView(ListView):
+    template_name = "patient_bio.html"
+    queryset = Patient.objects.all()
+    context_object_name = "patients"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["detail_header"] = "Patient Bio"
+        context["humberger_header"] = "Patient Bio"
+        return context
 
 class ClinicalChemistryView(ListView):
     template_name = "chemical_chemistry.html"
