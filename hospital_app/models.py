@@ -11,7 +11,7 @@ class EmployeeInfo(models.Model):
     license_number = models.CharField(max_length=10, unique=True, db_index=True)
 
     def __str__(self):
-        return f"{self.user.get_full_name()} {self.license_number}"
+        return f"Employee Information {self.user.get_full_name()} {self.license_number}"
 
 
 class Patient(models.Model):
@@ -72,7 +72,7 @@ class Patient(models.Model):
         return self.time_of_collection.strftime("%H:%M %p")
 
     def __str__(self) -> str:
-        return self.get_full_name()
+        return f'Patient Information {self.get_full_name()}'
     
 
     class Meta:
@@ -301,7 +301,7 @@ class RBSResult(models.Model):
     time = models.TimeField(auto_now_add=False)
 
     def __str__(self) -> str:
-        return self.result
+        return f'Result {self.result}'
 
     def get_time(self):
         return self.time.strftime("%I:%M %p")
@@ -342,7 +342,7 @@ class RBS(models.Model):
     )
 
     def __str__(self) -> str:
-        return f"RBS Result of {self.patient} {self.rbs_result}"
+        return f"RBS Result of {self.patient}"
 
 
 class Urinalysis(models.Model):
