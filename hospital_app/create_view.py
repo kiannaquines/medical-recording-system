@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from hospital_app.forms import EmployeeCreationForm, HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm, RBSForm, EmployeeInfoCreationForm, UrinalysisForm, RBSResultForm
+from hospital_app.forms import EmployeeCreationForm, HematologyForm, SerologyForm, ClinicalChemistryForm, CrossMatchingForm, PatientForm, CrossMatchingResultForm, RBSForm, EmployeeInfoCreationForm, UrinalysisForm, RBSResultForm, LabRequestForm
 from hospital_app.models import *
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
@@ -39,6 +39,25 @@ class RBSCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['detail_header'] = 'RBS Details'
         context['humberger_header'] = 'RBS Details'
+        return context
+
+class LabRequestCreateView(CreateView):
+    template_name = 'forms.html'
+    form_class = LabRequestForm
+    model = LabRequest
+    success_url = reverse_lazy('laboratory__result_list')
+
+    def form_valid(self, form):
+        form = super().form_valid(form)
+        return form
+    
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['detail_header'] = 'Laboratory Request Details'
+        context['humberger_header'] = 'Laboratory Request Details'
         return context
 
 class RBSResultCreateView(CreateView):

@@ -12,6 +12,7 @@ hospital_models = [
     RBS,
     Urinalysis,
     RBSResult,
+    LabRequest,
 ]
 
 custom_fields = {

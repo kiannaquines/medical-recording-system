@@ -20,6 +20,7 @@ urlpatterns = [
     path('laboratory/rbs/result', RBSView.as_view(), name="rbs_result_list"),
     path('laboratory/urinalysis/result', UrinalysisView.as_view(), name="urinalysis_result_list"),
     path('laboratory/rbs-result/result', PatientRBSView.as_view(), name="rbs__result_list"),
+    path('laboratory/request/result', LaboratoryRequestView.as_view(), name="laboratory__result_list"),
     # Create
     path('laboratory/hematology/add', HematologyCreateView.as_view(), name="hematology_add"),
     path('laboratory/serology/add', SerologyCreateView.as_view(), name="serology_add"),
@@ -32,6 +33,7 @@ urlpatterns = [
     path('laboratory/rbs/add', RBSCreateView.as_view(), name="rbs_add"),
     path('laboratory/urinalysis/add', UrinalysisCreateView.as_view(), name="urinalysis_add"),
     path('laboratory/rbs-result/add', RBSResultCreateView.as_view(), name="rbs_result_add"),
+    path('laboratory/request/add', LabRequestCreateView.as_view(), name="laboratory_request_add"),
     # Update
     path('laboratory/hematology/update/<int:pk>', HematologyUpdateView.as_view(), name="hematology_update"),
     path('laboratory/serology/update/<int:pk>', SerologyUpdateView.as_view(), name="serology_update"),

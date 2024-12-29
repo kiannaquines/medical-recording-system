@@ -90,6 +90,17 @@ class EmployeeListView(ListView):
         context["detail_header"] = "Employee Details List"
         context["humberger_header"] = "Employee Details"
         return context
+    
+class LaboratoryRequestView(ListView):
+    template_name = "lab_request.html"
+    queryset = LabRequest.objects.all()
+    context_object_name = "results"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["detail_header"] = "Laboratory Request List"
+        context["humberger_header"] = "Laboratory Request"
+        return context
 
 
 class PatientListView(ListView):
