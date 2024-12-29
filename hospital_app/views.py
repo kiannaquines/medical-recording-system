@@ -261,10 +261,10 @@ def generate_hematology_result(request, pk):
             fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
             filled_pdf_buffer.seek(0)
 
+            filename = f"hematology_result_{slugify(hematology_result.patient.get_full_name())}_{datetime.now().strftime('%Y%m%d')}.pdf"
+
             response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
-            response["Content-Disposition"] = (
-                f'attachment; filename="hematology_result_{pk}.pdf"'
-            )
+            response["Content-Disposition"] = f'attachment; filename="{filename}"'
             return response
 
         except Exception as e:
@@ -317,11 +317,9 @@ def generate_chemistry_result(request, pk):
             filled_pdf_buffer = io.BytesIO()
             fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
             filled_pdf_buffer.seek(0)
-
+            filename = f"chemistry_result_{slugify(chemical_chemistry_result.patient.get_full_name())}_{datetime.now().strftime('%Y%m%d')}.pdf"
             response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
-            response["Content-Disposition"] = (
-                f'attachment; filename="chemical_chemistry_result_{pk}.pdf"'
-            )
+            response["Content-Disposition"] = f'attachment; filename="{filename}"'
             return response
 
         except Exception as e:
@@ -365,11 +363,9 @@ def generate_serology_result(request, pk):
             filled_pdf_buffer = io.BytesIO()
             fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
             filled_pdf_buffer.seek(0)
-
+            filename = f"serology_result_{slugify(serology_result.patient.get_full_name())}_{datetime.now().strftime('%Y%m%d')}.pdf"
             response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
-            response["Content-Disposition"] = (
-                f'attachment; filename="serology_result_{pk}.pdf"'
-            )
+            response["Content-Disposition"] = f'attachment; filename="={filename}"'
             return response
 
         except Exception as e:
@@ -417,9 +413,9 @@ def generate_panbio(request, pk):
             filled_pdf_buffer = io.BytesIO()
             fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
             filled_pdf_buffer.seek(0)
-
+            filename = f"panbio_result_{slugify(patient_info.get_full_name())}_{datetime.now().strftime('%Y%m%d')}.pdf"
             response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
-            response["Content-Disposition"] = f'attachment; filename="panbio_{pk}.pdf"'
+            response["Content-Disposition"] = f'attachment; filename="{filename}"'
             return response
 
         except Exception as e:
@@ -474,11 +470,9 @@ def generate_urinalysis_result(request, pk):
             filled_pdf_buffer = io.BytesIO()
             fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
             filled_pdf_buffer.seek(0)
-
+            filename = f"urinalysis_result_{slugify(urinalysis_detail.patient)}_{datetime.now().strftime('%Y%m%d')}.pdf"
             response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
-            response["Content-Disposition"] = (
-                f'attachment; filename="urinalysis_{pk}.pdf"'
-            )
+            response["Content-Disposition"] = f'attachment; filename="{filename}"'
             return response
 
         except Exception as e:
@@ -573,8 +567,6 @@ def generate_cross_matching_result(request, pk):
             TableStyle(
                 [
                     ("ALIGN", (0, 0), (-1, -1), "LEFT"),
-                    ("LINEBELOW", (1, 0), (1, 0), 0.5, colors.black),
-                    ("LINEBELOW", (3, 0), (3, 0), 0.5, colors.black),
                 ]
             )
         )
@@ -719,8 +711,7 @@ def generate_rbs_result(request, pk):
                 Paragraph(
                     "<b>PRESIDENT ROXAS PROVINCIAL COMMUNITY HOSPITAL</b><br/>"
                     "New Cebu, Pres. Roxas, Cotabato.<br/>"
-                    "<b>LABORATORY DEPARTMENT</b><br/>"
-                    "<b>RBS</b>",
+                    "<b>LABORATORY DEPARTMENT</b><br/>",
                     header_style,
                 ),
             ]
@@ -741,8 +732,7 @@ def generate_rbs_result(request, pk):
         elements.append(Spacer(1, 20))
 
         get_patient = Patient.objects.get(pk=pk)
-
-        rbs_data = RBS.objects.filter(patient=get_patient.pk)
+        rbs_data = RBS.objects.get(patient=get_patient.pk)
 
         patient_info = [
             [
@@ -752,6 +742,10 @@ def generate_rbs_result(request, pk):
                 Paragraph(datetime.now().strftime("%Y/%m/%d"), styles["Normal"]),
             ]
         ]
+
+        header_table_labresult = Paragraph("<b>RBS</b>", header_style)
+        elements.append(header_table_labresult)
+        elements.append(Spacer(1, 20))
 
         patient_table = Table(
             patient_info, colWidths=[0.8 * inch, 4 * inch, 0.8 * inch, 2 * inch]
@@ -779,16 +773,16 @@ def generate_rbs_result(request, pk):
             data.append(
                 [
                     result.result,
-                    result.date,
-                    result.time,
+                    result.get_date(),
+                    result.get_time(),
                 ]
             )
 
         main_table = Table(
             data,
             colWidths=[
-                2.4 * inch,
-                2.4 * inch,
+                2.5 * inch,
+                2.5 * inch,
                 2.4 * inch,
             ],
         )
@@ -819,41 +813,56 @@ def generate_rbs_result(request, pk):
             spaceAfter=0,
         )
 
-        # signatory_data = [
-        #     [
-        #         Paragraph(
-        #             f"<b>{technologist.user.get_full_name()}</b>",
-        #             signatory_style,
-        #         ),
-        #         Paragraph(
-        #             f"<b>{pathologist.user.get_full_name()}</b>",
-        #             signatory_style,
-        #         ),
-        #     ],
-        #     [
-        #         Paragraph(f"Lic no. {technologist.license_number}", signatory_style),
-        #         Paragraph(f"Lic no. {pathologist.license_number}", signatory_style),
-        #     ],
-        #     [
-        #         Paragraph("<b>Pathologist</b>", signatory_style),
-        #         Paragraph("<b>Medical Technologist</b>", signatory_style),
-        #     ],
-        # ]
+        assigned_technologist_details = get_object_or_404(
+            EmployeeInfo, user=rbs_data.assigned_technologist
+        )
+        assigned_pathologistlogist_details = get_object_or_404(
+            EmployeeInfo, user=rbs_data.assigned_technologist
+        )
 
-        # signatory_table = Table(signatory_data, colWidths=[4 * inch, 4 * inch])
-        # signatory_table.setStyle(
-        #     TableStyle(
-        #         [
-        #             ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        #             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        #         ]
-        #     )
-        # )
+        signatory_data = [
+            [
+                Paragraph(
+                    f"<b>{rbs_data.assigned_pathologist.get_full_name()}</b>",
+                    signatory_style,
+                ),
+                Paragraph(
+                    f"<b>{rbs_data.assigned_technologist.get_full_name()}</b>",
+                    signatory_style,
+                ),
+            ],
+            [
+                Paragraph(
+                    f"Lic no. {assigned_technologist_details.license_number}",
+                    signatory_style,
+                ),
+                Paragraph(
+                    f"Lic no. {assigned_pathologistlogist_details.license_number}",
+                    signatory_style,
+                ),
+            ],
+            [
+                Paragraph("<b>Pathologist</b>", signatory_style),
+                Paragraph("<b>Medical Technologist</b>", signatory_style),
+            ],
+        ]
 
-        # filename = f"rbs_result_{slugify(cross_matching_data.patient)}_{datetime.now().strftime('%Y%m%d')}.pdf"
-        # elements.append(signatory_table)
+        signatory_table = Table(signatory_data, colWidths=[4 * inch, 4 * inch])
+        signatory_table.setStyle(
+            TableStyle(
+                [
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ]
+            )
+        )
+
+        filename = (
+            f"rbs_result_{slugify(get_patient)}_{datetime.now().strftime('%Y%m%d')}.pdf"
+        )
+        elements.append(signatory_table)
         doc.title = "RBS Result"
         doc.build(elements, onFirstPage=add_logo)
         buffer.seek(0)
-        response = FileResponse(buffer, as_attachment=True, filename="filename.pdf")
+        response = FileResponse(buffer, as_attachment=True, filename=f"{filename}")
         return response

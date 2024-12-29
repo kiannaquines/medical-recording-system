@@ -15,6 +15,8 @@
                             <tr>
                                 <th class="text-muted">Patient</th>
                                 <th class="text-muted">Results</th>
+                                <th class="text-muted">Pathologist</th>
+                                <th class="text-muted">Medical Technologist</th>
                                 <th class="text-muted">Action</th>
                             </tr>
                         </thead>
@@ -29,6 +31,8 @@
                                         </span>
                                     {% endfor %}
                                 </td>
+                                <td>{{ result.assigned_pathologist.get_full_name }}</td>
+                                <td>{{ result.assigned_technologist.get_full_name }}</td>
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
                                         <a href="{% url 'rbs_update' pk=result.id %}" class="text-sm">

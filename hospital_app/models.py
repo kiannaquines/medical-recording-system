@@ -295,6 +295,12 @@ class RBSResult(models.Model):
 
     def __str__(self) -> str:
         return self.result
+    
+    def get_time(self):
+        return self.time.strftime("%I:%M %p")
+
+    def get_date(self):
+        return self.date.strftime("%m/%d/%Y")
 
 
 class RBS(models.Model):
