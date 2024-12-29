@@ -8,14 +8,12 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Manage Patient Informations</h5>
 
-                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
-
+                {% if request.user|has_group:"Administrator" %}
                 <a href="{% url 'laboratory_request_super_add' %}" class="btn btn-primary mb-3">Add Request</a>
 
-                {% else %}
-
+                {% endif %}
+                {% if request.user|has_group:"Nurse" %}
                 <a href="{% url 'laboratory_request_add' %}" class="btn btn-primary mb-3">Add Request</a>
-
                 {% endif %}
             </div>
         </div>
@@ -127,8 +125,10 @@
                                 <th class="text-muted">Description</th>
                                 <th class="text-muted">Request Type</th>
                                 <th class="text-muted">Requested</th>
-                                <th class="text-muted">Date Request</th>            
+                                <th class="text-muted">Date Request</th>
+                                {% if request.user|has_group:"Administrator" %}            
                                 <th class="text-muted">Actions</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -147,7 +147,8 @@
                                 <td>
                                     {{ result.date_request }}
                                 </td>
-            
+                                
+                                {% if request.user|has_group:"Administrator" %}
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
                                         <a href="{% url 'lab_result_update' pk=result.id %}" class="text-sm">
@@ -158,6 +159,7 @@
                                         </a>
                                     </div>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>

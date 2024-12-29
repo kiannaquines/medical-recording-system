@@ -98,7 +98,7 @@ class LaboratoryRequestView(ListView):
 
     def get_queryset(self):
         current_user = self.request.user
-        if current_user.groups.filter(Q(name="Administrator") or Q(name="Medical Technologist")).exists():
+        if current_user.groups.filter(Q(name="Medical Technologist")).exists() or current_user.groups.filter(Q(name="Administrator")).exists():
             return LabRequest.objects.all().order_by('-date_request')
         return LabRequest.objects.filter(requested_by=current_user).order_by('-date_request')
 
