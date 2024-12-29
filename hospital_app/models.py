@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -409,7 +410,8 @@ class LabRequest(models.Model):
         choices=lab_request_type,
         help_text="Type of laboratory request",
     )
-    requested_by = models.ForeignKey(User, related_name="requested_by_lab", on_delete=models.CASCADE)
+    
+    requested_by = models.ForeignKey(User, related_name="requested_by_lab", limit_choices_to=Q(groups__name="Doctor") | Q(groups__name="Nurse"), on_delete=models.CASCADE)
     date_request = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:

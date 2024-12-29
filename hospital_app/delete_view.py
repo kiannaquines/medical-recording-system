@@ -3,6 +3,25 @@ from django.views.generic import DeleteView
 from django.urls import reverse_lazy
 
 
+class LabRequestDeleteView(DeleteView):
+    pk_url_kwarg = "pk"
+    template_name = "delete_forms.html"
+    model = LabRequest
+    success_url = reverse_lazy("laboratory__result_list")
+
+    def form_valid(self, form):
+        form = super().form_valid(form)
+        return form
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["detail_header"] = "Delete Lab Request Details"
+        context["humberger_header"] = "Lab Request Details"
+        return context
+
 class UrinalysisDeleteView(DeleteView):
     pk_url_kwarg = "pk"
     template_name = "delete_forms.html"

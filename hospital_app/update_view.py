@@ -9,6 +9,7 @@ from hospital_app.forms import (
     RBSForm,
     UrinalysisForm,
     RBSResultForm,
+    LabRequestForm,
 )
 from hospital_app.models import *
 from django.views.generic import UpdateView
@@ -77,6 +78,26 @@ class CrossMatchingResultUpdateView(UpdateView):
         context["humberger_header"] = "Cross Matching Details"
         return context
 
+
+class LabRequestResultUpdateView(UpdateView):
+    pk_url_kwarg = "pk"
+    template_name = "forms.html"
+    form_class = LabRequestForm
+    model = LabRequest
+    success_url = reverse_lazy("laboratory__result_list")
+
+    def form_valid(self, form):
+        form = super().form_valid(form)
+        return form
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["detail_header"] = "Update Lab Request Details"
+        context["humberger_header"] = "Lab Request Details"
+        return context
 
 class RBSResultUpdateView(UpdateView):
     template_name = "forms.html"

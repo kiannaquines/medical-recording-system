@@ -22,27 +22,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for result in patients %}
+                            {% for result in results %}
                             <tr>
                                 <td>{{ result.patient }}</td>
                                 <td>
                                     {{ result.description }}
                                 </td>
-                                <td>{{ result.lab_request_type }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ result.lab_request_type }}</span>
+                                </td>
                                 <td>
                                     {{ result.date_request }}
                                 </td>
             
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
-                                        <a href="{% url 'patient_update' pk=result.id %}" class="text-sm">
+                                        <a href="{% url 'lab_result_update' pk=result.id %}" class="text-sm">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="{% url 'patient_delete' pk=result.id %}" class="text-sm">
+                                        <a href="{% url 'lab_result_delete' pk=result.id %}" class="text-sm">
                                             <i class="bi bi-trash text-danger"></i>
-                                        </a>
-                                        <a href="{% url 'generate_panbio' pk=result.id %}">
-                                            <i class="bi bi-printer"></i>
                                         </a>
                                     </div>
                                 </td>

@@ -150,11 +150,10 @@
                     <table id="datatable" class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th class="text-muted">Timestamp</th>
-                                <th class="text-muted">User</th>
-                                <th class="text-muted">Action Type</th>
-                                <th class="text-muted">Action Object</th>
-                                <th class="text-muted">Model Transaction</th>
+                                <th class="text-muted">Date Transaction</th>
+                                <th class="text-muted">User/Employee</th>
+                                <th class="text-muted">Action & Action Type</th>
+                                <th class="text-muted">Model Transaction Used</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -163,12 +162,14 @@
                                 <td>{{ log.action_time }}</td>
                                 <td>{{ log.user.get_full_name }}</td>
                                 <td>
-                                    {% if log.action_flag == 1 %} Add 
+                                    <span title="{{ log.object_repr }}" style="cursor: pointer;">
+                                    {{ log.object_repr|truncatechars:45 }}
+                                    - {% if log.action_flag == 1 %} Add 
                                     {% elif log.action_flag == 2 %} Change 
                                     {% elif log.action_flag == 3 %} Delete 
                                     {% endif %}
+                                    </span>
                                 </td>
-                                <td>{{ log.object_repr }}</td>
                                 <td>{{ log.content_type }}</td>
                             </tr>
                             {% endfor %}

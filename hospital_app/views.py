@@ -96,6 +96,12 @@ class LaboratoryRequestView(ListView):
     queryset = LabRequest.objects.all()
     context_object_name = "results"
 
+    def get_queryset(self):
+        current_user = self.request.user
+        if current_user.groups.filter(Q(name="Administrator") or Q(name="Medical Technologist")).exists():
+            return LabRequest.objects.all()
+        return LabRequest.objects.filter(requested_by=current_user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["detail_header"] = "Laboratory Request List"

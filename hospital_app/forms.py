@@ -27,6 +27,10 @@ custom_fields = {
     "time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),
 }
 
+fields_to_exclude = {
+    ""
+}
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(

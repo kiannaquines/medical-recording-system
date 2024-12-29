@@ -39,14 +39,22 @@
                                     {% endfor %}
                                 </td>
                                 <td>
+                                    {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                     <a style="text-decoration: none;" target="_blank" href="{% url 'employee_update' pk=result.pathologist.id %}">
                                         {{ result.pathologist.get_full_name }}
                                     </a>
+                                    {% else %}
+                                        {{ result.pathologist.get_full_name }}
+                                    {% endif %}
                                 </td>
                                 <td>
+                                    {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                     <a style="text-decoration: none;" target="_blank" href="{% url 'employee_update' pk=result.medical_technologist.id %}">
                                         {{ result.medical_technologist.get_full_name }}
                                     </a>
+                                    {% else %}
+                                        {{ result.medical_technologist.get_full_name }}
+                                    {% endif %}
                                 </td>
                                 {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <td>
