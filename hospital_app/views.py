@@ -103,6 +103,7 @@ class PatientListView(ListView):
         context["humberger_header"] = "Patient Details"
         return context
 
+
 class PatientListView(ListView):
     template_name = "patient_bio.html"
     queryset = Patient.objects.all()
@@ -113,6 +114,7 @@ class PatientListView(ListView):
         context["detail_header"] = "Patient Bio"
         context["humberger_header"] = "Patient Bio"
         return context
+
 
 class ClinicalChemistryView(ListView):
     template_name = "chemical_chemistry.html"
