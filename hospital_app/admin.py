@@ -11,6 +11,7 @@ hospital_models = [
     EmployeeInfo,
     RBS,
     Urinalysis,
+    LabRequest,
 ]
 
 for model in hospital_models:

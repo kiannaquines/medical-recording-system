@@ -1,4 +1,5 @@
 {% extends './includes/base.html' %}
+{% load group %}
 
 {% block content %}
 <div class="container-fluid">
@@ -6,7 +7,9 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Manage Employee Informations</h5>
+                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                 <a href="{% url 'employee_add' %}" class="btn btn-primary mb-3">Add Employee</a>
+                {% endif %}
             </div>
             <div class="card mb-4">
                 <div class="card-body">
@@ -17,7 +20,9 @@
                                 <th class="text-muted">Email Address</th>
                                 <th class="text-muted">Position</th>
                                 <th class="text-muted">Date Joined</th>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <th class="text-muted">Actions</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -33,6 +38,7 @@
                                     {% endfor %}
                                 </td>
                                 <td>{{ result.date_joined }}</td>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
                                         <a href="{% url 'employee_update' pk=result.id %}" class="text-sm">
@@ -46,6 +52,7 @@
                                         </a>
                                     </div>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>

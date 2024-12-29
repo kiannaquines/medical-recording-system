@@ -295,7 +295,7 @@ class RBSResult(models.Model):
 
     def __str__(self) -> str:
         return self.result
-    
+
     def get_time(self):
         return self.time.strftime("%I:%M %p")
 
@@ -384,3 +384,35 @@ class Urinalysis(models.Model):
 
     def __str__(self) -> str:
         return f"Urinalysis Result of {self.patient} {self.date}"
+
+
+class LabRequest(models.Model):
+    lab_request_type = (
+        ("Clinical Chemistry", "Clinical Chemistry"),
+        ("Cross Matching", "Cross Matching"),
+        ("Urinalysis", "Urinalysis"),
+        ("Hematology", "Hematology"),
+        ("Serology", "Serology"),
+        ("RBS", "RBS"),
+    )
+    patient = models.ForeignKey(
+        Patient,
+        on_delete=models.CASCADE,
+        related_name="patient_lab_requests",
+        help_text="Patient needs to be examine",
+    )
+    description = models.TextField(
+        max_length=300, help_text="Description for laboratory request"
+    )
+    lab_request_type = models.CharField(
+        max_length=255,
+        choices=lab_request_type,
+        help_text="Type of laboratory request",
+    )
+    date_request = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"Lab Request for {self.patient} laboratory request for {self.lab_request_type}"
+
+    def get_datetime_request(self):
+        return self.date_request.strftime("%m/%d/%Y %I:%M %p")

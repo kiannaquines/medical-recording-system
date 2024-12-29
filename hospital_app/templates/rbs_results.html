@@ -1,4 +1,5 @@
 {% extends './includes/base.html' %}
+{% load group %}
 
 {% block content %}
 <div class="container-fluid">
@@ -6,7 +7,9 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Manage RBS Results</h5>
+                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                 <a href="{% url 'rbs_result_add' %}" class="btn btn-primary mb-3">Add Result</a>
+                {% endif %}
             </div>
             <div class="card mb-4">
                 <div class="card-body">
@@ -16,7 +19,9 @@
                                 <th class="text-muted">Result</th>
                                 <th class="text-muted">Date</th>
                                 <th class="text-muted">Time</th>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <th class="text-muted">Action</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -25,6 +30,7 @@
                                 <td>{{ result.result }}</td>
                                 <td>{{ result.date }}</td>
                                 <td>{{ result.time }}</td>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
                                         <a href="{% url 'rbs_result_update' pk=result.id %}" class="text-sm">
@@ -35,6 +41,7 @@
                                         </a>
                                     </div>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>

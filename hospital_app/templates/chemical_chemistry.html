@@ -1,4 +1,5 @@
 {% extends './includes/base.html' %}
+{% load group %}
 
 {% block content %}
 <div class="container-fluid">
@@ -6,7 +7,9 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Manage Clinical Results</h5>
+                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                 <a href="{% url 'clinical_chemistry_add' %}" class="btn btn-primary mb-3">Add Clinical Chemistry</a>
+                {% endif %}
             </div>
             <div class="card mb-4">
                 <div class="card-body">
@@ -21,7 +24,9 @@
                                 <th class="text-muted">LDL</th>
                                 <th class="text-muted">Creatinine</th>
                                 <th class="text-muted">Uric Acid</th>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <th class="text-muted">Action</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -35,6 +40,7 @@
                                 <td>{{ result.ldl }}</td>
                                 <td>{{ result.creatinine }}</td>
                                 <td>{{ result.uric_acid }}</td>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
                                         <a href="{% url 'clinical_chemistry_update' pk=result.id %}" class="text-sm">
@@ -48,6 +54,7 @@
                                         </a>
                                     </div>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>

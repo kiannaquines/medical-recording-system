@@ -1,4 +1,5 @@
 {% extends './includes/base.html' %}
+{% load group %}
 
 {% block content %}
 <div class="container-fluid">
@@ -19,7 +20,9 @@
                                 <th class="text-muted">Physician</th>
                                 <th class="text-muted">Room #</th>
                                 <th class="text-muted">SARS Result</th>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <th class="text-muted">Actions</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -36,6 +39,7 @@
                                 <td>{{ result.physician.get_full_name }}</td>
                                 <td>{{ result.room_number }}</td>
                                 <td>{{ result.sars_result }}</td>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
                                         <a href="{% url 'generate_panbio' pk=result.id %}">
@@ -43,6 +47,7 @@
                                         </a>
                                     </div>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>

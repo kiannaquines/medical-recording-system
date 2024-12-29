@@ -1,4 +1,5 @@
 {% extends './includes/base.html' %}
+{% load group %}
 
 {% block content %}
 <div class="container-fluid">
@@ -6,7 +7,9 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Manage Cross Matching Results</h5>
+                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                 <a href="{% url 'cross_matching_add' %}" class="btn btn-primary mb-3">Add Cross Matching Result</a>
+                {% endif %}
             </div>
             <div class="card mb-4">
                 <div class="card-body">
@@ -17,7 +20,9 @@
                                 <th class="text-muted">Result</th>
                                 <th class="text-muted">Pathologist</th>
                                 <th class="text-muted">Medical Technologist</th>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <th class="text-muted">Actions</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -42,7 +47,8 @@
                                     <a style="text-decoration: none;" target="_blank" href="{% url 'employee_update' pk=result.medical_technologist.id %}">
                                         {{ result.medical_technologist.get_full_name }}
                                     </a>
-                                    </td>
+                                </td>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
                                         <a href="{% url 'cross_matching_update' pk=result.id %}" class="text-sm">
@@ -56,6 +62,7 @@
                                         </a>
                                     </div>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>

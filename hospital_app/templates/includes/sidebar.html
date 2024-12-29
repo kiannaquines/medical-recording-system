@@ -26,22 +26,22 @@
                 role="menu"
                 data-accordion="false"
             >
+            <li>
+                <a href="#" class="nav-link">
+                    <small class="text-uppercase text-muted">
+                        Dashboard Module
+                    </small>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="nav-icon bi bi-speedometer"></i>
+                    <p>
+                        Dashboard
+                    </p>
+                </a>
+            </li>
             {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
-                <li>
-                    <a href="#" class="nav-link">
-                        <small class="text-uppercase text-muted">
-                            Dashboard Module
-                        </small>
-                    </a>
-                </li>
-                <li class="nav-item active">
-                    <a href="{% url 'dashboard' %}" class="nav-link">
-                        <i class="nav-icon bi bi-speedometer"></i>
-                        <p>
-                            Dashboard
-                        </p>
-                    </a>
-                </li>
                 <li>
                     <a href="#" class="nav-link">
                         <small class="text-uppercase text-muted">

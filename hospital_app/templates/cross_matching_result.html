@@ -1,4 +1,5 @@
 {% extends './includes/base.html' %}
+{% load group %}
 
 {% block content %}
 <div class="container-fluid">
@@ -6,7 +7,9 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Manage Cross Matching Results</h5>
+                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                 <a href="{% url 'cross_matching_result_add' %}" class="btn btn-primary mb-3">Add Cross Matching Result</a>
+                {% endif %}
             </div>
             <div class="card mb-4">
                 <div class="card-body">
@@ -19,7 +22,9 @@
                                 <th class="text-muted">Collection Date</th>
                                 <th class="text-muted">Expiration Date</th>
                                 <th class="text-muted">Result</th>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <th class="text-muted">Actions</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -31,6 +36,7 @@
                                 <td>{{ result.date_of_collection }}</td>
                                 <td>{{ result.expiration_date }}</td>
                                 <td>{{ result.result }}</td>
+                                {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
                                         <a href="{% url 'cross_matching_result_update' pk=result.id %}" class="text-sm">
@@ -41,6 +47,7 @@
                                         </a>
                                     </div>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>
