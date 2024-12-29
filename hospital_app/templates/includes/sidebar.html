@@ -1,4 +1,6 @@
 {% load static %}
+{% load group %}
+
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
     <div class="sidebar-brand d-flex align-items-center gap-2">
         <div class="bg-success rounded px-2 py-1">
@@ -24,6 +26,7 @@
                 role="menu"
                 data-accordion="false"
             >
+            {% if request.user|has_group:"Administrator" or request.user|has_group:"Medical Technologist" %}
                 <li>
                     <a href="#" class="nav-link">
                         <small class="text-uppercase text-muted">
@@ -141,6 +144,87 @@
                         </p>
                     </a>
                 </li>
+                {% elif request.user|has_group:"Doctor" or request.user|has_group:"Nurse" %}
+                <li>
+                    <a href="#" class="nav-link">
+                        <small class="text-uppercase text-muted">
+                            Laboratory result
+                        </small>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'chemical_chemistry_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            Chemical Chemistry
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'serology_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            Serology
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'hematology_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            Hematology
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'urinalysis_result_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            Urinalysis Results
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'cross_matching_result_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            Cross Matching Result
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'cross_matching_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            Cross Matching
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'rbs__result_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            RBS Results
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'rbs_result_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            Patient RBS Results
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'patient_bio_list' %}" class="nav-link">
+                        <i class="nav-icon bi bi-file-medical"></i>
+                        <p>
+                            Patient Bio
+                        </p>
+                    </a>
+                </li>
+                {% endif %}
                 <li>
                     <a href="#" class="nav-link">
                         <small class="text-uppercase text-muted">
