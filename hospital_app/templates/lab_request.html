@@ -27,7 +27,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Hematology Request</span>
                     <span class="info-box-number">
-                        12
+                        {{ hematology_count }}
                     </span>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">Serology Request</span>
-                    <span class="info-box-number">34</span>
+                    <span class="info-box-number">{{ serology_count }}</span>
                 </div>
             </div>
         </div>
@@ -49,8 +49,10 @@
                     <i class="bi bi-person-check"></i>
                 </span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Chemical Chemistry</span>
-                    <span class="info-box-number">34</span>
+                    <span class="info-box-text">Clinical Chemistry</span>
+                    <span class="info-box-number">
+                        {{ clinical_chemistry_count }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -61,46 +63,41 @@
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">Urinalysis</span>
-                    <span class="info-box-number">45</span>
+                    <span class="info-box-number">
+                        {{ urinalysis_count }}
+                    </span>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
+        <div class="col-12 col-sm-6 col-md-4">
             <div class="info-box">
                 <span class="info-box-icon text-bg-danger shadow-sm">
                     <i class="bi bi-person-exclamation"></i>
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">Cross Matching</span>
-                    <span class="info-box-number">34</span>
+                    <span class="info-box-number">
+                        {{ cross_matching_count }}
+                    </span>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-3">
+        <div class="col-12 col-sm-6 col-md-4">
             <div class="info-box">
                 <span class="info-box-icon text-bg-success shadow-sm">
                     <i class="bi bi-person-check"></i>
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">RBS Request</span>
-                    <span class="info-box-number">34</span>
+                    <span class="info-box-number">
+                        {{ rbs_count }}
+                    </span>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon text-bg-warning shadow-sm">
-                    <i class="bi bi-people"></i>
-                </span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Patient Bio</span>
-                    <span class="info-box-number">45</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
+        <div class="col-12 col-sm-6 col-md-4">
             <div class="info-box">
                 <span class="info-box-icon text-bg-primary shadow-sm">
                     <i class="bi bi-person"></i>
@@ -108,7 +105,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Overall Request</span>
                     <span class="info-box-number">
-                        12
+                        {{ overall_results }}
                     </span>
                 </div>
             </div>

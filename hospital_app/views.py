@@ -104,8 +104,17 @@ class LaboratoryRequestView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context["detail_header"] = "Laboratory Request List"
         context["humberger_header"] = "Laboratory Request"
+        context["hematology_count"] = LabRequest.objects.filter(lab_request_type='Hematology').count()
+        context["serology_count"] = LabRequest.objects.filter(lab_request_type='Serology').count()
+        context["clinical_chemistry_count"] = LabRequest.objects.filter(lab_request_type='Clinical Chemistry').count()
+        context["cross_matching_count"] = LabRequest.objects.filter(lab_request_type='Cross Matching').count()
+        context["urinalysis_count"] = LabRequest.objects.filter(lab_request_type='Urinalysis').count()
+        context["rbs_count"] = LabRequest.objects.filter(lab_request_type='RBS').count()
+        context["overall_results"] = LabRequest.objects.count()
+
         return context
 
 
