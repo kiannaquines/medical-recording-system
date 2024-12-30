@@ -82,7 +82,7 @@ class DashboardView(View):
 
 class EmployeeListView(ListView):
     template_name = "employee.html"
-    queryset = User.objects.all().order_by('-date_joined')
+    queryset = User.objects.all().order_by("-date_joined")
     context_object_name = "employees"
 
     def get_context_data(self, **kwargs):
@@ -90,29 +90,45 @@ class EmployeeListView(ListView):
         context["detail_header"] = "Employee Details List"
         context["humberger_header"] = "Employee Details"
         return context
-    
+
+
 class LaboratoryRequestView(ListView):
     template_name = "lab_request.html"
-    queryset = LabRequest.objects.all().order_by('-date_request')
+    queryset = LabRequest.objects.all().order_by("-date_request")
     context_object_name = "results"
 
     def get_queryset(self):
         current_user = self.request.user
-        if current_user.groups.filter(Q(name="Medical Technologist")).exists() or current_user.groups.filter(Q(name="Administrator")).exists():
-            return LabRequest.objects.all().order_by('-date_request')
-        return LabRequest.objects.filter(requested_by=current_user).order_by('-date_request')
+        if (
+            current_user.groups.filter(Q(name="Medical Technologist")).exists()
+            or current_user.groups.filter(Q(name="Administrator")).exists()
+        ):
+            return LabRequest.objects.all().order_by("-date_request")
+        return LabRequest.objects.filter(requested_by=current_user).order_by(
+            "-date_request"
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context["detail_header"] = "Laboratory Request List"
         context["humberger_header"] = "Laboratory Request"
-        context["hematology_count"] = LabRequest.objects.filter(lab_request_type='Hematology').count()
-        context["serology_count"] = LabRequest.objects.filter(lab_request_type='Serology').count()
-        context["clinical_chemistry_count"] = LabRequest.objects.filter(lab_request_type='Clinical Chemistry').count()
-        context["cross_matching_count"] = LabRequest.objects.filter(lab_request_type='Cross Matching').count()
-        context["urinalysis_count"] = LabRequest.objects.filter(lab_request_type='Urinalysis').count()
-        context["rbs_count"] = LabRequest.objects.filter(lab_request_type='RBS').count()
+        context["hematology_count"] = LabRequest.objects.filter(
+            lab_request_type="Hematology"
+        ).count()
+        context["serology_count"] = LabRequest.objects.filter(
+            lab_request_type="Serology"
+        ).count()
+        context["clinical_chemistry_count"] = LabRequest.objects.filter(
+            lab_request_type="Clinical Chemistry"
+        ).count()
+        context["cross_matching_count"] = LabRequest.objects.filter(
+            lab_request_type="Cross Matching"
+        ).count()
+        context["urinalysis_count"] = LabRequest.objects.filter(
+            lab_request_type="Urinalysis"
+        ).count()
+        context["rbs_count"] = LabRequest.objects.filter(lab_request_type="RBS").count()
         context["overall_results"] = LabRequest.objects.count()
 
         return context
@@ -120,7 +136,7 @@ class LaboratoryRequestView(ListView):
 
 class PatientListView(ListView):
     template_name = "patient.html"
-    queryset = Patient.objects.all().order_by('-date')
+    queryset = Patient.objects.all().order_by("-date")
     context_object_name = "patients"
 
     def get_context_data(self, **kwargs):
@@ -132,7 +148,7 @@ class PatientListView(ListView):
 
 class PatientPanBioListView(ListView):
     template_name = "patient_bio.html"
-    queryset = Patient.objects.all().order_by('-date')
+    queryset = Patient.objects.all().order_by("-date")
     context_object_name = "patients"
 
     def get_context_data(self, **kwargs):
@@ -144,7 +160,7 @@ class PatientPanBioListView(ListView):
 
 class ClinicalChemistryView(ListView):
     template_name = "chemical_chemistry.html"
-    queryset = ClinicalChemistry.objects.all().order_by('-date')
+    queryset = ClinicalChemistry.objects.all().order_by("-date")
     context_object_name = "results"
 
     def get_context_data(self, **kwargs):
