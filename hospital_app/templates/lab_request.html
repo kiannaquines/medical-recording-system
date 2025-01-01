@@ -130,7 +130,6 @@
                                 <th class="text-muted">Description</th>
                                 <th class="text-muted">Request Type</th>
                                 <th class="text-muted">Requested</th>
-                                <th class="text-muted">Date Request</th>
                                 {% if request.user|has_group:"Administrator" %}
                                 <th class="text-muted">Actions</th>
                                 {% endif %}
@@ -141,16 +140,13 @@
                             <tr>
                                 <td>{{ result.patient }}</td>
                                 <td>
-                                    {{ result.description }}
+                                    {{ result.description|truncatechars:40 }}
                                 </td>
                                 <td>
                                     <span class="badge bg-primary">{{ result.lab_request_type }}</span>
                                 </td>
                                 <td>
                                     {{ result.requested_by.get_full_name }}
-                                </td>
-                                <td>
-                                    {{ result.date_request }}
                                 </td>
                                 {% if request.user|has_group:"Administrator" %}
                                 <td>

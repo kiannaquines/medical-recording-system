@@ -143,8 +143,13 @@ class BaseForm(forms.ModelForm):
 
     def add_custom_widgets(self):
         for field_name, field in self.fields.items():
-            field.widget.attrs.update({"required": True})
             field.widget.attrs.update({"class": "form-control"})
+
+            if field_name == "middlename":
+                field.widget.attrs.update({"required": False})
+            else:
+                field.widget.attrs.update({"required": True})
+
 
             if field_name in custom_fields:
                 self.fields[field_name].widget = custom_fields[field_name]

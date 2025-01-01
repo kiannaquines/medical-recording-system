@@ -16,7 +16,7 @@ class EmployeeInfo(models.Model):
 
 class Patient(models.Model):
     firstname = models.CharField(max_length=255)
-    middlename = models.CharField(max_length=255)
+    middlename = models.CharField(max_length=255, null=False, blank=True)
     lastname = models.CharField(max_length=255)
 
     age = models.PositiveIntegerField()
@@ -63,7 +63,7 @@ class Patient(models.Model):
     )
 
     def get_full_name(self):
-        return f"{self.firstname} {self.middlename} {self.lastname}"
+        return f"{self.firstname}  { self.middlename[0] + '.' if self.middlename else ''} {self.lastname}"
 
     def get_date(self):
         return self.date.strftime("%Y/%m/%d")
