@@ -50,9 +50,56 @@
                     <i class="bi bi-person-lock"></i>
                     Login as Administator
                 </a>
+                <a
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    class="btn btn-primary mt-1"
+                >
+                    <i class="bi bi-person-lock"></i>
+                    Are you a patient?
+                </a>
             </div>
         </div>
     </form>
 </div>
+</div>
+<div
+    class="modal fade"
+    id="exampleModal"
+    aria-hidden="true"
+    aria-labelledby="exampleModalLabel"
+    tabindex="-1"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Search Patient Information</h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="get">
+                    <div class="input-group mb-3">
+                        <input
+                            type="search"
+                            name="patient"
+                            id="patient"
+                            class="form-control"
+                            placeholder="Search Patient"
+                            aria-label="Search Patient"
+                        >
+                        <button type="submit" class="btn btn-success">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
