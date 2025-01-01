@@ -7,13 +7,21 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Manage Patient Informations</h5>
-
                 {% if request.user|has_group:"Administrator" %}
-                <a href="{% url 'laboratory_request_super_add' %}" class="btn btn-primary mb-3">Add Request</a>
-
+                <div class="d-flex gap-2">
+                    <a href="{% url 'laboratory_request_super_add' %}" class="btn btn-primary mb-3">
+                        Add Request
+                    </a>
+                    <a href="{% url 'laboratory_request_super_add' %}" class="btn btn-primary mb-3">
+                        Generate Laboratory Stats
+                    </a>
+                </div>
                 {% endif %}
+
                 {% if request.user|has_group:"Nurse" %}
-                <a href="{% url 'laboratory_request_add' %}" class="btn btn-primary mb-3">Add Request</a>
+                <a href="{% url 'laboratory_request_add' %}" class="btn btn-primary mb-3">
+                    Add Request
+                </a>
                 {% endif %}
             </div>
         </div>
@@ -71,7 +79,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-12 col-sm-6 col-md-4">
+        <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box">
                 <span class="info-box-icon text-bg-danger shadow-sm">
                     <i class="bi bi-person-exclamation"></i>
@@ -84,7 +92,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4">
+        <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box">
                 <span class="info-box-icon text-bg-success shadow-sm">
                     <i class="bi bi-person-check"></i>
@@ -97,7 +105,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4">
+        <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box">
                 <span class="info-box-icon text-bg-primary shadow-sm">
                     <i class="bi bi-person"></i>
@@ -123,7 +131,7 @@
                                 <th class="text-muted">Request Type</th>
                                 <th class="text-muted">Requested</th>
                                 <th class="text-muted">Date Request</th>
-                                {% if request.user|has_group:"Administrator" %}            
+                                {% if request.user|has_group:"Administrator" %}
                                 <th class="text-muted">Actions</th>
                                 {% endif %}
                             </tr>
@@ -144,7 +152,6 @@
                                 <td>
                                     {{ result.date_request }}
                                 </td>
-                                
                                 {% if request.user|has_group:"Administrator" %}
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start gap-2">
