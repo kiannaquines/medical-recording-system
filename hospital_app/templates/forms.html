@@ -18,7 +18,7 @@
                                 <div class="form-check mt-2">
                                     {{ input }}
                                     <label class="form-check-label text-uppercase text-sm" for="{{ input.id_for_label }}">
-                                        <small>{{ input.label }} </small>
+                                        <small class="text-muted">{{ input.label }} </small>
                                         {% if input.field.required %}
                                         <span class="text-danger">*</span>
                                         {% endif %}
@@ -28,7 +28,7 @@
                                 {% else %}
                                 <div class="form-group mt-2 mb-2">
                                     <label class="fw-normal text-uppercase text-sm" for="{{ input.id_for_label }}">
-                                        <small>{{ input.label }} </small>
+                                        <small class="text-muted">{{ input.label }} </small>
                                         {% if input.field.required %}
                                         <span class="text-danger">*</span>
                                         {% endif %}

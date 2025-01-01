@@ -12,7 +12,7 @@
                     <a href="{% url 'laboratory_request_super_add' %}" class="btn btn-primary mb-3">
                         Add Request
                     </a>
-                    <a href="{% url 'laboratory_request_super_add' %}" class="btn btn-primary mb-3">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary mb-3">
                         Generate Laboratory Stats
                     </a>
                 </div>
@@ -165,6 +165,56 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="modal fade"
+    id="exampleModal"
+    aria-hidden="true"
+    aria-labelledby="exampleModalLabel"
+    tabindex="-1"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Search Patient Information</h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="get">
+                    <div class="form-group mb-3">
+                        <label class="text-uppercase" for="date_first">
+                            <small class="text-muted">Start Date</small>
+                        </label>
+                        <input
+                            type="date"
+                            name="date_first"
+                            id="date_first"
+                            class="form-control"
+                        >
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="text-uppercase" for="date_second">
+                            <small class="text-muted">End Date</small>
+                        </label>
+                        <input
+                            type="date"
+                            name="date_second"
+                            id="date_second"
+                            class="form-control"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        Export Report
+                    </button>
+                </form>
             </div>
         </div>
     </div>
