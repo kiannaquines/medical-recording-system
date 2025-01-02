@@ -5,6 +5,7 @@ from django.http import (
     FileResponse,
     HttpResponse,
     HttpResponseRedirect,
+    JsonResponse,
 )
 from django.urls import reverse_lazy
 from hospital_app.forms import LoginForm
@@ -30,6 +31,76 @@ from core.settings import LOGO_PATH
 from reportlab.lib.pagesizes import letter
 from django.utils.text import slugify
 from datetime import datetime
+
+
+def generate_report(request):
+    if request.method == "GET":
+
+        lab_requests = LabRequest.objects
+        clinical_chemistry = ClinicalChemistry.objects
+        serology = Serology.objects
+        hematology = Hematology.objects
+        cross_matching = CrossMatching.objects
+        in_patient = Patient.objects.filter(patient_type="In Patient")
+        out_patient = Patient.objects.filter(patient_type="Out Patient")
+
+        start_date = datetime.strptime(request.GET.get("start_date"), "%Y-%m-%d").date() if request.GET.get("start_date") else None
+        end_date = datetime.strptime(request.GET.get("end_date"), "%Y-%m-%d").date() if request.GET.get("start_date") else None
+
+        if start_date and end_date:
+            lab_requests = lab_requests.filter(date_request__range=[start_date, end_date]).count()
+            clinical_chemistry = clinical_chemistry.filter(date__range=[start_date, end_date]).count()
+            serology = serology.filter(date__range=[start_date, end_date]).count()
+            hematology = hematology.filter(date__range=[start_date, end_date]).count()
+            cross_matching = cross_matching.filter(created_at__range=[start_date, end_date]).count()
+            in_patient = in_patient.filter(date__range=[start_date, end_date]).count()
+            out_patient = out_patient.filter(date__range=[start_date, end_date]).count()
+        else:
+            lab_requests = lab_requests.count()
+            clinical_chemistry = clinical_chemistry.count()
+            serology = serology.count()
+            hematology = hematology.count()
+            cross_matching = cross_matching.count()
+            in_patient = in_patient.count()
+            out_patient = out_patient.count()
+      
+        data = {
+            "lab_requests": {
+                'total': lab_requests,
+                'name': 'Overall Laboratory Request'
+            },
+            "clinical_chemistry": {
+                'total': clinical_chemistry,
+                'name': 'Clinical Chemistry'
+            },
+            "serology": {
+                'total': serology,
+                'name': 'Serology'
+            },
+            "hematology": {
+                'total': hematology,
+                'name': 'Hematology'
+            },
+            "cross_matching": {
+                'total': cross_matching,
+                'name': 'Cross Matching'
+            },
+            "in_patient": {
+                'total': in_patient,
+                'name': 'In Patient'
+            },
+            "out_patient": {
+                'total': out_patient,
+                'name': 'Out Patient'
+            },
+            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "header_report_type": f"Report from {start_date} to {end_date}" if start_date and end_date else "Overall Report",
+        }
+
+        return JsonResponse(data)
+        
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
 class LoginView(View):

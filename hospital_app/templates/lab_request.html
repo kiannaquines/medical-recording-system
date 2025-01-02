@@ -1,6 +1,6 @@
 {% extends './includes/base.html' %}
 {% load group %}
-
+{% load static %}
 {% block content %}
 <div class="container-fluid">
     <div class="row">
@@ -12,8 +12,13 @@
                     <a href="{% url 'laboratory_request_super_add' %}" class="btn btn-primary mb-3">
                         Add Request
                     </a>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary mb-3">
-                        Generate Laboratory Stats
+                    <a
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#GenerateReportModal"
+                        class="btn btn-primary mb-3"
+                    >
+                        Generate Laboratory Report
                     </a>
                 </div>
                 {% endif %}
@@ -171,15 +176,15 @@
 </div>
 <div
     class="modal fade"
-    id="exampleModal"
+    id="GenerateReportModal"
     aria-hidden="true"
-    aria-labelledby="exampleModalLabel"
+    aria-labelledby="GenerateReportModalLabel"
     tabindex="-1"
 >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Search Patient Information</h1>
+                <h1 class="modal-title fs-5" id="GenerateReportModalLabel">Generate Report</h1>
                 <button
                     type="button"
                     class="btn-close"
@@ -188,35 +193,243 @@
                 ></button>
             </div>
             <div class="modal-body">
-                <form action="" method="get">
+                <form action="{% url 'generate_report' %}" method="get">
                     <div class="form-group mb-3">
-                        <label class="text-uppercase" for="date_first">
-                            <small class="text-muted">Start Date</small>
+                        <label class="text-uppercase" for="start_date">
+                            <small class="text-muted">Start Date (Optional)</small>
                         </label>
                         <input
                             type="date"
-                            name="date_first"
-                            id="date_first"
+                            name="start_date"
+                            id="start_date"
                             class="form-control"
                         >
                     </div>
                     <div class="form-group mb-3">
-                        <label class="text-uppercase" for="date_second">
-                            <small class="text-muted">End Date</small>
+                        <label class="text-uppercase" for="end_date">
+                            <small class="text-muted">End Date (Optional)</small>
                         </label>
                         <input
                             type="date"
-                            name="date_second"
-                            id="date_second"
+                            name="end_date"
+                            id="end_date"
                             class="form-control"
                         >
                     </div>
-                    <button type="submit" class="btn btn-success">
-                        Export Report
+                    <button type="button" class="btn btn-success" id="generateReportButton">
+                        Generate Report
                     </button>
+                    <input type="reset" class="btn btn-secondary" value="Reset">
                 </form>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block js_block %}
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const generateReportButton = document.getElementById('generateReportButton');
+    const printReportButton = document.getElementById('nextModalPrintBody');
+
+    generateReportButton.addEventListener('click', function() {
+        const startDate = document.getElementById('start_date').value;
+        const endDate = document.getElementById('end_date').value;
+
+        if (startDate && endDate === "") {
+            alert('End date is required');
+            return;
+        }
+
+        if (endDate && startDate === "") {
+            alert('Start date is required');
+            return;
+        }
+
+        if (startDate && endDate) {
+
+            if (startDate > endDate) {
+                alert('Start date cannot be greater than end date');
+                return;
+            }
+
+            if (startDate === endDate) {
+                alert('Start date and end date cannot be the same');
+                return;
+            }
+        }
+
+        const params = new URLSearchParams({
+            start_date: startDate,
+            end_date: endDate
+        });
+
+        fetch('{% url "generate_report" %}?' + params.toString(), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            
+            if (data.error) {
+                alert(data.error);
+                return
+            }
+
+            const width = 800;
+            const height = 600;
+
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+
+            const left = (screenWidth - width) / 2;
+            const top = (screenHeight - height) / 2;
+
+            const newWindow = window.open(
+                '',
+                '_blank',
+                `width=${width},height=${height},top=${top},left=${left},resizable=no,scrollbars=no`
+            );
+            
+            
+            newWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Print Report</title>
+                    <link
+                        rel="stylesheet"
+                        href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+                        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
+                        crossorigin="anonymous"
+                    >
+                    <link
+                        rel="stylesheet"
+                        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css"
+                        integrity="sha256-Qsx5lrStHZyR9REqhUF8iQt73X06c8LGIUPzpOhwRrI="
+                        crossorigin="anonymous"
+                    >
+                    <link rel="stylesheet" href="{% static 'css/adminlte.css' %}" media="all">
+                    <style>
+                        body {
+                            margin: 50px;
+                            background-color: #ffffff;
+                        }
+
+                        #print{
+                            outline: none;
+                        }
+
+                        #download{
+                            outline: none;
+                        }
+
+                        @media print {
+                            @page {
+                                margin: 0px;
+                            }
+
+                            #print{
+                                display: none;
+                            }
+
+                            #download{
+                                display: none;
+                            }
+                        }
+                    </style>
+                </head>
+                <body id="content">
+                    <header class="d-flex align-items-center justify-content-between gap-2" style="margin-bottom: 20px">
+                        <img src="{% static 'assets/img/logo.jpg' %}" alt="Logo" class="img-fluid" width="100" height="100">
+                        <div>
+                            <span style="font-size: 17px" class="fw-bold d-block text-center">PRESIDENT ROXAS PROVINCIAL COMMUNITY HOSPITAL</span>
+                            <span style="font-size: 16px" class="fw-bold d-block text-center">New Cebu. Pres. Roxas . Cotabato</span>
+                            <span style="font-size: 15px" class="fw-bold d-block text-center">Hospital Performance</span>
+                            <span style="font-size: 15px" class="fw-bold d-block text-center">${data.header_report_type}</span>
+                        </div>
+                        <img src="{% static 'assets/img/hospital_logo.jpg' %}" alt="Logo" class="img-fluid" width="90" height="100">
+                    </header>
+                    <main>
+                        <h6>Generated By: <span class="fw-bold"> {{ request.user.get_full_name }}</span></h6>
+                        <h6>Date: <span class="fw-bold"> ${data.generated_at}</span></h6>
+                        <table class="table table-bordered" style="margin-top: 50px">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Laboratory/Event</th>
+                                    <th scope="col">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>1</th>
+                                    <td>${data.lab_requests.name}</td>
+                                    <td>${data.lab_requests.total}</td>
+                                </tr>
+                                <tr>
+                                    <th>2</th>
+                                    <td>${data.clinical_chemistry.name}</td>
+                                    <td>${data.clinical_chemistry.total}</td>
+                                </tr>
+                                <tr>
+                                    <th>3</th>
+                                    <td>${data.serology.name}</td>
+                                    <td>${data.serology.total}</td>
+                                </tr>
+                                <tr>
+                                    <th>4</th>
+                                    <td>${data.hematology.name}</td>
+                                    <td>${data.hematology.total}</td>
+                                </tr>
+                                <tr>
+                                    <th>5</th>
+                                    <td>${data.cross_matching.name}</td>
+                                    <td>${data.cross_matching.total}</td>
+                                </tr>
+                                <tr>
+                                    <th>6</th>
+                                    <td>${data.in_patient.name}</td>
+                                    <td>${data.in_patient.total}</td>
+                                </tr>
+                                <tr>
+                                    <th>7</th>
+                                    <td>${data.out_patient.name}</td>
+                                    <td>${data.out_patient.total}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button id="downloadPdf">PDF Document</button>
+                        <button onclick="return window.print();" id="print">Print Document</button>
+                    </main>
+                </body>
+                </html>
+            `);
+            
+            newWindow.onload = function() {
+                newWindow.document.querySelector('#downloadPdf').addEventListener('click', () => {
+                    const { jsPDF } = window.jspdf;
+                    const content = newWindow.document.getElementById('content');
+                    const pdf = new jsPDF();
+                    pdf.html(content, {
+                        callback: function(doc) {
+                            doc.save('report.pdf');
+                        },
+                    });
+                });
+            };
+        })
+        .catch(error => {
+            alert('An error occurred: ' + error.message);
+        });
+    });
+
+});
+</script>
 {% endblock %}

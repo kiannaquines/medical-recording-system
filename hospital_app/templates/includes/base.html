@@ -23,7 +23,7 @@
             integrity="sha256-Qsx5lrStHZyR9REqhUF8iQt73X06c8LGIUPzpOhwRrI="
             crossorigin="anonymous"
         >
-        <link rel="stylesheet" href="{% static 'css/adminlte.css' %}">
+        <link rel="stylesheet" href="{% static 'css/adminlte.css' %}" media="all">
         <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -51,6 +51,7 @@
         <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.1.8/datatables.min.js"></script>
+        {% block js_block %}{% endblock %}
         <script>
         $(function () {
           $("#datatable").DataTable({
