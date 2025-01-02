@@ -31,6 +31,40 @@ from core.settings import LOGO_PATH
 from reportlab.lib.pagesizes import letter
 from django.utils.text import slugify
 from datetime import datetime
+import json
+
+
+def view_patient_informations(request):
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.body)
+            patient_id = body.get('patient_id')
+            room_number = body.get('room_number')
+            age = body.get('age')
+
+            patient_info = Patient.objects.filter(
+                pk=patient_id,
+                room_number=room_number,
+                age=age
+            )
+
+            if patient_info.exists():
+                return JsonResponse({
+                    "success": True,
+                    "patient_info": {
+                        "id": patient_info[0].id,
+                        "name": patient_info[0].get_full_name(),
+                        "room_number": patient_info[0].room_number,
+                        "age": patient_info[0].age,
+                    }
+                })
+            else:
+                return JsonResponse({"success": False, "error": "No patient found."})
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON body"}, status=400)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
 def generate_report(request):
@@ -117,7 +151,7 @@ class LoginView(View):
     def get(self, request):
         context = {}
         context["login_form"] = LoginForm()
-        context['patients'] = Patient.objects.all().order_by("-date")
+        context["patients"] = Patient.objects.all().order_by("-date")
         return render(request, "login.html", context)
 
     def post(self, request):

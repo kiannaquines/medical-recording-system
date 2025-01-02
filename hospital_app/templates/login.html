@@ -102,7 +102,12 @@
                             </td>
                             <td width="8%">
                                 <div class="d-flex align-items-center justify-content-start gap-2">
-                                    <a href="#" id="view-my-data" data-id="{{ result.id }}" data-name="{{ result.get_full_name }}">
+                                    <a
+                                        href="#"
+                                        id="view-my-data"
+                                        data-id="{{ result.id }}"
+                                        data-name="{{ result.get_full_name }}"
+                                    >
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </div>
@@ -160,11 +165,30 @@
             }
         });
 
-        if (age && roomNumber) {
-            Swal.fire(`Age: ${age}, Room Number: ${roomNumber}`);
-        }
+        fetch('{% url "view_patient_informations" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                patient_id: dataId,
+                age: age,
+                room_number: roomNumber,
+            })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('Success:', data);
+        })
+        .catch(error => {
+            alert('Error:', error);
+        });
     });
 });
-
 </script>
 {% endblock %}

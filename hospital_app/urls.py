@@ -71,4 +71,8 @@ urlpatterns = [
 
     # Generate Report
     path('generate-report', generate_report, name="generate_report"),
+
+
+    # View Patient Informations
+    path('patient/information/', view_patient_informations, name="view_patient_informations"),
 ]
