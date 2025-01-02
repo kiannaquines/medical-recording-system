@@ -165,29 +165,31 @@
             }
         });
 
-        fetch('{% url "view_patient_informations" %}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-            body: JSON.stringify({
-                patient_id: dataId,
-                age: age,
-                room_number: roomNumber,
+        if (age && roomNumber) {
+            fetch('{% url "view_patient_informations" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    patient_id: dataId,
+                    age: age,
+                    room_number: roomNumber,
+                })
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
             })
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert('Success:', data);
-        })
-        .catch(error => {
-            alert('Error:', error);
-        });
+            .then(data => {
+                alert('Success:', data);
+            })
+            .catch(error => {
+                alert('Error:', error);
+            });
+        }
     });
 });
 </script>
