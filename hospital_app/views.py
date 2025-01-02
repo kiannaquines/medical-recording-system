@@ -65,12 +65,12 @@ def view_patient_informations(request):
                     }
                 )
             else:
-                return JsonResponse({"success": False, "error": "No patient found."})
+                return JsonResponse({"success": False, "error": "Sorry, you provided invalid information please try again."})
 
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON body"}, status=400)
+            return JsonResponse({"error": "Sorry, invalid JSON body"}, status=400)
 
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+    return JsonResponse({"error": "Sorry, invalid request method"}, status=405)
 
 
 def generate_report(request):

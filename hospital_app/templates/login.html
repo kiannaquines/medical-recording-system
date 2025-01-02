@@ -120,6 +120,28 @@
         </div>
     </div>
 </div>
+<div
+    class="modal fade"
+    id="PatientInformationModal"
+    aria-hidden="true"
+    aria-labelledby="PatientInformationModalLabel"
+    tabindex="-1"
+>
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="PatientInformationModalLabel"></h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block js %}
@@ -184,7 +206,22 @@
                 return response.json();
             })
             .then(data => {
-                alert('Success:', data);
+                if (!data.success) {
+                    Swal.fire(
+                        'Warning',
+                        `${data.error}`,
+                        'error'
+                    )
+                } else {
+                    const resultModal = document.querySelector('#PatientInformationModal');
+                    const resultModalOpen = new bootstrap.Modal(resultModal, {
+                        keyboard: false,
+                        backdrop: 'static',
+                    });
+                    resultModalOpen.show();
+                    document.getElementById("PatientInformationModalLabel").innerHTML = `${dataName}'s Information`;
+                }
+
             })
             .catch(error => {
                 alert('Error:', error);
