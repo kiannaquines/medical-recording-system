@@ -53,7 +53,7 @@
                 <a
                     href="#"
                     data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
+                    data-bs-target="#SearchPatientInformationModal"
                     class="btn btn-primary mt-1"
                 >
                     <i class="bi bi-person-lock"></i>
@@ -66,15 +66,15 @@
 </div>
 <div
     class="modal fade"
-    id="exampleModal"
+    id="SearchPatientInformationModal"
     aria-hidden="true"
-    aria-labelledby="exampleModalLabel"
+    aria-labelledby="SearchPatientInformationModalLabel"
     tabindex="-1"
 >
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Search Your Information</h1>
+                <h1 class="modal-title fs-5" id="SearchPatientInformationModalLabel">Search Your Information</h1>
                 <button
                     type="button"
                     class="btn-close"
@@ -129,7 +129,7 @@
         element.addEventListener('click', async function(event) {
         event.preventDefault();
         
-        const prevModalElement = document.getElementById("exampleModal")
+        const prevModalElement = document.getElementById("SearchPatientInformationModal")
         const modalInstance = bootstrap.Modal.getInstance(prevModalElement);
 
         if (modalInstance) {

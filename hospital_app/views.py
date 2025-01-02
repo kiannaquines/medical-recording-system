@@ -35,29 +35,35 @@ import json
 
 
 def view_patient_informations(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             body = json.loads(request.body)
-            patient_id = body.get('patient_id')
-            room_number = body.get('room_number')
-            age = body.get('age')
+            patient_id = body.get("patient_id")
+            room_number = body.get("room_number")
+            age = body.get("age")
 
-            patient_info = Patient.objects.filter(
-                pk=patient_id,
-                room_number=room_number,
-                age=age
-            )
+            patient_info = Patient.objects.filter(pk=patient_id, room_number=room_number, age=age)
+
+            clinical_chemistry = ClinicalChemistry.objects.filter(patient__id=patient_id)
+            serology = Serology.objects.filter(patient__id=patient_id)
+            hematology = Hematology.objects.filter(patient__id=patient_id)
+            cross_matching = CrossMatching.objects.filter(patient__id=patient_id)
+            urinalysis = Urinalysis.objects.filter(patient__id=patient_id)
+            rbs = RBS.objects.filter(patient__id=patient_id)
 
             if patient_info.exists():
-                return JsonResponse({
-                    "success": True,
-                    "patient_info": {
-                        "id": patient_info[0].id,
-                        "name": patient_info[0].get_full_name(),
-                        "room_number": patient_info[0].room_number,
-                        "age": patient_info[0].age,
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "patient_info": list(patient_info.values()),
+                        "clinical_chemistry": list(clinical_chemistry.values()),
+                        "serology": list(serology.values()),
+                        "hematology": list(hematology.values()),
+                        "cross_matching": list(cross_matching.values()),
+                        "urinalysis": list(urinalysis.values()),
+                        "rbs": list(rbs.values()),
                     }
-                })
+                )
             else:
                 return JsonResponse({"success": False, "error": "No patient found."})
 
