@@ -35,70 +35,80 @@ from datetime import datetime
 
 def generate_report(request):
     if request.method == "GET":
+        patient_type = request.GET.get("patient_type")
+        start_date = (
+            datetime.strptime(request.GET.get("start_date"), "%Y-%m-%d").date()
+            if request.GET.get("start_date")
+            else None
+        )
+        end_date = (
+            datetime.strptime(request.GET.get("end_date"), "%Y-%m-%d").date()
+            if request.GET.get("end_date")
+            else None
+        )
 
-        lab_requests = LabRequest.objects
-        clinical_chemistry = ClinicalChemistry.objects
-        serology = Serology.objects
-        hematology = Hematology.objects
-        cross_matching = CrossMatching.objects
-        in_patient = Patient.objects.filter(patient_type="In Patient")
-        out_patient = Patient.objects.filter(patient_type="Out Patient")
-
-        start_date = datetime.strptime(request.GET.get("start_date"), "%Y-%m-%d").date() if request.GET.get("start_date") else None
-        end_date = datetime.strptime(request.GET.get("end_date"), "%Y-%m-%d").date() if request.GET.get("start_date") else None
+        clinical_chemistry = ClinicalChemistry.objects.filter(
+            patient__patient_type=patient_type
+        )
+        serology = Serology.objects.filter(
+            patient__patient_type=patient_type,
+        )
+        hematology = Hematology.objects.filter(patient__patient_type=patient_type)
+        cross_matching = CrossMatching.objects.filter(
+            patient__patient_type=patient_type
+        )
+        urinalysis = Urinalysis.objects.filter(patient__patient_type=patient_type)
 
         if start_date and end_date:
-            lab_requests = lab_requests.filter(date_request__range=[start_date, end_date]).count()
-            clinical_chemistry = clinical_chemistry.filter(date__range=[start_date, end_date]).count()
+            clinical_chemistry = clinical_chemistry.filter(
+                date__range=[start_date, end_date]
+            ).count()
             serology = serology.filter(date__range=[start_date, end_date]).count()
             hematology = hematology.filter(date__range=[start_date, end_date]).count()
-            cross_matching = cross_matching.filter(created_at__range=[start_date, end_date]).count()
-            in_patient = in_patient.filter(date__range=[start_date, end_date]).count()
-            out_patient = out_patient.filter(date__range=[start_date, end_date]).count()
+            cross_matching = cross_matching.filter(
+                created_at__range=[start_date, end_date]
+            ).count()
+            urinalysis = urinalysis.filter(
+                created_at__range=[start_date, end_date]
+            ).count()
         else:
-            lab_requests = lab_requests.count()
             clinical_chemistry = clinical_chemistry.count()
             serology = serology.count()
             hematology = hematology.count()
             cross_matching = cross_matching.count()
-            in_patient = in_patient.count()
-            out_patient = out_patient.count()
-      
+            urinalysis = urinalysis.count()
+
         data = {
-            "lab_requests": {
-                'total': lab_requests,
-                'name': 'Overall Laboratory Request'
-            },
             "clinical_chemistry": {
-                'total': clinical_chemistry,
-                'name': 'Clinical Chemistry'
+                "total": clinical_chemistry,
+                "name": f"Clinical Chemistry Request {patient_type}",
             },
             "serology": {
-                'total': serology,
-                'name': 'Serology'
+                "total": serology,
+                "name": f"Serology {patient_type}",
             },
             "hematology": {
-                'total': hematology,
-                'name': 'Hematology'
+                "total": hematology,
+                "name": f"Hematology {patient_type}",
             },
             "cross_matching": {
-                'total': cross_matching,
-                'name': 'Cross Matching'
+                "total": cross_matching,
+                "name": f"Cross Matching {patient_type}",
             },
-            "in_patient": {
-                'total': in_patient,
-                'name': 'In Patient'
-            },
-            "out_patient": {
-                'total': out_patient,
-                'name': 'Out Patient'
+            "urinalysis": {
+                "total": urinalysis,
+                "name": f"Urinalysis Request {patient_type}",
             },
             "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "header_report_type": f"Report from {start_date} to {end_date}" if start_date and end_date else "Overall Report",
+            "header_report_type": (
+                f"Report from {start_date} to {end_date}"
+                if start_date and end_date
+                else "Overall Report"
+            ),
         }
 
         return JsonResponse(data)
-        
+
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
 
@@ -236,8 +246,8 @@ class ClinicalChemistryView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["detail_header"] = "Chemical Chemistry Details List"
-        context["humberger_header"] = "Chemical Chemistry Details"
+        context["detail_header"] = "Clinical Chemistry Details List"
+        context["humberger_header"] = "Clinical Chemistry Details"
         return context
 
 
