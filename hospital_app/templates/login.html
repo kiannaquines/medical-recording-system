@@ -201,7 +201,11 @@
                 })
             }).then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    Swal.fire(
+                        'Warning',
+                        'Failed to access lab results. Please try again later.',
+                        'error'
+                    )
                 }
                 return response.json();
             })
@@ -212,6 +216,8 @@
                         `${data.error}`,
                         'error'
                     )
+
+                    modalInstance.show()
                 } else {
                     const resultModal = document.querySelector('#PatientInformationModal');
                     const resultModalOpen = new bootstrap.Modal(resultModal, {
@@ -224,7 +230,11 @@
 
             })
             .catch(error => {
-                alert('Error:', error);
+                Swal.fire(
+                    'Error',
+                    'An error occurred while accessing the lab results. Please try again later.',
+                    'error'
+                )
             });
         }
     });
