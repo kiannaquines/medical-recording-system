@@ -117,6 +117,7 @@ class LoginView(View):
     def get(self, request):
         context = {}
         context["login_form"] = LoginForm()
+        context['patients'] = Patient.objects.all().order_by("-date")
         return render(request, "login.html", context)
 
     def post(self, request):
