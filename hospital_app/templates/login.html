@@ -127,7 +127,7 @@
     aria-labelledby="PatientInformationModalLabel"
     tabindex="-1"
 >
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="PatientInformationModalLabel"></h1>
@@ -139,25 +139,104 @@
                 ></button>
             </div>
             <div class="modal-body">
-                <h2 class="fs-4">Patient Information</h2>
-                <table id="PatientInformationModalTable" class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th class="text-muted">Test</th>
-                            <th class="text-muted">Result</th>
-                            <th class="text-muted">Unit</th>
-                            <th class="text-muted">Reference Range</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Test</td>
-                            <td>Result</td>
-                            <td>Unit</td>
-                            <td>Range</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table id="PatientInformationModalTable" class="table table-bordered table-hover">
+                        <caption>Patient Information</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted">Patient</th>
+                                <th class="text-muted">Gender</th>
+                                <th class="text-muted">Patient Type</th>
+                                <th class="text-muted">Assigned Physician</th>
+                                <th class="text-muted">Sample Type</th>
+                                <th class="text-muted">SARS Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="patient"></td>
+                                <td id="gender"></td>
+                                <td id="type"></td>
+                                <td id="physician"></td>
+                                <td id="sample"></td>
+                                <td id="sars"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-responsive">
+                    <table id="ClinicalChemistryModalTable" class="table table-bordered table-hover">
+                        <caption>Clinical Chemistry Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted">Glucose</th>
+                                <th class="text-muted">Cholesterol</th>
+                                <th class="text-muted">Triglycerides</th>
+                                <th class="text-muted">HDL</th>
+                                <th class="text-muted">LDL</th>
+                                <th class="text-muted">Creatinine</th>
+                                <th class="text-muted">Uric Acid</th>
+                                <th class="text-muted">BUN</th>
+                                <th class="text-muted">SGPT</th>
+                                <th class="text-muted">SGOT</th>
+                                <th class="text-muted">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clinical_chemistry_body"></tbody>
+                    </table>
+                </div>
+                <div class="table-responsive">
+                    <table id="ClinicalChemistryModalTable" class="table table-bordered table-hover">
+                        <caption>Serology Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted">HB Determination</th>
+                                <th class="text-muted">Typhidot Rapid Test</th>
+                                <th class="text-muted">Dengue Rapid Test</th>
+                                <th class="text-muted">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="serology_body"></tbody>
+                    </table>
+                </div>
+                <div class="table-responsive">
+                    <table id="HemoglobinModalTable" class="table table-bordered table-hover">
+                        <caption>Hematology Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted" scope="col">Hemoglobin</th>
+                                <th class="text-muted" scope="col">Hematocrit</th>
+                                <th class="text-muted" scope="col">Erythrocty</th>
+                                <th class="text-muted" scope="col">Platelet</th>
+                                <th class="text-muted" scope="col">Blood Type</th>
+                                <th class="text-muted" scope="col">RH Type</th>
+                                <th class="text-muted" scope="col">Leucocyte</th>
+                                <th class="text-muted" scope="col">Segmenters</th>
+                                <th class="text-muted" scope="col">Lymphocytes</th>
+                                <th class="text-muted" scope="col">Monocytes</th>
+                                <th class="text-muted" scope="col">Eosinophils</th>
+                                <th class="text-muted" scope="col">Basophils</th>
+                                <th class="text-muted" scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hemoglobin_body"></tbody>
+                    </table>
+                </div>
+                <div class="table-responsive">
+                    <table id="HemoglobinModalTable" class="table table-bordered table-hover">
+                        <caption>Cross Matching Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted" scope="col">Serial Number</th>
+                                <th class="text-muted" scope="col">Amount in CC</th>
+                                <th class="text-muted" scope="col">Blood Bank</th>
+                                <th class="text-muted" scope="col">Expiration Date</th>
+                                <th class="text-muted" scope="col">Result</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cross_matching_body"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -239,6 +318,9 @@
 
                     modalInstance.show()
                 } else {
+
+                    console.log(data);
+
                     const resultModal = document.querySelector('#PatientInformationModal');
                     const resultModalOpen = new bootstrap.Modal(resultModal, {
                         keyboard: false,
@@ -246,6 +328,96 @@
                     });
                     resultModalOpen.show();
                     document.getElementById("PatientInformationModalLabel").innerHTML = `${dataName}'s Information`;
+
+
+                    document.getElementById("patient").innerHTML = data.patient_info.fullname;
+                    document.getElementById("gender").innerHTML = data.patient_info.gender;
+                    document.getElementById("type").innerHTML = data.patient_info.patient_type;
+                    document.getElementById("physician").innerHTML = data.patient_info.physician;
+                    document.getElementById("sample").innerHTML = data.patient_info.sample_type;
+                    document.getElementById("sars").innerHTML = data.patient_info.sars_result;
+
+                    const clinical_chemistry = data.clinical_chemistry;
+                    let clinical_chemistry_rows = "";
+
+                    if (clinical_chemistry.length > 0) {
+                        clinical_chemistry.forEach(result => {
+                            clinical_chemistry_rows += `
+                                <tr>
+                                    <td>${result.glucose}</td>
+                                    <td>${result.cholesterol}</td>
+                                    <td>${result.triglycerides}</td>
+                                    <td>${result.hdl}</td>
+                                    <td>${result.ldl}</td>
+                                    <td>${result.creatinine}</td>
+                                    <td>${result.uric_acid}</td>
+                                    <td>${result.bun}</td>
+                                    <td>${result.sgpt}</td>
+                                    <td>${result.sgot}</td>
+                                    <td>${result.date}</td>
+                                </tr>`;
+                        });
+                    } else {
+                        clinical_chemistry_rows = `
+                            <tr>
+                                <td colspan='11'>No clinical chemistry results found.</td>
+                            </tr>`;
+                    }
+                    document.getElementById("clinical_chemistry_body").innerHTML = clinical_chemistry_rows;
+
+
+                    
+                    const serology = data.serology;
+                    let serology_rows = "";
+                    if (serology.length > 0) {
+                        serology.forEach(result => {
+                            serology_rows += `
+                                <tr>
+                                    <td>${result.hb_determination}</td>
+                                    <td>${result.typhidot_rapid_test}</td>
+                                    <td>${result.dengue_rapid_test}</td>
+                                    <td>${result.date}</td>
+                                </tr>`;
+                        });
+                    } else {
+                        serology_rows = `
+                            <tr>
+                                <td colspan='4'>No serology results found.</td>
+                            </tr>`;
+                    }
+                    document.getElementById("serology_body").innerHTML = serology_rows;
+
+
+                    const hematology = data.hematology;
+                    let hematology_rows = "";
+
+                    if (hematology.length > 0) {
+                        hematology.forEach(result => {
+                            hematology_rows += `
+                                <tr>
+                                    <td>${result.hemoglobin_mass_concentration}</td>
+                                    <td>${result.hematocrit}</td>
+                                    <td>${result.erythrocty_no_concentration}</td>
+                                    <td>${result.platelet}</td>
+                                    <td>${result.blood_type}</td>
+                                    <td>${result.rh_type}</td>
+                                    <td>${result.leucocyte_no_concentration}</td>
+                                    <td>${result.segmenters}</td>
+                                    <td>${result.lymphocytes}</td>
+                                    <td>${result.monocytes}</td>
+                                    <td>${result.eosinophils}</td>
+                                    <td>${result.basophils}</td>
+                                    <td>${result.date}</td>
+                                </tr>`;
+                        });
+                    } else {
+                        hematology_rows = `
+                            <tr>
+                                <td colspan='6'>No hematology results found.</td>
+                            </tr>`;
+                    }
+                    document.getElementById("hemoglobin_body").innerHTML = hematology_rows;
+                    
                 }
 
             })

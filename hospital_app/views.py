@@ -35,53 +35,87 @@ import json
 
 
 def view_patient_informations(request):
-    if request.method == "POST":
-        try:
-            body = json.loads(request.body)
-            patient_id = body.get("patient_id")
-            room_number = body.get("room_number")
-            age = body.get("age")
 
-            patient = Patient.objects.get(pk=patient_id, room_number=room_number, age=age)
-            patient_info = Patient.objects.filter(pk=patient_id, room_number=room_number, age=age)
+    from django.db.models import Prefetch
 
-            clinical_chemistry = ClinicalChemistry.objects.filter(patient__id=patient_id)
-            serology = Serology.objects.filter(patient__id=patient_id)
-            hematology = Hematology.objects.filter(patient__id=patient_id)
-            cross_matching = CrossMatching.objects.filter(patient__id=patient_id)
-            urinalysis = Urinalysis.objects.filter(patient__id=patient_id)
-            rbs = RBS.objects.filter(patient__id=patient_id)
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request method. Only POST is allowed."}, status=405)
 
-            if patient_info.exists():
-                return JsonResponse(
-                    {
-                        "success": True,
-                        "patient_info": {
-                            'fullname': patient.get_full_name(),
-                            'age': patient.age,
-                            'gender': patient.sex,
-                            'patient_type': patient.patient_type,
-                            'physician': patient.physician,
-                            'room_number': patient.room_number,
-                            'sample_type': patient.sample_type,
-                            'sars_result': patient.sars_result,
-                            'date': patient.date,
-                        },
-                        "clinical_chemistry": list(clinical_chemistry.values()),
-                        "serology": list(serology.values()),
-                        "hematology": list(hematology.values()),
-                        "cross_matching": list(cross_matching.values()),
-                        "urinalysis": list(urinalysis.values()),
-                        "rbs": list(rbs.values()),
-                    }
-                )
-            else:
-                return JsonResponse({"success": False, "error": "Sorry, you provided invalid information please try again."})
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON body."}, status=400)
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Sorry, invalid JSON body"}, status=400)
+    patient_id = body.get("patient_id")
+    room_number = body.get("room_number")
+    age = body.get("age")
 
-    return JsonResponse({"error": "Sorry, invalid request method"}, status=405)
+    if not all([patient_id, room_number, age]):
+        return JsonResponse({"error": "Missing required fields: patient_id, room_number, or age."}, status=400)
+
+    try:
+        patient = Patient.objects.get(pk=patient_id, room_number=room_number, age=age)
+    except Patient.DoesNotExist:
+        return JsonResponse({"error": "Patient not found with the provided information."}, status=404)
+
+    patient_info = {
+        'fullname': patient.get_full_name(),
+        'age': patient.age,
+        'gender': patient.sex,
+        'patient_type': patient.patient_type,
+        'physician': patient.physician.get_full_name() if patient.physician else None,
+        'room_number': patient.room_number,
+        'sample_type': patient.sample_type,
+        'sars_result': patient.sars_result,
+        'date': patient.date.isoformat() if patient.date else None,
+    }
+
+    cross_matching_data = CrossMatching.objects.filter(patient__id=patient_id).prefetch_related(
+        Prefetch(
+            'results',
+            queryset=CrossMatchingResult.objects.all(),
+        )
+    )
+
+    output = []
+    for cross_matching in cross_matching_data:
+        output.append({
+            "id": cross_matching.id,
+            "patient": str(cross_matching.patient),
+            "pathologist": str(cross_matching.pathologist),
+            "medical_technologist": str(cross_matching.medical_technologist),
+            "created_at": cross_matching.created_at,
+            "updated_at": cross_matching.updated_at,
+            "results": [
+                {
+                    "serial_no": result.serial_no,
+                    "amt_in_cc": result.amt_in_cc,
+                    "blood_bank": result.blood_bank,
+                    "date_of_collection": result.date_of_collection,
+                    "expiration_date": result.expiration_date,
+                    "result": result.result,
+                }
+                for result in cross_matching.results.all()
+            ],
+        })
+
+
+    related_data = {
+        "clinical_chemistry": list(ClinicalChemistry.objects.filter(patient__id=patient_id).values('glucose','cholesterol','triglycerides','hdl','ldl','creatinine', 'uric_acid', 'bun', 'sgpt', 'sgot', 'date')),
+        "serology": list(Serology.objects.filter(patient__id=patient_id).values('hb_determination','typhidot_rapid_test','dengue_rapid_test','date')),
+        "hematology": list(Hematology.objects.filter(patient__id=patient_id).values('hemoglobin_mass_concentration','hematocrit','erythrocty_no_concentration','platelet','blood_type','rh_type','leucocyte_no_concentration','segmenters','lymphocytes','monocytes','eosinophils','basophils','date')),
+        "cross_matching": output,
+        "urinalysis": list(Urinalysis.objects.filter(patient__id=patient_id).values()),
+        "rbs": list(RBS.objects.filter(patient__id=patient_id).values()),
+    }
+
+    return JsonResponse(
+        {
+            "success": True,
+            "patient_info": patient_info,
+            **related_data,
+        }
+    )
 
 
 def generate_report(request):
