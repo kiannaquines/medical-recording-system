@@ -42,6 +42,7 @@ def view_patient_informations(request):
             room_number = body.get("room_number")
             age = body.get("age")
 
+            patient = Patient.objects.get(pk=patient_id, room_number=room_number, age=age)
             patient_info = Patient.objects.filter(pk=patient_id, room_number=room_number, age=age)
 
             clinical_chemistry = ClinicalChemistry.objects.filter(patient__id=patient_id)
@@ -55,7 +56,17 @@ def view_patient_informations(request):
                 return JsonResponse(
                     {
                         "success": True,
-                        "patient_info": list(patient_info.values()),
+                        "patient_info": {
+                            'fullname': patient.get_full_name(),
+                            'age': patient.age,
+                            'gender': patient.sex,
+                            'patient_type': patient.patient_type,
+                            'physician': patient.physician,
+                            'room_number': patient.room_number,
+                            'sample_type': patient.sample_type,
+                            'sars_result': patient.sars_result,
+                            'date': patient.date,
+                        },
                         "clinical_chemistry": list(clinical_chemistry.values()),
                         "serology": list(serology.values()),
                         "hematology": list(hematology.values()),
