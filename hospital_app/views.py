@@ -77,9 +77,17 @@ def view_patient_informations(request):
         )
     )
 
-    output = []
+    rbs_data = RBS.objects.filter(patient__id=patient_id).prefetch_related(
+        Prefetch(
+            'rbs_result',
+            queryset=RBSResult.objects.all(),
+        )
+    )
+
+
+    output_cross_matching = []
     for cross_matching in cross_matching_data:
-        output.append({
+        output_cross_matching.append({
             "id": cross_matching.id,
             "patient": str(cross_matching.patient),
             "pathologist": str(cross_matching.pathologist),
@@ -98,15 +106,34 @@ def view_patient_informations(request):
                 for result in cross_matching.results.all()
             ],
         })
+    
+    output_rbs_result = []
+    for rbs in rbs_data:
+        output_rbs_result.append({
+            "id": rbs.id,
+            "patient": str(rbs.patient),
+            "pathologist": str(rbs.assigned_pathologist) if rbs.assigned_pathologist else None,
+            "medical_technologist": str(rbs.assigned_technologist) if rbs.assigned_technologist else None,
+            "results": [
+                {
+                    "result": result.result,
+                    "date": result.date.strftime("%m/%d/%Y"),
+                    "time": result.time.strftime("%I:%M %p"),
+                }
+                for result in rbs.rbs_result.all()
+            ],
+        })
+
+
 
 
     related_data = {
         "clinical_chemistry": list(ClinicalChemistry.objects.filter(patient__id=patient_id).values('glucose','cholesterol','triglycerides','hdl','ldl','creatinine', 'uric_acid', 'bun', 'sgpt', 'sgot', 'date')),
         "serology": list(Serology.objects.filter(patient__id=patient_id).values('hb_determination','typhidot_rapid_test','dengue_rapid_test','date')),
         "hematology": list(Hematology.objects.filter(patient__id=patient_id).values('hemoglobin_mass_concentration','hematocrit','erythrocty_no_concentration','platelet','blood_type','rh_type','leucocyte_no_concentration','segmenters','lymphocytes','monocytes','eosinophils','basophils','date')),
-        "cross_matching": output,
-        "urinalysis": list(Urinalysis.objects.filter(patient__id=patient_id).values()),
-        "rbs": list(RBS.objects.filter(patient__id=patient_id).values()),
+        "cross_matching": output_cross_matching,
+        "urinalysis": Urinalysis.objects.filter(patient__id=patient_id).values('color','appearance','specific_gravity','pH','sugar','albumin','epithelia','bacteria','pus_cells','rbc','cast','crystals','others','amorphous','mucous_thread','pregnancy_test','urates').first(),
+        "rbs": output_rbs_result,
     }
 
     return JsonResponse(
