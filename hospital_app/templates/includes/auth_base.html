@@ -60,10 +60,9 @@
         {% block js %}{% endblock %}
         <script>
             $(function () {
-               const datatable = ["#datatable","#CrossMatchingDataTable","#HemoglobinModalTable","#ClinicalChemistryModalTable","#SerologyDataTable","#PatientInformationModalTable"]
+               const datatable = ["#datatable"]
 
                datatable.forEach(item => {
-
                    $(item).DataTable({
                        "responsive": true,
                        "ordering": false, 
