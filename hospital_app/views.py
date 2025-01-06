@@ -56,7 +56,7 @@ def view_patient_informations(request):
     try:
         patient = Patient.objects.get(pk=patient_id, room_number=room_number, age=age)
     except Patient.DoesNotExist:
-        return JsonResponse({"error": "Patient not found with the provided information."}, status=404)
+        return JsonResponse({"success": False, "error": "Patient not found with the provided information."}, status=404)
 
     patient_info = {
         'fullname': patient.get_full_name(),
