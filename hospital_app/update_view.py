@@ -15,6 +15,7 @@ from hospital_app.forms import (
 from hospital_app.models import *
 from django.views.generic import UpdateView
 from django.urls import reverse_lazy
+from django.contrib import messages
 
 
 class HematologyUpdateView(UpdateView):
@@ -26,9 +27,19 @@ class HematologyUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request,
+            "You have successfully updated hematology information",
+            extra_tags="primary",
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -47,9 +58,17 @@ class SerologyUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request, "You have successfully updated serology information"
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -68,9 +87,19 @@ class CrossMatchingResultUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request,
+            "You have successfully updated cross-matching result",
+            extra_tags="primary",
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -91,9 +120,19 @@ class LabRequestResultUpdateView(UpdateView):
         lab_request = form.save(commit=False)
         lab_request.requested_by = lab_request.requested_by
         lab_request.save()
+        messages.success(
+            self.request,
+            "You have successfully updated lab request result",
+            extra_tags="primary",
+        )
         return super().form_valid(form)
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -101,6 +140,7 @@ class LabRequestResultUpdateView(UpdateView):
         context["detail_header"] = "Update Lab Request Details"
         context["humberger_header"] = "Lab Request Details"
         return context
+
 
 class RBSResultUpdateView(UpdateView):
     template_name = "forms.html"
@@ -110,9 +150,19 @@ class RBSResultUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request,
+            "You have successfully updated RBS result",
+            extra_tags="primary",
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -131,9 +181,19 @@ class CrossMatchingUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request,
+            "You have successfully updated cross-matching details",
+            extra_tags="primary",
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -152,9 +212,19 @@ class PatientUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request,
+            "You have successfully updated patient details",
+            extra_tags="primary",
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -173,9 +243,19 @@ class EmployeeUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request,
+            "You have successfully updated employee details",
+            extra_tags="primary",
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -194,15 +274,25 @@ class ClinicalChemicalUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request,
+            "You have successfully updated clinical chemistry details",
+            extra_tags="primary",
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["detail_header"] = "Update Chemical Chemistry Detail"
-        context["humberger_header"] = "Chemical Chemistry Details"
+        context["detail_header"] = "Update Clinical Chemistry Detail"
+        context["humberger_header"] = "Clinical Chemistry Details"
         return context
 
 
@@ -215,9 +305,19 @@ class RBSUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request,
+            "You have successfully updated rbs details",
+            extra_tags="primary",
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -236,9 +336,19 @@ class UrinalysisUpdateView(UpdateView):
 
     def form_valid(self, form):
         form = super().form_valid(form)
+        messages.success(
+            self.request,
+            "You have successfully updated urinalysis details",
+            extra_tags="primary",
+        )
         return form
 
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(
+                    request=self.request, messages=error, extra_tags="danger"
+                )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
