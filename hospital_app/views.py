@@ -464,9 +464,13 @@ def generate_hematology_result(request, pk):
             assigned_technologist_details = get_object_or_404(
                 EmployeeInfo, user=hematology_result.assigned_technologist
             )
-            assigned_pathologistlogist_details = get_object_or_404(
-                EmployeeInfo, user=hematology_result.assigned_technologist
+            print('Information 1')
+            print(assigned_technologist_details)
+            assigned_pathologist_details = get_object_or_404(
+                EmployeeInfo, user=hematology_result.assigned_pathologist
             )
+            print('Information 2')
+            print(assigned_pathologist_details)
 
             data_to_fill = {
                 "name": str(hematology_result.patient),
@@ -491,7 +495,7 @@ def generate_hematology_result(request, pk):
                     hematology_result.assigned_technologist.get_full_name()
                 ),
                 "lic_no_pathologist": str(
-                    assigned_pathologistlogist_details.license_number
+                    assigned_pathologist_details.license_number
                 ),
                 "lic_no_medical_technologist": str(
                     assigned_technologist_details.license_number

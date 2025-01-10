@@ -311,19 +311,9 @@ class EmployeeDeleteView(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        check_user = EmployeeInfo.objects.filter(user=self.object)
-
-        if check_user.exists():
-            check_user.delete()
-            messages.success(
-                self.request,
-                "You have successfully removed employee profile information.",
-                extra_tags="primary",
-            )
-
         messages.success(
             self.request,
-            "You have successfully removed employee information.",
+            "You have successfully removed employee information and their profile.",
             extra_tags="primary",
         )
         return super().delete(request, *args, **kwargs)
