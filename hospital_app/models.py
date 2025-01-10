@@ -72,11 +72,10 @@ class Patient(models.Model):
         return self.time_of_collection.strftime("%H:%M %p")
 
     def __str__(self) -> str:
-        return f'Patient Information {self.get_full_name()}'
-    
+        return f"Patient Information {self.get_full_name()}"
 
     class Meta:
-        ordering = ('time_of_collection',)
+        ordering = ("time_of_collection",)
 
 
 class ClinicalChemistry(models.Model):
@@ -95,7 +94,9 @@ class ClinicalChemistry(models.Model):
     sgpt = models.FloatField()
     sgot = models.FloatField()
     date = models.DateField(auto_now_add=True)
-    re_test = models.BooleanField(default=False)
+    re_test = models.BooleanField(
+        default=False, help_text="Re-test clinical chemistry results"
+    )
     assigned_pathologist = models.ForeignKey(
         User,
         related_name="chemical_chemist_pathologist",
@@ -123,7 +124,7 @@ class ClinicalChemistry(models.Model):
         verbose_name = "Clinical Chemistry"
         verbose_name_plural = "Clinical Chemistry"
         db_table = "clinical_chemistry"
-        ordering = ('date',)
+        ordering = ("date",)
 
 
 class Hematology(models.Model):
@@ -162,7 +163,7 @@ class Hematology(models.Model):
     monocytes = models.FloatField()
     eosinophils = models.FloatField()
     basophils = models.FloatField()
-    re_test = models.BooleanField(default=False)
+    re_test = models.BooleanField(default=False, help_text="Re-test Hematology")
     date = models.DateField(auto_now_add=True)
 
     assigned_pathologist = models.ForeignKey(
@@ -192,7 +193,7 @@ class Hematology(models.Model):
         verbose_name = "Hematology"
         verbose_name_plural = "Hematology"
         db_table = "hematology"
-        ordering = ('date',)
+        ordering = ("date",)
 
 
 class Serology(models.Model):
@@ -203,7 +204,7 @@ class Serology(models.Model):
     hb_determination = models.CharField(max_length=255)
     typhidot_rapid_test = models.CharField(max_length=255)
     dengue_rapid_test = models.CharField(max_length=255)
-    re_test = models.BooleanField(default=False)
+    re_test = models.BooleanField(default=False, help_text="Re-test serology")
     assigned_pathologist = models.ForeignKey(
         User,
         related_name="serology_pathologist",
@@ -278,7 +279,7 @@ class CrossMatching(models.Model):
         on_delete=models.CASCADE,
         help_text="Medical technologist handling the cross-matching.",
     )
-    re_test = models.BooleanField(default=False)
+    re_test = models.BooleanField(default=False, help_text="Re-test the cross-matching")
     created_at = models.DateTimeField(
         auto_now_add=True, help_text="Timestamp of record creation."
     )
@@ -302,17 +303,16 @@ class RBSResult(models.Model):
     time = models.TimeField(auto_now_add=False)
 
     def __str__(self) -> str:
-        return f'Result {self.result}'
+        return f"Result {self.result}"
 
     def get_time(self):
         return self.time.strftime("%I:%M %p")
 
     def get_date(self):
         return self.date.strftime("%m/%d/%Y")
-    
 
     class Meta:
-        ordering = ('date',)
+        ordering = ("date",)
 
 
 class RBS(models.Model):
@@ -369,7 +369,7 @@ class Urinalysis(models.Model):
     pregnancy_test = models.CharField(
         max_length=255, help_text="Pregnancy Test", null=True, blank=True
     )
-    re_test = models.BooleanField(default=False)
+    re_test = models.BooleanField(default=False, help_text="Re-test urinalysis")
     urates = models.CharField(max_length=255, help_text="Urates", null=True, blank=True)
 
     assigned_pathologist = models.ForeignKey(
@@ -398,10 +398,9 @@ class Urinalysis(models.Model):
 
     def __str__(self) -> str:
         return f"Urinalysis Result of {self.patient} {self.date}"
-    
 
     class Meta:
-        ordering = ('date',)
+        ordering = ("date",)
 
 
 class LabRequest(models.Model):
@@ -427,8 +426,13 @@ class LabRequest(models.Model):
         choices=lab_request_type,
         help_text="Type of laboratory request",
     )
-    
-    requested_by = models.ForeignKey(User, related_name="requested_by_lab", limit_choices_to=Q(groups__name="Doctor") | Q(groups__name="Nurse"), on_delete=models.CASCADE)
+
+    requested_by = models.ForeignKey(
+        User,
+        related_name="requested_by_lab",
+        limit_choices_to=Q(groups__name="Doctor") | Q(groups__name="Nurse"),
+        on_delete=models.CASCADE,
+    )
     date_request = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
