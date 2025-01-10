@@ -402,11 +402,14 @@ class EmployeeCreateView(CreateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return form
+        return super().form_invalid(form)  
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

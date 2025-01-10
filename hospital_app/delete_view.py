@@ -21,11 +21,13 @@ class LabRequestDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,11 +53,13 @@ class UrinalysisDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -80,11 +84,13 @@ class RBSResultDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,11 +116,13 @@ class RBSDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -140,11 +148,13 @@ class HematologyDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -170,11 +180,13 @@ class SerologyDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -200,11 +212,13 @@ class CrossMatchingResultDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -230,11 +244,13 @@ class CrossMatchingDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -260,11 +276,13 @@ class PatientDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -290,11 +308,13 @@ class ClinicalChemicalDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -320,11 +340,13 @@ class EmployeeDeleteView(DeleteView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -36,11 +36,13 @@ class HematologyUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,11 +67,13 @@ class SerologyUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,11 +100,13 @@ class CrossMatchingResultUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -129,11 +135,13 @@ class LabRequestResultUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -159,11 +167,13 @@ class RBSResultUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -190,11 +200,13 @@ class CrossMatchingUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -221,11 +233,13 @@ class PatientUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -252,11 +266,13 @@ class EmployeeUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -283,11 +299,13 @@ class ClinicalChemicalUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -314,11 +332,13 @@ class RBSUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -345,11 +365,13 @@ class UrinalysisUpdateView(UpdateView):
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
-            for error in errors:
+            for form_error in errors:
                 messages.error(
-                    request=self.request, messages=error, extra_tags="danger"
+                    request=self.request,  
+                    message=form_error,    
+                    extra_tags="danger"    
                 )
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
