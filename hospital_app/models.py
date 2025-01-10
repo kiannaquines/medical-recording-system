@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class EmployeeInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,blank=True)
     license_number = models.CharField(max_length=10, unique=True, db_index=True)
 
     def __str__(self):
