@@ -247,6 +247,7 @@ class LoginView(View):
             messages.error(
                 request,
                 "There was an error while authenticating your account please check your username or password, please try again.",
+                extra_tags="danger",
             )
 
         return HttpResponseRedirect(reverse_lazy("login"))

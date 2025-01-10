@@ -61,7 +61,8 @@ class SerologyUpdateView(UpdateView):
     def form_valid(self, form):
         form = super().form_valid(form)
         messages.success(
-            self.request, "You have successfully updated serology information"
+            self.request, "You have successfully updated serology information",
+            extra_tags="primary",
         )
         return form
 

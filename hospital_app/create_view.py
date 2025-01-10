@@ -35,6 +35,14 @@ def employee_info_add_view(request, pk):
                 extra_tags="primary",
             )
             return redirect("employee_list")
+        else:
+            for field, errors in form.errors.items():
+                for form_error in errors:
+                    messages.error(
+                        request=request,  
+                        message=form_error,    
+                        extra_tags="danger"    
+                    )
 
     employee_info = EmployeeInfo.objects.filter(user=employee).first()
     context = {
