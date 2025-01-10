@@ -313,7 +313,7 @@ class EmployeeDeleteView(DeleteView):
         form = super().form_valid(form)
         messages.success(
             self.request,
-            "You have successfully removed employee detail.",
+            "You have successfully removed employee.",
             extra_tags="primary",
         )
         return form

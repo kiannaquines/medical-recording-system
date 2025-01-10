@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class EmployeeInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
     license_number = models.CharField(max_length=10, unique=True, db_index=True)
 
     def __str__(self):
@@ -170,16 +170,16 @@ class Hematology(models.Model):
         User,
         related_name="assigned_pathologist",
         on_delete=models.CASCADE,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         limit_choices_to={"groups__name": "Pathologist"},
     )
     assigned_technologist = models.ForeignKey(
         User,
         related_name="assigned_technologist",
         on_delete=models.CASCADE,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         limit_choices_to={"groups__name": "Medical Technologist"},
     )
 
@@ -271,6 +271,8 @@ class CrossMatching(models.Model):
         limit_choices_to={"groups__name": "Pathologist"},
         on_delete=models.CASCADE,
         help_text="Pathologist overseeing the cross-matching.",
+        null=True,
+        blank=True,
     )
     medical_technologist = models.ForeignKey(
         User,
@@ -278,6 +280,8 @@ class CrossMatching(models.Model):
         limit_choices_to={"groups__name": "Medical Technologist"},
         on_delete=models.CASCADE,
         help_text="Medical technologist handling the cross-matching.",
+        null=True,
+        blank=True,
     )
     re_test = models.BooleanField(default=False, help_text="Re-test the cross-matching")
     created_at = models.DateTimeField(
@@ -376,8 +380,8 @@ class Urinalysis(models.Model):
         User,
         related_name="urinalysis_assigned_pathologist",
         on_delete=models.CASCADE,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         limit_choices_to={"groups__name": "Pathologist"},
         help_text="Pathologist name",
     )
@@ -385,8 +389,8 @@ class Urinalysis(models.Model):
         User,
         related_name="urinalysis_assigned_technologist",
         on_delete=models.CASCADE,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         limit_choices_to={"groups__name": "Medical Technologist"},
         help_text="Medical Technologist name",
     )
@@ -432,6 +436,8 @@ class LabRequest(models.Model):
         related_name="requested_by_lab",
         limit_choices_to=Q(groups__name="Doctor") | Q(groups__name="Nurse"),
         on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
     date_request = models.DateTimeField(auto_now_add=True)
 
