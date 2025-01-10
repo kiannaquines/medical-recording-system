@@ -14,7 +14,7 @@
                         <div class="row">
                             {% for input in form %}
                             <div class="col-md-12">
-                                {% if input.name == 'is_active' or input.name == 'is_staff' or input.name == 'is_superuser' %}
+                                {% if input.name == 'is_active' or input.name == 'is_staff' or input.name == 'is_superuser' or input.name == 're_test' %}
                                 <div class="form-check mt-2">
                                     {{ input }}
                                     <label class="form-check-label text-uppercase text-sm" for="{{ input.id_for_label }}">

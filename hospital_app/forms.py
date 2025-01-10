@@ -23,6 +23,7 @@ custom_fields = {
     "time_of_collection": forms.TimeInput(
         attrs={"type": "time", "class": "form-control"}
     ),
+    "re_test": forms.CheckboxInput(attrs={"type": "checkbox", "class": "form-check-input"}),
     "date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
     "time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),
 }

@@ -95,7 +95,7 @@ class ClinicalChemistry(models.Model):
     sgpt = models.FloatField()
     sgot = models.FloatField()
     date = models.DateField(auto_now_add=True)
-
+    re_test = models.BooleanField(default=False)
     assigned_pathologist = models.ForeignKey(
         User,
         related_name="chemical_chemist_pathologist",
@@ -162,6 +162,7 @@ class Hematology(models.Model):
     monocytes = models.FloatField()
     eosinophils = models.FloatField()
     basophils = models.FloatField()
+    re_test = models.BooleanField(default=False)
     date = models.DateField(auto_now_add=True)
 
     assigned_pathologist = models.ForeignKey(
@@ -202,7 +203,7 @@ class Serology(models.Model):
     hb_determination = models.CharField(max_length=255)
     typhidot_rapid_test = models.CharField(max_length=255)
     dengue_rapid_test = models.CharField(max_length=255)
-
+    re_test = models.BooleanField(default=False)
     assigned_pathologist = models.ForeignKey(
         User,
         related_name="serology_pathologist",
@@ -277,7 +278,7 @@ class CrossMatching(models.Model):
         on_delete=models.CASCADE,
         help_text="Medical technologist handling the cross-matching.",
     )
-
+    re_test = models.BooleanField(default=False)
     created_at = models.DateTimeField(
         auto_now_add=True, help_text="Timestamp of record creation."
     )
@@ -332,6 +333,7 @@ class RBS(models.Model):
         blank=True,
         limit_choices_to={"groups__name": "Pathologist"},
     )
+    re_test = models.BooleanField(default=False, help_text="Retest the RBS")
     assigned_technologist = models.ForeignKey(
         User,
         related_name="rbs_assigned_technologist",
@@ -367,6 +369,7 @@ class Urinalysis(models.Model):
     pregnancy_test = models.CharField(
         max_length=255, help_text="Pregnancy Test", null=True, blank=True
     )
+    re_test = models.BooleanField(default=False)
     urates = models.CharField(max_length=255, help_text="Urates", null=True, blank=True)
 
     assigned_pathologist = models.ForeignKey(
