@@ -1,6 +1,6 @@
 {% for message in messages %}
-<div class="callout callout-info">
-    <h5 class="fw-bold">Action Message</h5>
-    <p>{{ message.message }}</p>
-</p>
+<div class="callout callout-{{ message.extra_tags }} mb-3">
+    <h6 class="fw-bold">Action Message</h6>
+    <p>{{ message }}</p>
+</div>
 {% endfor %}
