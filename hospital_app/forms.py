@@ -23,8 +23,12 @@ custom_fields = {
     "time_of_collection": forms.TimeInput(
         attrs={"type": "time", "class": "form-control"}
     ),
-    "re_test": forms.CheckboxInput(attrs={"type": "checkbox", "class": "form-check-input"}),
-    "is_done": forms.CheckboxInput(attrs={"type": "checkbox", "class": "form-check-input"}),
+    "re_test": forms.CheckboxInput(
+        attrs={"type": "checkbox", "class": "form-check-input"}
+    ),
+    "is_done": forms.CheckboxInput(
+        attrs={"type": "checkbox", "class": "form-check-input"}
+    ),
     "date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
     "time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),
 }
@@ -39,10 +43,10 @@ class LaboratoryRequestFormNurseAndDoctor(forms.ModelForm):
                 field.widget.attrs.update({"class": "form-check-input"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
-        
+
     class Meta:
         model = LabRequest
-        fields = ("patient", "description", "lab_request_type","is_done")
+        fields = ("patient", "description", "lab_request_type", "is_done")
         exclude = ("requested_by",)
 
 
@@ -94,7 +98,7 @@ class EmployeeCreationForm(UserCreationForm):
             "is_active",
             "is_staff",
             "is_superuser",
-            "license_number"
+            "license_number",
         ]
 
 
@@ -137,7 +141,6 @@ class BaseForm(forms.ModelForm):
                 field.widget.attrs.update({"required": False})
             else:
                 field.widget.attrs.update({"required": True})
-
 
             if field_name in custom_fields:
                 self.fields[field_name].widget = custom_fields[field_name]

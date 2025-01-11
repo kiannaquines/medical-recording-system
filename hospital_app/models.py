@@ -443,7 +443,10 @@ class LabRequest(models.Model):
         blank=True,
     )
     date_request = models.DateTimeField(auto_now_add=True)
-    is_done = models.BooleanField(default=False, help_text="Toggle if the request is done.")
+    is_done = models.BooleanField(
+        default=False, help_text="Toggle if the request is done."
+    )
+
     def __str__(self) -> str:
         return f"Lab Request for {self.patient} laboratory request for {self.lab_request_type}"
 
