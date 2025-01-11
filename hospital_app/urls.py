@@ -29,7 +29,6 @@ urlpatterns = [
     path('laboratory/cross-matching-result/add', CrossMatchingResultCreateView.as_view(), name="cross_matching_result_add"),
     path('patient/add', PatientCreateView.as_view(), name="patient_add"),
     path('employee/add', EmployeeCreateView.as_view(), name="employee_add"),
-    path('employee/info/add/<int:pk>', employee_info_add_view, name="employee_info_add"),
     path('laboratory/rbs/add', RBSCreateView.as_view(), name="rbs_add"),
     path('laboratory/urinalysis/add', UrinalysisCreateView.as_view(), name="urinalysis_add"),
     path('laboratory/rbs-result/add', RBSResultCreateView.as_view(), name="rbs_result_add"),

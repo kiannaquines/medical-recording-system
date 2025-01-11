@@ -265,9 +265,9 @@ class DashboardView(View):
         context["hematology_count"] = Hematology.objects.all().count()
         context["cross_matching_count"] = CrossMatching.objects.all().count()
 
-        context["overall_employee"] = User.objects.all().count()
-        context["inactive_employee"] = User.objects.filter(is_active=False).count()
-        context["active_employee"] = User.objects.filter(is_active=True).count()
+        context["overall_employee"] = CustomUser.objects.all().count()
+        context["inactive_employee"] = CustomUser.objects.filter(is_active=False).count()
+        context["active_employee"] = CustomUser.objects.filter(is_active=True).count()
         context["employee_group_count"] = Group.objects.all().count()
         context["logs"] = LogEntry.objects.select_related(
             "user", "content_type"
@@ -277,7 +277,7 @@ class DashboardView(View):
 
 class EmployeeListView(ListView):
     template_name = "employee.html"
-    queryset = User.objects.all().order_by("-date_joined")
+    queryset = CustomUser.objects.all().order_by("-date_joined")
     context_object_name = "employees"
 
     def get_context_data(self, **kwargs):
@@ -461,17 +461,6 @@ def generate_hematology_result(request, pk):
     if request.method == "GET":
         try:
             hematology_result = get_object_or_404(Hematology, pk=pk)
-            assigned_technologist_details = get_object_or_404(
-                EmployeeInfo, user=hematology_result.assigned_technologist
-            )
-            print('Information 1')
-            print(assigned_technologist_details)
-            assigned_pathologist_details = get_object_or_404(
-                EmployeeInfo, user=hematology_result.assigned_pathologist
-            )
-            print('Information 2')
-            print(assigned_pathologist_details)
-
             data_to_fill = {
                 "name": str(hematology_result.patient),
                 "date": hematology_result.get_date(),
@@ -495,10 +484,10 @@ def generate_hematology_result(request, pk):
                     hematology_result.assigned_technologist.get_full_name()
                 ),
                 "lic_no_pathologist": str(
-                    assigned_pathologist_details.license_number
+                    '123445'
                 ),
                 "lic_no_medical_technologist": str(
-                    assigned_technologist_details.license_number
+                    '233442'
                 ),
             }
 
@@ -528,13 +517,7 @@ def generate_chemistry_result(request, pk):
     if request.method == "GET":
         try:
             chemical_chemistry_result = get_object_or_404(ClinicalChemistry, pk=pk)
-            assigned_technologist_details = get_object_or_404(
-                EmployeeInfo, user=chemical_chemistry_result.assigned_technologist
-            )
-            assigned_pathologistlogist_details = get_object_or_404(
-                EmployeeInfo, user=chemical_chemistry_result.assigned_technologist
-            )
-
+            
             data_to_fill = {
                 "name": str(chemical_chemistry_result.patient),
                 "date": chemical_chemistry_result.get_date(),
@@ -555,8 +538,8 @@ def generate_chemistry_result(request, pk):
                 "namemedtich": str(
                     chemical_chemistry_result.assigned_technologist.get_full_name()
                 ),
-                "pat_lic": str(assigned_pathologistlogist_details.license_number),
-                "med_tech_lic": str(assigned_technologist_details.license_number),
+                "pat_lic": str('123234'),
+                "med_tech_lic": str('123234'),
             }
 
             input_pdf_path = os.path.join(
@@ -583,12 +566,7 @@ def generate_serology_result(request, pk):
     if request.method == "GET":
         try:
             serology_result = get_object_or_404(Serology, pk=pk)
-            assigned_technologist_details = get_object_or_404(
-                EmployeeInfo, user=serology_result.assigned_technologist
-            )
-            assigned_pathologistlogist_details = get_object_or_404(
-                EmployeeInfo, user=serology_result.assigned_technologist
-            )
+            
 
             data_to_fill = {
                 "text_1rlg": str(serology_result.patient),
@@ -598,11 +576,11 @@ def generate_serology_result(request, pk):
                 "textarea_5ugpz": f"{str(serology_result.typhidot_rapid_test)}",
                 "textarea_6tjgp": str(serology_result.dengue_rapid_test),
                 "text_7cce": str(
-                    assigned_pathologistlogist_details.user.get_full_name()
+                    serology_result.user.get_full_name()
                 ),
-                "text_8hhqi": f"{str(assigned_technologist_details.user.get_full_name())} L",
-                "text_9qfvv": str(assigned_pathologistlogist_details.license_number),
-                "text_10wele": str(assigned_technologist_details.license_number),
+                "text_8hhqi": f"{str(serology_result.user.get_full_name())} L",
+                "text_9qfvv": str(serology_result.license_number),
+                "text_10wele": str(serology_result.license_number),
             }
 
             input_pdf_path = os.path.join(
@@ -629,12 +607,7 @@ def generate_panbio(request, pk):
     if request.method == "GET":
         try:
             patient_info = get_object_or_404(Patient, pk=pk)
-            assigned_technologist_details = get_object_or_404(
-                EmployeeInfo, user=patient_info.assigned_technologist
-            )
-            assigned_pathologistlogist_details = get_object_or_404(
-                EmployeeInfo, user=patient_info.assigned_technologist
-            )
+            
 
             data_to_fill = {
                 "date": str(patient_info.get_date()),
@@ -649,10 +622,10 @@ def generate_panbio(request, pk):
                 "time": str(patient_info.get_time_of_collection()),
                 "date_collection": str(patient_info.date_of_collection),
                 "result": str(patient_info.sars_result),
-                "name1": str(assigned_pathologistlogist_details.user.get_full_name()),
-                "name2": str(assigned_technologist_details.user.get_full_name()),
-                "lic1": str(assigned_pathologistlogist_details.license_number),
-                "lic2": str(assigned_technologist_details.license_number),
+                "name1": str(patient_info.user.get_full_name()),
+                "name2": str(patient_info.user.get_full_name()),
+                "lic1": str(patient_info.license_number),
+                "lic2": str(patient_info.license_number),
             }
 
             input_pdf_path = os.path.join(
@@ -679,12 +652,7 @@ def generate_urinalysis_result(request, pk):
     if request.method == "GET":
         try:
             urinalysis_detail = get_object_or_404(Urinalysis, pk=pk)
-            assigned_technologist_details = get_object_or_404(
-                EmployeeInfo, user=urinalysis_detail.assigned_technologist
-            )
-            assigned_pathologistlogist_details = get_object_or_404(
-                EmployeeInfo, user=urinalysis_detail.assigned_technologist
-            )
+            
 
             data_to_fill = {
                 "name": str(urinalysis_detail.patient),
@@ -706,10 +674,10 @@ def generate_urinalysis_result(request, pk):
                 "bacteria": urinalysis_detail.bacteria,
                 "others": urinalysis_detail.others,
                 "pregnancy_test": urinalysis_detail.pregnancy_test,
-                "name1": assigned_pathologistlogist_details.user.get_full_name(),
-                "name2": assigned_technologist_details.user.get_full_name(),
-                "lic1": assigned_pathologistlogist_details.license_number,
-                "lic2": assigned_technologist_details.license_number,
+                "name1": urinalysis_detail.user.get_full_name(),
+                "name2": urinalysis_detail.user.get_full_name(),
+                "lic1": urinalysis_detail.license_number,
+                "lic2": urinalysis_detail.license_number,
             }
 
             input_pdf_path = os.path.join(
@@ -798,12 +766,7 @@ def generate_cross_matching_result(request, pk):
         elements.append(Spacer(1, 20))
 
         cross_matching_data = CrossMatching.objects.get(pk=pk)
-        technologist = get_object_or_404(
-            EmployeeInfo, user=cross_matching_data.medical_technologist
-        )
-        pathologist = get_object_or_404(
-            EmployeeInfo, user=cross_matching_data.pathologist
-        )
+        
         patient_info = [
             [
                 Paragraph("<b>Name:</b>", styles["Normal"]),
@@ -903,8 +866,8 @@ def generate_cross_matching_result(request, pk):
                 ),
             ],
             [
-                Paragraph(f"Lic no. {technologist.license_number}", signatory_style),
-                Paragraph(f"Lic no. {pathologist.license_number}", signatory_style),
+                Paragraph(f"Lic no. 124343", signatory_style),
+                Paragraph(f"Lic no. 2434532", signatory_style),
             ],
             [
                 Paragraph("<b>Pathologist</b>", signatory_style),
@@ -1066,13 +1029,6 @@ def generate_rbs_result(request, pk):
             spaceAfter=0,
         )
 
-        assigned_technologist_details = get_object_or_404(
-            EmployeeInfo, user=rbs_data.assigned_technologist
-        )
-        assigned_pathologistlogist_details = get_object_or_404(
-            EmployeeInfo, user=rbs_data.assigned_technologist
-        )
-
         signatory_data = [
             [
                 Paragraph(
@@ -1086,11 +1042,11 @@ def generate_rbs_result(request, pk):
             ],
             [
                 Paragraph(
-                    f"Lic no. {assigned_technologist_details.license_number}",
+                    f"Lic no. 12343",
                     signatory_style,
                 ),
                 Paragraph(
-                    f"Lic no. {assigned_pathologistlogist_details.license_number}",
+                    f"Lic no. 12343",
                     signatory_style,
                 ),
             ],

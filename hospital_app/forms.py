@@ -58,21 +58,6 @@ class LoginForm(forms.Form):
     )
 
 
-class EmployeeInfoCreationForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({"class": "form-control"})
-
-    class Meta:
-        model = EmployeeInfo
-        fields = (
-            "user",
-            "license_number",
-        )
-
-
 class EmployeeCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -84,6 +69,7 @@ class EmployeeCreationForm(UserCreationForm):
             "email",
             "password1",
             "password2",
+            "license_number",
         }
 
         for field_name in fields_required:
@@ -97,17 +83,17 @@ class EmployeeCreationForm(UserCreationForm):
                 field.widget.attrs.update({"class": "form-control"})
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = [
             "username",
             "first_name",
             "last_name",
             "email",
             "groups",
-            "user_permissions",
             "is_active",
             "is_staff",
             "is_superuser",
+            "license_number"
         ]
 
 
@@ -123,17 +109,17 @@ class EmployeeUpdateForm(forms.ModelForm):
                 field.widget.attrs.update({"class": "form-control"})
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = [
             "username",
             "first_name",
             "last_name",
             "email",
             "groups",
-            "user_permissions",
             "is_active",
             "is_staff",
             "is_superuser",
+            "license_number",
         ]
 
 

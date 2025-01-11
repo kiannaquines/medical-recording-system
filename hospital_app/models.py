@@ -2,17 +2,16 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.db.models import Q
+from django.contrib.auth.models import AbstractUser
 
-User = get_user_model()
-
-
-class EmployeeInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
+class CustomUser(AbstractUser):
     license_number = models.CharField(max_length=10, unique=True, db_index=True)
-
     def __str__(self):
-        return f"Employee Information {self.user.get_full_name()} {self.license_number}"
-
+        return self.get_full_name()
+    
+    class Meta:
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
 class Patient(models.Model):
     firstname = models.CharField(max_length=255)
@@ -24,7 +23,7 @@ class Patient(models.Model):
         max_length=10, choices=(("Male", "Male"), ("Female", "Female"))
     )
     physician = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="physician",
         limit_choices_to={"groups__name": "Physician"},
         on_delete=models.CASCADE,
@@ -37,7 +36,7 @@ class Patient(models.Model):
     date = models.DateField(auto_now_add=True)
 
     assigned_pathologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="patient_pathologist",
         on_delete=models.CASCADE,
         null=True,
@@ -45,7 +44,7 @@ class Patient(models.Model):
         limit_choices_to={"groups__name": "Pathologist"},
     )
     assigned_technologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="patient_technologist",
         on_delete=models.CASCADE,
         null=True,
@@ -98,7 +97,7 @@ class ClinicalChemistry(models.Model):
         default=False, help_text="Re-test clinical chemistry results"
     )
     assigned_pathologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="chemical_chemist_pathologist",
         on_delete=models.CASCADE,
         null=True,
@@ -106,7 +105,7 @@ class ClinicalChemistry(models.Model):
         limit_choices_to={"groups__name": "Pathologist"},
     )
     assigned_technologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="chemical_chemist_technologist",
         on_delete=models.CASCADE,
         null=True,
@@ -167,7 +166,7 @@ class Hematology(models.Model):
     date = models.DateField(auto_now_add=True)
 
     assigned_pathologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="assigned_pathologist",
         on_delete=models.CASCADE,
         null=True,
@@ -175,7 +174,7 @@ class Hematology(models.Model):
         limit_choices_to={"groups__name": "Pathologist"},
     )
     assigned_technologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="assigned_technologist",
         on_delete=models.CASCADE,
         null=True,
@@ -206,7 +205,7 @@ class Serology(models.Model):
     dengue_rapid_test = models.CharField(max_length=255)
     re_test = models.BooleanField(default=False, help_text="Re-test serology")
     assigned_pathologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="serology_pathologist",
         on_delete=models.CASCADE,
         null=True,
@@ -214,7 +213,7 @@ class Serology(models.Model):
         limit_choices_to={"groups__name": "Pathologist"},
     )
     assigned_technologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="serology_technologist",
         on_delete=models.CASCADE,
         null=True,
@@ -266,7 +265,7 @@ class CrossMatching(models.Model):
         help_text="Patient associated with this cross-matching.",
     )
     pathologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="pathologist_cross_matchings",
         limit_choices_to={"groups__name": "Pathologist"},
         on_delete=models.CASCADE,
@@ -275,7 +274,7 @@ class CrossMatching(models.Model):
         blank=True,
     )
     medical_technologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="technologist_cross_matchings",
         limit_choices_to={"groups__name": "Medical Technologist"},
         on_delete=models.CASCADE,
@@ -330,7 +329,7 @@ class RBS(models.Model):
     )
 
     assigned_pathologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="rbs_assigned_pathologist",
         on_delete=models.CASCADE,
         null=True,
@@ -339,7 +338,7 @@ class RBS(models.Model):
     )
     re_test = models.BooleanField(default=False, help_text="Retest the RBS")
     assigned_technologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="rbs_assigned_technologist",
         on_delete=models.CASCADE,
         null=True,
@@ -377,7 +376,7 @@ class Urinalysis(models.Model):
     urates = models.CharField(max_length=255, help_text="Urates", null=True, blank=True)
 
     assigned_pathologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="urinalysis_assigned_pathologist",
         on_delete=models.CASCADE,
         null=True,
@@ -386,7 +385,7 @@ class Urinalysis(models.Model):
         help_text="Pathologist name",
     )
     assigned_technologist = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="urinalysis_assigned_technologist",
         on_delete=models.CASCADE,
         null=True,
@@ -432,7 +431,7 @@ class LabRequest(models.Model):
     )
 
     requested_by = models.ForeignKey(
-        User,
+        CustomUser,
         related_name="requested_by_lab",
         limit_choices_to=Q(groups__name="Doctor") | Q(groups__name="Nurse"),
         on_delete=models.CASCADE,

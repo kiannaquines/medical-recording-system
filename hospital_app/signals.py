@@ -4,12 +4,11 @@ from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from .models import (
-    EmployeeInfo, Patient, ClinicalChemistry, Hematology,
+    Patient, ClinicalChemistry, Hematology,
     Serology, CrossMatching, RBS, Urinalysis, LabRequest
 )
 
 MODELS_TO_LOG = [
-    EmployeeInfo,
     Patient,
     ClinicalChemistry,
     Hematology,

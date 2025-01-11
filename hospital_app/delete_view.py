@@ -306,7 +306,7 @@ class ClinicalChemicalDeleteView(DeleteView):
 class EmployeeDeleteView(DeleteView):
     pk_url_kwarg = "pk"
     template_name = "delete_forms.html"
-    model = User
+    model = CustomUser
     success_url = reverse_lazy("employee_list")
 
     def delete(self, request, *args, **kwargs):

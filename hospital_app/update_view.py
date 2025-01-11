@@ -253,7 +253,7 @@ class EmployeeUpdateView(UpdateView):
     pk_url_kwarg = "pk"
     template_name = "forms.html"
     form_class = EmployeeUpdateForm
-    model = User
+    model = CustomUser
     success_url = reverse_lazy("employee_list")
 
     def form_valid(self, form):

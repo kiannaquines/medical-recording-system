@@ -8,7 +8,6 @@ from hospital_app.forms import (
     PatientForm,
     CrossMatchingResultForm,
     RBSForm,
-    EmployeeInfoCreationForm,
     UrinalysisForm,
     RBSResultForm,
     LabRequestForm,
@@ -18,47 +17,6 @@ from hospital_app.models import *
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.contrib import messages
-
-
-def employee_info_add_view(request, pk):
-    employee = get_object_or_404(User, pk=pk)
-
-    if request.method == "POST":
-        form = EmployeeInfoCreationForm(
-            request.POST, instance=EmployeeInfo.objects.filter(user=employee).first()
-        )
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "You have successfully added employee details.",
-                extra_tags="primary",
-            )
-            return redirect("employee_list")
-        else:
-            for field, errors in form.errors.items():
-                for form_error in errors:
-                    messages.error(
-                        request=request,  
-                        message=form_error,    
-                        extra_tags="danger"    
-                    )
-
-    employee_info = EmployeeInfo.objects.filter(user=employee).first()
-    context = {
-        "detail_header": (
-            "Edit Employee Detail" if employee_info else "Add Employee Detail"
-        ),
-        "humberger_header": (
-            "Edit Employee Detail" if employee_info else "Add Employee Detail"
-        ),
-        "form": (
-            EmployeeInfoCreationForm(instance=employee_info)
-            if employee_info
-            else EmployeeInfoCreationForm(initial={"user": employee})
-        ),
-    }
-    return render(request, "forms.html", context)
 
 
 class RBSCreateView(CreateView):
@@ -396,7 +354,7 @@ class ClinicalChemicalCreateView(CreateView):
 class EmployeeCreateView(CreateView):
     template_name = "forms.html"
     form_class = EmployeeCreationForm
-    model = User
+    model = CustomUser
     success_url = reverse_lazy("employee_list")
 
     def form_valid(self, form):

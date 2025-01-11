@@ -82,6 +82,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+AUTH_USER_MODEL = 'hospital_app.CustomUser'
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGO_PATH = os.path.join(BASE_DIR, "static\\assets\\img\\logo.jpg")
 
