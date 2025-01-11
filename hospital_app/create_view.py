@@ -256,8 +256,8 @@ class CrossMatchingResultCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["detail_header"] = "Chemical Chemistry Details"
-        context["humberger_header"] = "Chemical Chemistry Details"
+        context["detail_header"] = "Cross Matching Details"
+        context["humberger_header"] = "Cross Matching Details"
         return context
 
 

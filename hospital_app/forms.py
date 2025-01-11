@@ -24,6 +24,7 @@ custom_fields = {
         attrs={"type": "time", "class": "form-control"}
     ),
     "re_test": forms.CheckboxInput(attrs={"type": "checkbox", "class": "form-check-input"}),
+    "is_done": forms.CheckboxInput(attrs={"type": "checkbox", "class": "form-check-input"}),
     "date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
     "time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),
 }
@@ -41,7 +42,7 @@ class LaboratoryRequestFormNurseAndDoctor(forms.ModelForm):
         
     class Meta:
         model = LabRequest
-        fields = ("patient", "description", "lab_request_type",)
+        fields = ("patient", "description", "lab_request_type","is_done")
         exclude = ("requested_by",)
 
 

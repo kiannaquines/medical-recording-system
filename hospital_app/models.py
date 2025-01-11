@@ -4,14 +4,17 @@ from django.contrib.auth.models import Group
 from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 
+
 class CustomUser(AbstractUser):
     license_number = models.CharField(max_length=10, unique=True, db_index=True)
+
     def __str__(self):
         return self.get_full_name()
-    
+
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
+
 
 class Patient(models.Model):
     firstname = models.CharField(max_length=255)
@@ -238,6 +241,7 @@ class CrossMatchingResult(models.Model):
     )
     amt_in_cc = models.FloatField(help_text="Amount in cc.")
     blood_bank = models.CharField(max_length=255, help_text="Name of the blood bank.")
+    blood_type = models.CharField(max_length=255, help_text="Name of the blood type")
     date_of_collection = models.DateField(help_text="Date the blood was collected.")
     expiration_date = models.DateField(help_text="Expiration date of the blood.")
     result = models.TextField(max_length=255, help_text="Result of the cross-matching.")
@@ -439,7 +443,7 @@ class LabRequest(models.Model):
         blank=True,
     )
     date_request = models.DateTimeField(auto_now_add=True)
-
+    is_done = models.BooleanField(default=False, help_text="Toggle if the request is done.")
     def __str__(self) -> str:
         return f"Lab Request for {self.patient} laboratory request for {self.lab_request_type}"
 

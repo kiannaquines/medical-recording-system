@@ -39,7 +39,9 @@ def view_patient_informations(request):
     from django.db.models import Prefetch
 
     if request.method != "POST":
-        return JsonResponse({"error": "Invalid request method. Only POST is allowed."}, status=405)
+        return JsonResponse(
+            {"error": "Invalid request method. Only POST is allowed."}, status=405
+        )
 
     try:
         body = json.loads(request.body)
@@ -51,88 +53,159 @@ def view_patient_informations(request):
     age = body.get("age")
 
     if not all([patient_id, room_number, age]):
-        return JsonResponse({"error": "Missing required fields: patient_id, room_number, or age."}, status=400)
+        return JsonResponse(
+            {"error": "Missing required fields: patient_id, room_number, or age."},
+            status=400,
+        )
 
     try:
         patient = Patient.objects.get(pk=patient_id, room_number=room_number, age=age)
     except Patient.DoesNotExist:
-        return JsonResponse({"success": False, "error": "Patient not found with the provided information."}, status=404)
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "Patient not found with the provided information.",
+            },
+            status=404,
+        )
 
     patient_info = {
-        'fullname': patient.get_full_name(),
-        'age': patient.age,
-        'gender': patient.sex,
-        'patient_type': patient.patient_type,
-        'physician': patient.physician.get_full_name() if patient.physician else None,
-        'room_number': patient.room_number,
-        'sample_type': patient.sample_type,
-        'sars_result': patient.sars_result,
-        'date': patient.date.isoformat() if patient.date else None,
+        "fullname": patient.get_full_name(),
+        "age": patient.age,
+        "gender": patient.sex,
+        "patient_type": patient.patient_type,
+        "physician": patient.physician.get_full_name() if patient.physician else None,
+        "room_number": patient.room_number,
+        "sample_type": patient.sample_type,
+        "sars_result": patient.sars_result,
+        "date": patient.date.isoformat() if patient.date else None,
     }
 
-    cross_matching_data = CrossMatching.objects.filter(patient__id=patient_id).prefetch_related(
+    cross_matching_data = CrossMatching.objects.filter(
+        patient__id=patient_id
+    ).prefetch_related(
         Prefetch(
-            'results',
+            "results",
             queryset=CrossMatchingResult.objects.all(),
         )
     )
 
     rbs_data = RBS.objects.filter(patient__id=patient_id).prefetch_related(
         Prefetch(
-            'rbs_result',
+            "rbs_result",
             queryset=RBSResult.objects.all(),
         )
     )
 
-
     output_cross_matching = []
     for cross_matching in cross_matching_data:
-        output_cross_matching.append({
-            "id": cross_matching.id,
-            "patient": str(cross_matching.patient),
-            "pathologist": str(cross_matching.pathologist),
-            "medical_technologist": str(cross_matching.medical_technologist),
-            "created_at": cross_matching.created_at,
-            "updated_at": cross_matching.updated_at,
-            "results": [
-                {
-                    "serial_no": result.serial_no,
-                    "amt_in_cc": result.amt_in_cc,
-                    "blood_bank": result.blood_bank,
-                    "date_of_collection": result.date_of_collection,
-                    "expiration_date": result.expiration_date,
-                    "result": result.result,
-                }
-                for result in cross_matching.results.all()
-            ],
-        })
-    
+        output_cross_matching.append(
+            {
+                "id": cross_matching.id,
+                "patient": str(cross_matching.patient),
+                "pathologist": str(cross_matching.pathologist),
+                "medical_technologist": str(cross_matching.medical_technologist),
+                "created_at": cross_matching.created_at,
+                "updated_at": cross_matching.updated_at,
+                "results": [
+                    {
+                        "serial_no": result.serial_no,
+                        "amt_in_cc": result.amt_in_cc,
+                        "blood_bank": result.blood_bank,
+                        "date_of_collection": result.date_of_collection,
+                        "expiration_date": result.expiration_date,
+                        "result": result.result,
+                    }
+                    for result in cross_matching.results.all()
+                ],
+            }
+        )
+
     output_rbs_result = []
     for rbs in rbs_data:
-        output_rbs_result.append({
-            "id": rbs.id,
-            "patient": str(rbs.patient),
-            "pathologist": str(rbs.assigned_pathologist) if rbs.assigned_pathologist else None,
-            "medical_technologist": str(rbs.assigned_technologist) if rbs.assigned_technologist else None,
-            "results": [
-                {
-                    "result": result.result,
-                    "date": result.date.strftime("%m/%d/%Y"),
-                    "time": result.time.strftime("%I:%M %p"),
-                }
-                for result in rbs.rbs_result.all()
-            ],
-        })
-
-
-
+        output_rbs_result.append(
+            {
+                "id": rbs.id,
+                "patient": str(rbs.patient),
+                "pathologist": (
+                    str(rbs.assigned_pathologist) if rbs.assigned_pathologist else None
+                ),
+                "medical_technologist": (
+                    str(rbs.assigned_technologist)
+                    if rbs.assigned_technologist
+                    else None
+                ),
+                "results": [
+                    {
+                        "result": result.result,
+                        "date": result.date.strftime("%m/%d/%Y"),
+                        "time": result.time.strftime("%I:%M %p"),
+                    }
+                    for result in rbs.rbs_result.all()
+                ],
+            }
+        )
 
     related_data = {
-        "clinical_chemistry": list(ClinicalChemistry.objects.filter(patient__id=patient_id).values('glucose','cholesterol','triglycerides','hdl','ldl','creatinine', 'uric_acid', 'bun', 'sgpt', 'sgot', 'date')),
-        "serology": list(Serology.objects.filter(patient__id=patient_id).values('hb_determination','typhidot_rapid_test','dengue_rapid_test','date')),
-        "hematology": list(Hematology.objects.filter(patient__id=patient_id).values('hemoglobin_mass_concentration','hematocrit','erythrocty_no_concentration','platelet','blood_type','rh_type','leucocyte_no_concentration','segmenters','lymphocytes','monocytes','eosinophils','basophils','date')),
+        "clinical_chemistry": list(
+            ClinicalChemistry.objects.filter(patient__id=patient_id).values(
+                "glucose",
+                "cholesterol",
+                "triglycerides",
+                "hdl",
+                "ldl",
+                "creatinine",
+                "uric_acid",
+                "bun",
+                "sgpt",
+                "sgot",
+                "date",
+            )
+        ),
+        "serology": list(
+            Serology.objects.filter(patient__id=patient_id).values(
+                "hb_determination", "typhidot_rapid_test", "dengue_rapid_test", "date"
+            )
+        ),
+        "hematology": list(
+            Hematology.objects.filter(patient__id=patient_id).values(
+                "hemoglobin_mass_concentration",
+                "hematocrit",
+                "erythrocty_no_concentration",
+                "platelet",
+                "blood_type",
+                "rh_type",
+                "leucocyte_no_concentration",
+                "segmenters",
+                "lymphocytes",
+                "monocytes",
+                "eosinophils",
+                "basophils",
+                "date",
+            )
+        ),
         "cross_matching": output_cross_matching,
-        "urinalysis": Urinalysis.objects.filter(patient__id=patient_id).values('color','appearance','specific_gravity','pH','sugar','albumin','epithelia','bacteria','pus_cells','rbc','cast','crystals','others','amorphous','mucous_thread','pregnancy_test','urates').first(),
+        "urinalysis": Urinalysis.objects.filter(patient__id=patient_id)
+        .values(
+            "color",
+            "appearance",
+            "specific_gravity",
+            "pH",
+            "sugar",
+            "albumin",
+            "epithelia",
+            "bacteria",
+            "pus_cells",
+            "rbc",
+            "cast",
+            "crystals",
+            "others",
+            "amorphous",
+            "mucous_thread",
+            "pregnancy_test",
+            "urates",
+        )
+        .first(),
         "rbs": output_rbs_result,
     }
 
@@ -266,7 +339,9 @@ class DashboardView(View):
         context["cross_matching_count"] = CrossMatching.objects.all().count()
 
         context["overall_employee"] = CustomUser.objects.all().count()
-        context["inactive_employee"] = CustomUser.objects.filter(is_active=False).count()
+        context["inactive_employee"] = CustomUser.objects.filter(
+            is_active=False
+        ).count()
         context["active_employee"] = CustomUser.objects.filter(is_active=True).count()
         context["employee_group_count"] = Group.objects.all().count()
         context["logs"] = LogEntry.objects.select_related(
@@ -462,7 +537,7 @@ def generate_hematology_result(request, pk):
         try:
             hematology_result = get_object_or_404(Hematology, pk=pk)
             data_to_fill = {
-                "name": str(hematology_result.patient),
+                "name": str(hematology_result.patient.get_full_name()),
                 "date": hematology_result.get_date(),
                 "room": hematology_result.patient.room_number,
                 "hemoglobin": f"{str(hematology_result.hemoglobin_mass_concentration)} gm/L",
@@ -484,10 +559,10 @@ def generate_hematology_result(request, pk):
                     hematology_result.assigned_technologist.get_full_name()
                 ),
                 "lic_no_pathologist": str(
-                    '123445'
+                    hematology_result.assigned_pathologist.license_number
                 ),
                 "lic_no_medical_technologist": str(
-                    '233442'
+                    hematology_result.assigned_technologist.license_number
                 ),
             }
 
@@ -516,30 +591,32 @@ def generate_hematology_result(request, pk):
 def generate_chemistry_result(request, pk):
     if request.method == "GET":
         try:
-            chemical_chemistry_result = get_object_or_404(ClinicalChemistry, pk=pk)
-            
+            clinical_chemistry = get_object_or_404(ClinicalChemistry, pk=pk)
+
             data_to_fill = {
-                "name": str(chemical_chemistry_result.patient),
-                "date": chemical_chemistry_result.get_date(),
-                "room": chemical_chemistry_result.patient.room_number,
-                "glucose": f"{str(chemical_chemistry_result.glucose)} gm/L",
-                "chol": f"{str(chemical_chemistry_result.cholesterol)} L",
-                "tri": str(chemical_chemistry_result.triglycerides),
-                "hdl": str(chemical_chemistry_result.hdl),
-                "ldl": f"{str(chemical_chemistry_result.ldl)} L",
-                "cre": str(chemical_chemistry_result.creatinine),
-                "uric": str(chemical_chemistry_result.uric_acid),
-                "bun": str(chemical_chemistry_result.bun),
-                "sgpt": str(chemical_chemistry_result.sgpt),
-                "sgot": str(chemical_chemistry_result.sgot),
+                "name": str(clinical_chemistry.patient),
+                "date": clinical_chemistry.get_date(),
+                "room": clinical_chemistry.patient.room_number,
+                "glucose": f"{str(clinical_chemistry.glucose)} gm/L",
+                "chol": f"{str(clinical_chemistry.cholesterol)} L",
+                "tri": str(clinical_chemistry.triglycerides),
+                "hdl": str(clinical_chemistry.hdl),
+                "ldl": f"{str(clinical_chemistry.ldl)} L",
+                "cre": str(clinical_chemistry.creatinine),
+                "uric": str(clinical_chemistry.uric_acid),
+                "bun": str(clinical_chemistry.bun),
+                "sgpt": str(clinical_chemistry.sgpt),
+                "sgot": str(clinical_chemistry.sgot),
                 "name_path": str(
-                    chemical_chemistry_result.assigned_pathologist.get_full_name()
+                    clinical_chemistry.assigned_pathologist.get_full_name()
                 ),
                 "namemedtich": str(
-                    chemical_chemistry_result.assigned_technologist.get_full_name()
+                    clinical_chemistry.assigned_technologist.get_full_name()
                 ),
-                "pat_lic": str('123234'),
-                "med_tech_lic": str('123234'),
+                "pat_lic": str(clinical_chemistry.assigned_pathologist.license_number),
+                "med_tech_lic": str(
+                    clinical_chemistry.assigned_technologist.license_number
+                ),
             }
 
             input_pdf_path = os.path.join(
@@ -553,7 +630,7 @@ def generate_chemistry_result(request, pk):
             filled_pdf_buffer = io.BytesIO()
             fillpdfs.write_fillable_pdf(input_pdf_path, filled_pdf_buffer, data_to_fill)
             filled_pdf_buffer.seek(0)
-            filename = f"chemistry_result_{slugify(chemical_chemistry_result.patient.get_full_name())}_{datetime.now().strftime('%Y%m%d')}.pdf"
+            filename = f"clinical_result_{slugify(clinical_chemistry.patient.get_full_name())}_{datetime.now().strftime('%Y%m%d')}.pdf"
             response = FileResponse(filled_pdf_buffer, content_type="application/pdf")
             response["Content-Disposition"] = f'attachment; filename="{filename}"'
             return response
@@ -566,7 +643,6 @@ def generate_serology_result(request, pk):
     if request.method == "GET":
         try:
             serology_result = get_object_or_404(Serology, pk=pk)
-            
 
             data_to_fill = {
                 "text_1rlg": str(serology_result.patient),
@@ -575,12 +651,12 @@ def generate_serology_result(request, pk):
                 "textarea_4zrvv": f"{str(serology_result.hb_determination)}",
                 "textarea_5ugpz": f"{str(serology_result.typhidot_rapid_test)}",
                 "textarea_6tjgp": str(serology_result.dengue_rapid_test),
-                "text_7cce": str(
-                    serology_result.user.get_full_name()
+                "text_7cce": str(serology_result.assigned_pathologist.get_full_name()),
+                "text_8hhqi": f"{str(serology_result.assigned_technologist.get_full_name())} L",
+                "text_9qfvv": str(serology_result.assigned_pathologist.license_number),
+                "text_10wele": str(
+                    serology_result.assigned_technologist.license_number
                 ),
-                "text_8hhqi": f"{str(serology_result.user.get_full_name())} L",
-                "text_9qfvv": str(serology_result.license_number),
-                "text_10wele": str(serology_result.license_number),
             }
 
             input_pdf_path = os.path.join(
@@ -607,7 +683,6 @@ def generate_panbio(request, pk):
     if request.method == "GET":
         try:
             patient_info = get_object_or_404(Patient, pk=pk)
-            
 
             data_to_fill = {
                 "date": str(patient_info.get_date()),
@@ -622,10 +697,10 @@ def generate_panbio(request, pk):
                 "time": str(patient_info.get_time_of_collection()),
                 "date_collection": str(patient_info.date_of_collection),
                 "result": str(patient_info.sars_result),
-                "name1": str(patient_info.user.get_full_name()),
-                "name2": str(patient_info.user.get_full_name()),
-                "lic1": str(patient_info.license_number),
-                "lic2": str(patient_info.license_number),
+                "name1": str(patient_info.assigned_pathologist.get_full_name()),
+                "name2": str(patient_info.assigned_technologist.get_full_name()),
+                "lic1": str(patient_info.assigned_pathologist.license_number),
+                "lic2": str(patient_info.assigned_technologist.license_number),
             }
 
             input_pdf_path = os.path.join(
@@ -652,7 +727,6 @@ def generate_urinalysis_result(request, pk):
     if request.method == "GET":
         try:
             urinalysis_detail = get_object_or_404(Urinalysis, pk=pk)
-            
 
             data_to_fill = {
                 "name": str(urinalysis_detail.patient),
@@ -674,10 +748,10 @@ def generate_urinalysis_result(request, pk):
                 "bacteria": urinalysis_detail.bacteria,
                 "others": urinalysis_detail.others,
                 "pregnancy_test": urinalysis_detail.pregnancy_test,
-                "name1": urinalysis_detail.user.get_full_name(),
-                "name2": urinalysis_detail.user.get_full_name(),
-                "lic1": urinalysis_detail.license_number,
-                "lic2": urinalysis_detail.license_number,
+                "name1": urinalysis_detail.assigned_pathologist.get_full_name(),
+                "name2": urinalysis_detail.assigned_technologist.get_full_name(),
+                "lic1": urinalysis_detail.assigned_pathologist.license_number,
+                "lic2": urinalysis_detail.assigned_technologist.license_number,
             }
 
             input_pdf_path = os.path.join(
@@ -766,7 +840,7 @@ def generate_cross_matching_result(request, pk):
         elements.append(Spacer(1, 20))
 
         cross_matching_data = CrossMatching.objects.get(pk=pk)
-        
+
         patient_info = [
             [
                 Paragraph("<b>Name:</b>", styles["Normal"]),
@@ -806,7 +880,7 @@ def generate_cross_matching_result(request, pk):
             data.append(
                 [
                     result.serial_no,
-                    result.blood_bank,
+                    result.blood_type,
                     result.amt_in_cc,
                     result.blood_bank,
                     result.date_of_collection.strftime("%Y/%m/%d"),
@@ -866,8 +940,14 @@ def generate_cross_matching_result(request, pk):
                 ),
             ],
             [
-                Paragraph(f"Lic no. 124343", signatory_style),
-                Paragraph(f"Lic no. 2434532", signatory_style),
+                Paragraph(
+                    f"Lic no. {cross_matching_data.medical_technologist.license_number}",
+                    signatory_style,
+                ),
+                Paragraph(
+                    f"Lic no. {cross_matching_data.pathologist.license_number}",
+                    signatory_style,
+                ),
             ],
             [
                 Paragraph("<b>Pathologist</b>", signatory_style),
@@ -1042,11 +1122,11 @@ def generate_rbs_result(request, pk):
             ],
             [
                 Paragraph(
-                    f"Lic no. 12343",
+                    f"Lic no. {rbs_data.assigned_pathologist.license_number}",
                     signatory_style,
                 ),
                 Paragraph(
-                    f"Lic no. 12343",
+                    f"Lic no. {rbs_data.assigned_technologist.license_number}",
                     signatory_style,
                 ),
             ],
