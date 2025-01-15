@@ -31,7 +31,7 @@ class Patient(models.Model):
         limit_choices_to={"groups__name": "Physician"},
         on_delete=models.CASCADE,
     )
-    room_number = models.PositiveIntegerField()
+    room_number = models.PositiveIntegerField(null=True, blank=True, help_text="Leave room number as empty if out patient")
     sample_type = models.CharField(max_length=255)
     time_of_collection = models.TimeField()
     date_of_collection = models.DateField()
