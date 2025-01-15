@@ -45,7 +45,9 @@
             </div>
             <div class="social-auth-links text-center mb-3 d-grid gap-2">
                 <input type="submit" class="btn btn-success mb-3" value=" Log me in">
-                <b><p>- OR -</p></b>
+                <b>
+                    <p>- OR -</p>
+                </b>
                 <a href="/admin" class="btn btn-danger">
                     <i class="bi bi-person-lock"></i>
                     Login as Administator
@@ -351,25 +353,19 @@ document.querySelectorAll('#view-my-data').forEach(element => {
                     'No patient found with the given ID and age.',
                     'error'
                 )
-
                 return;
             } else {
                 try {
-
                     const resultModal = document.querySelector('#PatientInformationModal');
-
                     if (!resultModal) {
                         console.error('Patient Information Modal not found');
                         return;
                     }
-
                     const resultModalOpen = new bootstrap.Modal(resultModal, {
                         keyboard: false,
                         backdrop: 'static',
                     });
-
                     resultModalOpen.show();
-                    
                     const modalLabel = document.getElementById("PatientInformationModalLabel");
                     if (modalLabel) {
                         modalLabel.textContent = `${dataName}'s Laboratory Information`;
@@ -548,84 +544,84 @@ document.querySelectorAll('#view-my-data').forEach(element => {
                             });
                         }
                         },
-                        "#UrinalysisDataTable": {
-                            columns: [
-                                { data: "color" },
-                                { data: "appearance" },
-                                { data: "specific_gravity" },
-                                { data: "pH" },
-                                { data: "sugar" },
-                                { data: "albumin" },
-                                { data: "epithelia" },
-                                { data: "bacteria" },
-                                { data: "pus_cells" },
-                                { data: "rbc" },
-                                { data: "cast" },
-                                { data: "crystals" },
-                                { data: "others" },
-                                { data: "amorphous" },
-                                { data: "mucous_thread" },
-                                { data: "pregnancy_test" },
-                                { data: "urates" },
-                            ],
-                            dataProperty: "urinalysis",
-                            dataFilter: function(response) {
-                                const jsonResponse = JSON.parse(response);
-                                const tableData = jsonResponse.urinalysis || [];
-                                
-                                const dataArray = Array.isArray(tableData) ? tableData : [tableData];
-                                
-                                return JSON.stringify({
-                                    draw: jsonResponse.draw,
-                                    recordsTotal: dataArray.length,
-                                    recordsFiltered: dataArray.length,
-                                    data: dataArray
-                                });
-                            },
+                    "#UrinalysisDataTable": {
+                        columns: [
+                            { data: "color" },
+                            { data: "appearance" },
+                            { data: "specific_gravity" },
+                            { data: "pH" },
+                            { data: "sugar" },
+                            { data: "albumin" },
+                            { data: "epithelia" },
+                            { data: "bacteria" },
+                            { data: "pus_cells" },
+                            { data: "rbc" },
+                            { data: "cast" },
+                            { data: "crystals" },
+                            { data: "others" },
+                            { data: "amorphous" },
+                            { data: "mucous_thread" },
+                            { data: "pregnancy_test" },
+                            { data: "urates" },
+                        ],
+                        dataProperty: "urinalysis",
+                        dataFilter: function(response) {
+                            const jsonResponse = JSON.parse(response);
+                            const tableData = jsonResponse.urinalysis || [];
+                            
+                            const dataArray = Array.isArray(tableData) ? tableData : [tableData];
+                            
+                            return JSON.stringify({
+                                draw: jsonResponse.draw,
+                                recordsTotal: dataArray.length,
+                                recordsFiltered: dataArray.length,
+                                data: dataArray
+                            });
                         },
-                        "#RBSDataTable": {
-                            columns: [
-                                { data: "result", title: "Result" }, 
-                                { data: "date", title: "Date" },
-                                { data: "time", title: "Time" },
-                            ],
-                            dataProperty: "rbs",
-                            dataFilter: function(response) {
-                                try {
-                                    const jsonResponse = JSON.parse(response);
-                                    const rbsData = jsonResponse.rbs || [];
-                                    
-                                    const flattenedData = [];
+                        },
+                    "#RBSDataTable": {
+                        columns: [
+                            { data: "result", title: "Result" }, 
+                            { data: "date", title: "Date" },
+                            { data: "time", title: "Time" },
+                        ],
+                        dataProperty: "rbs",
+                        dataFilter: function(response) {
+                            try {
+                                const jsonResponse = JSON.parse(response);
+                                const rbsData = jsonResponse.rbs || [];
+                                
+                                const flattenedData = [];
 
-                                    
-                                    rbsData.forEach(item => {
-                                        item.results.forEach(result => {
-                                            flattenedData.push({
-                                                ...result,
-                                            });
+                                
+                                rbsData.forEach(item => {
+                                    item.results.forEach(result => {
+                                        flattenedData.push({
+                                            ...result,
                                         });
-                                        
                                     });
+                                    
+                                });
 
-                                    return JSON.stringify({
-                                        draw: jsonResponse.draw || 1,
-                                        recordsTotal: flattenedData.length,
-                                        recordsFiltered: flattenedData.length,
-                                        data: flattenedData
-                                    });
+                                return JSON.stringify({
+                                    draw: jsonResponse.draw || 1,
+                                    recordsTotal: flattenedData.length,
+                                    recordsFiltered: flattenedData.length,
+                                    data: flattenedData
+                                });
 
-                                } catch (error) {
-                                    console.error("Error in dataFilter for RBSDataTable:", error);
+                            } catch (error) {
+                                console.error("Error in dataFilter for RBSDataTable:", error);
 
-                                    return JSON.stringify({
-                                        draw: 1,
-                                        recordsTotal: 0,
-                                        recordsFiltered: 0,
-                                        data: []
-                                    });
-                                }
+                                return JSON.stringify({
+                                    draw: 1,
+                                    recordsTotal: 0,
+                                    recordsFiltered: 0,
+                                    data: []
+                                });
                             }
                         }
+                    }
                     };
 
                     const listOfTables = ["#PatientInformationModalTable", "#ClinicalChemistryModalTable","#SerologyDataTable","#HemoglobinDataTable","#CrossMatchingDataTable","#UrinalysisDataTable","#RBSDataTable"];
