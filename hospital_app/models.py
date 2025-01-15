@@ -37,7 +37,7 @@ class Patient(models.Model):
     date_of_collection = models.DateField()
     sars_result = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=True)
-
+    serial_number = models.CharField(max_length=255, help_text="Serial number example: PT-01152025-R23")
     assigned_pathologist = models.ForeignKey(
         CustomUser,
         related_name="patient_pathologist",

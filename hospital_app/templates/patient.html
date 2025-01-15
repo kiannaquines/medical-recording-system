@@ -18,6 +18,7 @@
                         <thead>
                             <tr>
                                 <th class="text-muted">Patient</th>
+                                <th class="text-muted">Serial No.</th>
                                 <th class="text-muted">Type</th>
                                 <th class="text-muted">Age</th>
                                 <th class="text-muted">Gender</th>
@@ -33,6 +34,7 @@
                             {% for result in patients %}
                             <tr>
                                 <td>{{ result.get_full_name }}</td>
+                                <td>{{ result.serial_number }}</td>
                                 <td>
                                     <span class="badge bg-primary">{{ result.patient_type }}</span>
                                 </td>
