@@ -292,6 +292,7 @@ document.querySelectorAll('#view-my-data').forEach(element => {
         
         const prevModalElement = document.getElementById("SearchPatientInformationModal");
         const modalInstance = bootstrap.Modal.getInstance(prevModalElement);
+
         if (modalInstance) {
             modalInstance.hide();
         }
@@ -316,22 +317,21 @@ document.querySelectorAll('#view-my-data').forEach(element => {
         if (ageResult.dismiss) return;
         const age = ageResult.value;
 
-        const roomResult = await Swal.fire({
+        const serialNumberResult = await Swal.fire({
             title: `Access ${dataName}'s lab results`,
-            input: "number",
-            inputLabel: "Enter your room number",
-            inputPlaceholder: "Enter your room number",
+            input: "text",
+            inputLabel: "Enter your serial number",
+            inputPlaceholder: "PT-00000000-R00",
             showCancelButton: true,
             inputValidator: (value) => {
-                if (!value) return "Room number is required!";
-                if (value < 0) return "Room number cannot be negative!";
+                if (!value) return "Serial number is required!";
                 return null;
             }
         });
 
         
-        if (roomResult.dismiss) return;
-        const roomNumber = roomResult.value;
+        if (serialNumberResult.dismiss) return;
+        const serialNumber = serialNumberResult.value;
         
         fetch('{% url "view_patient_informations" %}', {
             method: 'POST',
@@ -342,7 +342,7 @@ document.querySelectorAll('#view-my-data').forEach(element => {
             body: JSON.stringify({
                 patient_id: dataId,
                 age: age,
-                room_number: roomNumber,
+                serial_number: serialNumber,
             }),
         }).then((response) => {
             if (!response.ok) {
@@ -659,7 +659,7 @@ document.querySelectorAll('#view-my-data').forEach(element => {
                                 return JSON.stringify({
                                     patient_id: dataId,
                                     age: age,
-                                    room_number: roomNumber,
+                                    serial_number: serialNumber,
                                 });
                             },
                             dataFilter: config.dataFilter,

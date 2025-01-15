@@ -49,17 +49,17 @@ def view_patient_informations(request):
         return JsonResponse({"error": "Invalid JSON body."}, status=400)
 
     patient_id = body.get("patient_id")
-    room_number = body.get("room_number")
+    serial_number = body.get("serial_number")
     age = body.get("age")
 
-    if not all([patient_id, room_number, age]):
+    if not all([patient_id, serial_number, age]):
         return JsonResponse(
-            {"error": "Missing required fields: patient_id, room_number, or age."},
+            {"error": "Missing required fields: patient_id, serial_number, or age."},
             status=400,
         )
 
     try:
-        patient = Patient.objects.get(pk=patient_id, room_number=room_number, age=age)
+        patient = Patient.objects.get(pk=patient_id, serial_number=serial_number, age=age)
     except Patient.DoesNotExist:
         return JsonResponse(
             {
