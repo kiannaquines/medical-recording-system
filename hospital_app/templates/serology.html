@@ -30,7 +30,7 @@
                         <tbody>
                             {% for result in results %}
                             <tr>
-                                <td>{{ result.patient }}</td>
+                                <td>{{ result.patient.get_full_name }}</td>
                                 <td>{{ result.hb_determination }}</td>
                                 <td>{{ result.typhidot_rapid_test }}</td>
                                 <td>{{ result.dengue_rapid_test }}</td>

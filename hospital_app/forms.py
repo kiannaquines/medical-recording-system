@@ -29,8 +29,7 @@ custom_fields = {
     "is_done": forms.CheckboxInput(
         attrs={"type": "checkbox", "class": "form-check-input"}
     ),
-    "date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
-    "time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),
+    "birthdate": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
 }
 
 

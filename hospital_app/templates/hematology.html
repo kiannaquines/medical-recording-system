@@ -31,7 +31,7 @@
                         <tbody>
                             {% for result in results %}
                             <tr>
-                                <td>{{ result.patient }}</td>
+                                <td>{{ result.patient.get_full_name }}</td>
                                 <td>{{ result.hemoglobin_mass_concentration }}</td>
                                 <td>{{ result.hematocrit }}</td>
                                 <td>{{ result.erythrocty_no_concentration }}</td>

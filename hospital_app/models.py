@@ -25,6 +25,8 @@ class Patient(models.Model):
     sex = models.CharField(
         max_length=10, choices=(("Male", "Male"), ("Female", "Female"))
     )
+    birthdate = models.DateField(help_text="Birth date of the patient", null=True, blank=True)
+    address = models.TextField(help_text="Permanent address of the patient", null=True, blank=True)
     physician = models.ForeignKey(
         CustomUser,
         related_name="physician",
