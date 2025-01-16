@@ -76,7 +76,7 @@ class Patient(models.Model):
         return self.time_of_collection.strftime("%H:%M %p")
 
     def __str__(self) -> str:
-        return f"Patient Information {self.get_full_name()}"
+        return f"Patient {self.get_full_name()}"
 
     class Meta:
         ordering = ("time_of_collection",)

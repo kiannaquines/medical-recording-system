@@ -45,8 +45,8 @@ class LaboratoryRequestFormNurseAndDoctor(forms.ModelForm):
 
     class Meta:
         model = LabRequest
-        fields = ("patient", "description", "lab_request_type", "is_done")
-        exclude = ("requested_by",)
+        fields = ("patient", "description", "lab_request_type")
+        exclude = ("requested_by","is_done")
 
 
 class LoginForm(forms.Form):

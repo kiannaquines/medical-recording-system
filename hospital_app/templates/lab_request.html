@@ -153,7 +153,6 @@
                                 <td>
                                     {{ result.description|truncatechars:40 }}
                                 </td>
-                                <!-- is_done -->
                                 <td>
                                     <span class="badge bg-primary">{{ result.lab_request_type }}</span>
                                 </td>
@@ -161,7 +160,7 @@
                                     {{ result.requested_by.get_full_name }}
                                 </td>
                                 <td>
-                                    <span class="badge bg-{% if result.is_done %}primary{% else %}danger{% endif %}">{% if result.is_done %}Done Request{% else %}Not Yet{% endif %}</span>
+                                    <span class="badge bg-{% if result.is_done %}primary{% else %}danger{% endif %}">{% if result.is_done %}Finished Request{% else %}Pending Request{% endif %}</span>
                                 </td>
                                 {% if request.user|has_group:"Administrator" %}
                                 <td>
