@@ -119,7 +119,7 @@ class CrossMatchingResultUpdateView(UpdateView):
 class LabRequestResultUpdateView(UpdateView):
     pk_url_kwarg = "pk"
     template_name = "forms.html"
-    form_class = LaboratoryRequestFormNurseAndDoctor
+    form_class = LabRequestForm
     model = LabRequest
     success_url = reverse_lazy("laboratory__result_list")
 

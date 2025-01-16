@@ -233,7 +233,7 @@ def generate_report(request):
         )
 
         clinical_chemistry = ClinicalChemistry.objects.filter(
-            patient__patient_type=patient_type
+            patient__patient_type=patient_type,
         )
         serology = Serology.objects.filter(
             patient__patient_type=patient_type,
@@ -266,7 +266,7 @@ def generate_report(request):
         data = {
             "clinical_chemistry": {
                 "total": clinical_chemistry,
-                "name": f"Clinical Chemistry Request {patient_type}",
+                "name": f"Clinical Chemistry {patient_type}",
             },
             "serology": {
                 "total": serology,
@@ -282,7 +282,7 @@ def generate_report(request):
             },
             "urinalysis": {
                 "total": urinalysis,
-                "name": f"Urinalysis Request {patient_type}",
+                "name": f"Urinalysis {patient_type}",
             },
             "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "header_report_type": (
