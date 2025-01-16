@@ -57,6 +57,16 @@
                                         <a href="{% url 'generate_panbio' pk=result.id %}">
                                             <i class="bi bi-printer"></i>
                                         </a>
+                                        <a
+                                            href="#"
+                                            id="view-my-data"
+                                            data-id="{{ result.id }}"
+                                            data-name="{{ result.get_full_name }}"
+                                            data-age="{{ result.age }}"
+                                            data-serial="{{ result.serial_number }}"
+                                        >
+                                        <i class="bi bi-eye text-success"></i>
+                                    </a>
                                     </div>
                                 </td>
                                 {% endif %}
@@ -69,4 +79,542 @@
         </div>
     </div>
 </div>
+
+
+<div
+    class="modal fade"
+    id="PatientInformationModal"
+    aria-hidden="true"
+    aria-labelledby="PatientInformationModalLabel"
+    tabindex="-1"
+>
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="PatientInformationModalLabel"></h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <!-- Patient Info -->
+                <div class="table-responsive">
+                    <table id="PatientInformationModalTable" class="table table-bordered table-hover">
+                        <caption>Patient Information</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted">Patient</th>
+                                <th class="text-muted">Age</th>
+                                <th class="text-muted">Gender</th>
+                                <th class="text-muted">Patient Type</th>
+                                <th class="text-muted">Sample Type</th>
+                                <th class="text-muted">SARS Result</th>
+                                <th class="text-muted">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!-- Clinical Chemistry -->
+                <div class="table-responsive">
+                    <table id="ClinicalChemistryModalTable" class="table table-bordered table-hover">
+                        <caption>Clinical Chemistry Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted">Glucose</th>
+                                <th class="text-muted">Cholesterol</th>
+                                <th class="text-muted">Triglycerides</th>
+                                <th class="text-muted">HDL</th>
+                                <th class="text-muted">LDL</th>
+                                <th class="text-muted">Creatinine</th>
+                                <th class="text-muted">Uric Acid</th>
+                                <th class="text-muted">BUN</th>
+                                <th class="text-muted">SGPT</th>
+                                <th class="text-muted">SGOT</th>
+                                <th class="text-muted">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!-- Serology -->
+                <div class="table-responsive">
+                    <table id="SerologyDataTable" class="table table-bordered table-hover">
+                        <caption>Serology Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted">HB Determination</th>
+                                <th class="text-muted">Typhidot Rapid Test</th>
+                                <th class="text-muted">Dengue Rapid Test</th>
+                                <th class="text-muted">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="serology_body"></tbody>
+                    </table>
+                </div>
+                <!-- Hematology -->
+                <div class="table-responsive">
+                    <table id="HemoglobinDataTable" class="table table-bordered table-hover">
+                        <caption>Hematology Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted" scope="col">Hemoglobin</th>
+                                <th class="text-muted" scope="col">Hematocrit</th>
+                                <th class="text-muted" scope="col">Erythrocty</th>
+                                <th class="text-muted" scope="col">Platelet</th>
+                                <th class="text-muted" scope="col">Blood</th>
+                                <th class="text-muted" scope="col">RH Type</th>
+                                <th class="text-muted" scope="col">Leucocyte</th>
+                                <th class="text-muted" scope="col">Segmenters</th>
+                                <th class="text-muted" scope="col">Lymphocytes</th>
+                                <th class="text-muted" scope="col">Monocytes</th>
+                                <th class="text-muted" scope="col">Eosinophils</th>
+                                <th class="text-muted" scope="col">Basophils</th>
+                                <th class="text-muted" scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!-- Cross Matching -->
+                <div class="table-responsive">
+                    <table id="CrossMatchingDataTable" class="table table-bordered table-hover">
+                        <caption>Cross Matching Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted" scope="col">Serial Number</th>
+                                <th class="text-muted" scope="col">Amount in CC</th>
+                                <th class="text-muted" scope="col">Blood Bank</th>
+                                <th class="text-muted" scope="col">Date Collection</th>
+                                <th class="text-muted" scope="col">Expiration Date</th>
+                                <th class="text-muted" scope="col">Result</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!-- Urinalysis Result -->
+                <div class="table-responsive">
+                    <table id="UrinalysisDataTable" class="table table-bordered table-hover">
+                        <caption>Urinalysis Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted" scope="col">Color</th>
+                                <th class="text-muted" scope="col">Appearance</th>
+                                <th class="text-muted" scope="col">Specific Gravity</th>
+                                <th class="text-muted" scope="col">pH Level</th>
+                                <th class="text-muted" scope="col">Sugar</th>
+                                <th class="text-muted" scope="col">Albumin</th>
+                                <th class="text-muted" scope="col">Epithelia</th>
+                                <th class="text-muted" scope="col">Bacteria</th>
+                                <th class="text-muted" scope="col">PUS Cells</th>
+                                <th class="text-muted" scope="col">RBC</th>
+                                <th class="text-muted" scope="col">Cast</th>
+                                <th class="text-muted" scope="col">Crystals</th>
+                                <th class="text-muted" scope="col">Others</th>
+                                <th class="text-muted" scope="col">Amorphous</th>
+                                <th class="text-muted" scope="col">Mucous Thread</th>
+                                <th class="text-muted" scope="col">Pregnancy Test</th>
+                                <th class="text-muted" scope="col">Urates</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!-- RBS Result -->
+                <div class="table-responsive">
+                    <table id="RBSDataTable" class="table table-bordered table-hover">
+                        <caption>RBS Results</caption>
+                        <thead>
+                            <tr>
+                                <th class="text-muted" scope="col">Result</th>
+                                <th class="text-muted" scope="col">Date</th>
+                                <th class="text-muted" scope="col">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block js_block %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelectorAll('#view-my-data').forEach(element => {
+    element.addEventListener('click', async function(event) {
+        event.preventDefault();
+        
+        const prevModalElement = document.getElementById("SearchPatientInformationModal");
+        const modalInstance = bootstrap.Modal.getInstance(prevModalElement);
+
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+
+        const dataId = this.dataset.id;
+        const dataName = this.dataset.name;
+        const age = this.dataset.age;
+        const serialNumber = this.dataset.serial;
+        
+        fetch('{% url "view_patient_informations" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                patient_id: dataId,
+                age: age,
+                serial_number: serialNumber,
+            }),
+        }).then((response) => {
+            if (!response.ok) {
+                Swal.fire(
+                    'Error',
+                    'No patient found with the given ID and age.',
+                    'error'
+                )
+                return;
+            } else {
+                try {
+                    const resultModal = document.querySelector('#PatientInformationModal');
+                    if (!resultModal) {
+                        console.error('Patient Information Modal not found');
+                        return;
+                    }
+                    const resultModalOpen = new bootstrap.Modal(resultModal, {
+                        keyboard: false,
+                        backdrop: 'static',
+                    });
+                    resultModalOpen.show();
+                    const modalLabel = document.getElementById("PatientInformationModalLabel");
+                    if (modalLabel) {
+                        modalLabel.textContent = `${dataName}'s Laboratory Information`;
+                    }
+
+                    const tableConfigs = {
+                    "#PatientInformationModalTable": {
+                        columns: [
+                            { data: "fullname" },
+                            { data: "age" },
+                            { data: "gender" },
+                            { data: "patient_type" },
+                            { data: "sample_type" },
+                            { data: "sars_result" },
+                            { data: "date" }
+                        ],
+                        dataProperty: "patient_info",
+                        dataFilter: function(response) {
+                            const jsonResponse = JSON.parse(response);
+                            const tableData = jsonResponse.patient_info || [];
+                            
+                            const dataArray = Array.isArray(tableData) ? tableData : [tableData];
+                            
+                            return JSON.stringify({
+                                draw: jsonResponse.draw,
+                                recordsTotal: dataArray.length,
+                                recordsFiltered: dataArray.length,
+                                data: dataArray
+                            });
+                        },
+                    },
+                    "#ClinicalChemistryModalTable": {
+                        columns: [
+                            { data: "glucose" },
+                            { data: "cholesterol" },
+                            { data: "triglycerides" },
+                            { data: "hdl" },
+                            { data: "ldl" },
+                            { data: "creatinine" },
+                            { data: "uric_acid" },
+                            { data: "bun" },
+                            { data: "sgpt" },
+                            { data: "sgot" },
+                            { data: "date" }
+                        ],
+                        dataProperty: "clinical_chemistry",
+                        dataFilter: function(response) {
+                            const jsonResponse = JSON.parse(response);
+                            const tableData = jsonResponse.clinical_chemistry || [];
+                            
+                            const dataArray = Array.isArray(tableData) ? tableData : [tableData];
+                            
+                            return JSON.stringify({
+                                draw: jsonResponse.draw,
+                                recordsTotal: dataArray.length,
+                                recordsFiltered: dataArray.length,
+                                data: dataArray
+                            });
+                        },
+                    },
+                    "#SerologyDataTable": {
+                        columns: [
+                            { data: "hb_determination" },
+                            { data: "typhidot_rapid_test" },
+                            { data: "dengue_rapid_test" },
+                            { data: "date" }
+                        ],
+                        dataProperty: "serology",
+                        dataFilter: function(response) {
+                            const jsonResponse = JSON.parse(response);
+                            const tableData = jsonResponse.serology || [];
+                            
+                            const dataArray = Array.isArray(tableData) ? tableData : [tableData];
+                            
+                            return JSON.stringify({
+                                draw: jsonResponse.draw,
+                                recordsTotal: dataArray.length,
+                                recordsFiltered: dataArray.length,
+                                data: dataArray
+                            });
+                        },
+                    },
+                    "#HemoglobinDataTable": {
+                        columns: [
+                            { data: "hemoglobin_mass_concentration" },
+                            { data: "hematocrit" },
+                            { data: "erythrocty_no_concentration" },
+                            { data: "platelet" },
+                            { data: "blood_type" },
+                            { data: "rh_type" },
+                            { data: "leucocyte_no_concentration" },
+                            { data: "segmenters" },
+                            { data: "lymphocytes" },
+                            { data: "monocytes" },
+                            { data: "eosinophils" },
+                            { data: "basophils" },
+                            { data: "date" },
+                        ],
+                        dataProperty: "hematology",
+                        dataFilter: function(response) {
+                            const jsonResponse = JSON.parse(response);
+                            const tableData = jsonResponse.hematology || [];
+                            
+                            const dataArray = Array.isArray(tableData) ? tableData : [tableData];
+                            
+                            return JSON.stringify({
+                                draw: jsonResponse.draw,
+                                recordsTotal: dataArray.length,
+                                recordsFiltered: dataArray.length,
+                                data: dataArray
+                            });
+                        },
+                    },
+                    "#CrossMatchingDataTable": {
+                        columns: [
+                            { 
+                                title: "Serial No.",
+                                data: "serial_no" 
+                            },
+                            { 
+                                title: "Amount in CC",
+                                data: "amt_in_cc",
+                                render: function(data) {
+                                    return data.toFixed(1);
+                                }
+                            },
+                            { 
+                                title: "Blood Bank",
+                                data: "blood_bank" 
+                            },
+                            { 
+                                title: "Date of Collection",
+                                data: "date_of_collection",
+                                render: function(data) {
+                                    return new Date(data).toLocaleDateString();
+                                }
+                            },
+                            { 
+                                title: "Expiration Date",
+                                data: "expiration_date",
+                                render: function(data) {
+                                    return new Date(data).toLocaleDateString();
+                                }
+                            },
+                            { 
+                                title: "Result",
+                                data: "result" 
+                            },
+                        ],
+                            dataProperty: "cross_matching",
+                            dataFilter: function(response) {
+                                const jsonResponse = JSON.parse(response);
+                                const crossMatchingData = jsonResponse.cross_matching || [];
+                                
+                                const flattenedData = [];
+                                crossMatchingData.forEach(matching => {
+                                    if (matching.results && matching.results.length > 0) {
+                                        matching.results.forEach(result => {
+                                            flattenedData.push({
+                                                ...result,
+                                                pathologist: matching.pathologist,
+                                                medical_technologist: matching.medical_technologist,
+                                                created_at: matching.created_at,
+                                                updated_at: matching.updated_at,
+                                                patient: matching.patient
+                                            });
+                                        });
+                                    }
+                                });
+
+                            return JSON.stringify({
+                                draw: jsonResponse.draw || 1,
+                                recordsTotal: flattenedData.length,
+                                recordsFiltered: flattenedData.length,
+                                data: flattenedData
+                            });
+                        }
+                        },
+                    "#UrinalysisDataTable": {
+                        columns: [
+                            { data: "color" },
+                            { data: "appearance" },
+                            { data: "specific_gravity" },
+                            { data: "pH" },
+                            { data: "sugar" },
+                            { data: "albumin" },
+                            { data: "epithelia" },
+                            { data: "bacteria" },
+                            { data: "pus_cells" },
+                            { data: "rbc" },
+                            { data: "cast" },
+                            { data: "crystals" },
+                            { data: "others" },
+                            { data: "amorphous" },
+                            { data: "mucous_thread" },
+                            { data: "pregnancy_test" },
+                            { data: "urates" },
+                        ],
+                        dataProperty: "urinalysis",
+                        dataFilter: function(response) {
+                            const jsonResponse = JSON.parse(response);
+                            const tableData = jsonResponse.urinalysis || [];
+                            
+                            const dataArray = Array.isArray(tableData) ? tableData : [tableData];
+                            
+                            return JSON.stringify({
+                                draw: jsonResponse.draw,
+                                recordsTotal: dataArray.length,
+                                recordsFiltered: dataArray.length,
+                                data: dataArray
+                            });
+                        },
+                        },
+                    "#RBSDataTable": {
+                        columns: [
+                            { data: "result", title: "Result" }, 
+                            { data: "date", title: "Date" },
+                            { data: "time", title: "Time" },
+                        ],
+                        dataProperty: "rbs",
+                        dataFilter: function(response) {
+                            try {
+                                const jsonResponse = JSON.parse(response);
+                                const rbsData = jsonResponse.rbs || [];
+                                
+                                const flattenedData = [];
+
+                                
+                                rbsData.forEach(item => {
+                                    item.results.forEach(result => {
+                                        flattenedData.push({
+                                            ...result,
+                                        });
+                                    });
+                                    
+                                });
+
+                                return JSON.stringify({
+                                    draw: jsonResponse.draw || 1,
+                                    recordsTotal: flattenedData.length,
+                                    recordsFiltered: flattenedData.length,
+                                    data: flattenedData
+                                });
+
+                            } catch (error) {
+                                console.error("Error in dataFilter for RBSDataTable:", error);
+
+                                return JSON.stringify({
+                                    draw: 1,
+                                    recordsTotal: 0,
+                                    recordsFiltered: 0,
+                                    data: []
+                                });
+                            }
+                        }
+                    }
+                    };
+
+                    const listOfTables = ["#PatientInformationModalTable", "#ClinicalChemistryModalTable","#SerologyDataTable","#HemoglobinDataTable","#CrossMatchingDataTable","#UrinalysisDataTable","#RBSDataTable"];
+
+                    listOfTables.forEach(tableId => {
+                    const config = tableConfigs[tableId];
+                    if (!config) {
+                        console.error(`No configuration found for table: ${tableId}`);
+                        return;
+                    }
+
+                    $(tableId).DataTable({
+                        responsive: true,
+                        ordering: false,
+                        lengthChange: true,
+                        autoWidth: true,
+                        paging: true,
+                        searching: true,
+                        info: true,
+                        processing: true,
+                        serverSide: true,
+                        destroy: true,
+                        ajax: {
+                            url: '{% url "view_patient_informations" %}',
+                            type: "POST",
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}',
+                                'Content-Type': 'application/json'
+                            },
+                            data: function(d) {
+                                return JSON.stringify({
+                                    patient_id: dataId,
+                                    age: age,
+                                    serial_number: serialNumber,
+                                });
+                            },
+                            dataFilter: config.dataFilter,
+                        },
+                        columns: config.columns,
+                        error: function(xhr, error, thrown) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: xhr.responseJSON?.error || 'Failed to load data. Please try again.'
+                            });
+                        }
+                    });
+                    });
+
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while setting up the data view.'
+                    });
+                }
+            }
+
+        }).catch((error) => {
+            console.error("Fetch error:", error);
+        });
+
+    });
+});
+</script>
 {% endblock %}
