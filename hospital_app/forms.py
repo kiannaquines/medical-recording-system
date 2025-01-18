@@ -136,7 +136,7 @@ class BaseForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs.update({"class": "form-control"})
 
-            if field_name == "middlename":
+            if field_name == "middlename" or field_name == "room_number":
                 field.widget.attrs.update({"required": False})
             else:
                 field.widget.attrs.update({"required": True})
