@@ -20,6 +20,10 @@ custom_fields = {
         attrs={"type": "date", "class": "form-control"}
     ),
     "expiration_date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+
+    "date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+    "time": forms.DateInput(attrs={"type": "time", "class": "form-control"}),
+
     "time_of_collection": forms.TimeInput(
         attrs={"type": "time", "class": "form-control"}
     ),
